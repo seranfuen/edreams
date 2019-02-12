@@ -1,0 +1,5 @@
+C:\Users\Sergio\Programacion\eDream\seanDebug\bin\Release\seanDebug.dll
+C:\Users\Sergio\Programacion\eDream\seanDebug\bin\Release\seanDebug.pdb
+C:\Users\Sergio\Programacion\eDream\seanDebug\obj\Release\ResolveAssemblyReference.cache
+C:\Users\Sergio\Programacion\eDream\seanDebug\obj\Release\seanDebug.dll
+C:\Users\Sergio\Programacion\eDream\seanDebug\obj\Release\seanDebug.pdb

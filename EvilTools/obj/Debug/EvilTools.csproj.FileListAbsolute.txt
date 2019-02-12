@@ -1,0 +1,5 @@
+C:\Users\Sergio\Programacion\eDream\EvilTools\bin\Debug\EvilTools.dll
+C:\Users\Sergio\Programacion\eDream\EvilTools\bin\Debug\EvilTools.pdb
+C:\Users\Sergio\Programacion\eDream\EvilTools\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Sergio\Programacion\eDream\EvilTools\obj\Debug\EvilTools.dll
+C:\Users\Sergio\Programacion\eDream\EvilTools\obj\Debug\EvilTools.pdb
