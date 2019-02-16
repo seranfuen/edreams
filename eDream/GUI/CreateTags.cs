@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -148,10 +148,10 @@ namespace eDream.GUI {
                     DataGridViewAutoSizeColumnMode.ColumnHeader;
                 tagsTable.Columns[0].ReadOnly = true;
                 tagsTable.Columns[0].SortMode = 
-                    System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+                    DataGridViewColumnSortMode.Automatic;
                 tagsTable.Columns[1].ReadOnly = true;
                 tagsTable.Columns[1].SortMode =
-                    System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+                    DataGridViewColumnSortMode.Automatic;
             } catch (Exception e) {
                 Console.WriteLine("<<DEBUG>>\n Error in SetColumns():\n   " +
                     e.Message);
@@ -251,7 +251,7 @@ namespace eDream.GUI {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void searchButton_Click(object sender, EventArgs e) {
-            if (String.IsNullOrWhiteSpace(tagSearch.Text)) {
+            if (string.IsNullOrWhiteSpace(tagSearch.Text)) {
                 ResetInitialData();
             }
             SetTableData(SearchData(statTags, tagSearch.Text));
@@ -263,7 +263,7 @@ namespace eDream.GUI {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e) {
-            tagSearch.Text = String.Empty;
+            tagSearch.Text = string.Empty;
             ResetInitialData();
         }
 
@@ -305,7 +305,7 @@ namespace eDream.GUI {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void createButton_Click(object sender, EventArgs e) {
-            this.Dispose();
+            Dispose();
         }
 
         /// <summary>
@@ -351,10 +351,10 @@ namespace eDream.GUI {
         /// <returns></returns>
         private string FindParentTag(string childTag) {
             int maxCount = 0;
-            string parent = String.Empty;
+            string parent = string.Empty;
             for (int i = 0; i < statTags.Count; i++) {
                 for (int j = 0; j < statTags[i].ChildTags.Count; j++) {
-                    if (String.Compare(statTags[i].ChildTags[j].TagName,
+                    if (string.Compare(statTags[i].ChildTags[j].TagName,
                         childTag, true) == 0) {
                             if (maxCount < statTags[i].TagCount) {
                                 parent = statTags[i].TagName;
@@ -381,7 +381,7 @@ namespace eDream.GUI {
             TagText = TagText.Trim();
             string parent = FindParentTag(tag);
             // If it is main
-            if (parent == String.Empty) {
+            if (parent == string.Empty) {
                 if (!MatchMainTag(tag)) {
                     WriteTag(tag);
                 }
@@ -421,7 +421,7 @@ namespace eDream.GUI {
                 mTag.Value.LastIndexOf(DreamTagParser.closeChildTags)).Trim();
             string sep = nTag[nTag.Length - 1] == 
                 DreamTagParser.mainTagSeparator ? " " : 
-                Char.ToString(DreamTagParser.mainTagSeparator) + " ";
+                char.ToString(DreamTagParser.mainTagSeparator) + " ";
             TagText = Regex.Replace(TagText, Regex.Escape(mTag.Value),
                 nTag+ sep + tag + char.ToString(DreamTagParser.closeChildTags),
                 RegexOptions.IgnoreCase);
@@ -463,7 +463,7 @@ namespace eDream.GUI {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ParentClosing(object sender, EventArgs e) {
-            this.Dispose();
+            Dispose();
         }
    }
 }

@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -47,7 +47,7 @@ namespace eDream.libs {
         /// <returns>A string showing the tags as a list</returns>
         public string TagsToString(List<DreamMainTag> tagList) {
             if (tagList == null || tagList.Count == 0) {
-                return String.Empty;
+                return string.Empty;
             }
             string[] mainTagsStr = new string[tagList.Count];
             string[] childTagsStr;
@@ -57,16 +57,16 @@ namespace eDream.libs {
                 if (tagList[i].CountChildTags() > 0) {
                     childTagsStr = new string[tagList[i].CountChildTags()];
                     for (int j = 0; j < tagList[i].ChildTags.Count; j++) {
-                        if (! String.IsNullOrEmpty(tagList[i].ChildTags[j].TagName)) {
+                        if (! string.IsNullOrEmpty(tagList[i].ChildTags[j].TagName)) {
                             childTagsStr[j] = tagList[i].ChildTags[j].TagName;
                         }
                     }
                     mainTagsStr[i] = mainTagsStr[i] + " " + openChildTags +
-                        String.Join(Char.ToString(mainTagSeparator) + " ",
+                        string.Join(char.ToString(mainTagSeparator) + " ",
                         childTagsStr) + closeChildTags;
                 }
             }
-            return String.Join(Char.ToString(mainTagSeparator) + " ",
+            return string.Join(char.ToString(mainTagSeparator) + " ",
                 mainTagsStr);
         }
 
@@ -78,7 +78,7 @@ namespace eDream.libs {
         /// <returns></returns>
         public List<DreamMainTag> StringToTags(string str) {
             List<DreamMainTag> tagList = new List<DreamMainTag>();
-            if (String.IsNullOrWhiteSpace(str)) {
+            if (string.IsNullOrWhiteSpace(str)) {
                 return tagList;
             }
             string[] mainTags = ExtractMainTags(str.Trim());

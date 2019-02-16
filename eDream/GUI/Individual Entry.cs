@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -62,7 +62,7 @@ namespace eDream.GUI {
             this.theEntry = theEntry;
             this.entryN = entryN;
             this.parent = parent;
-            this.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | 
+            Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | 
                 AnchorStyles.Right | AnchorStyles.Top);
             SetEntry();
         }
@@ -88,7 +88,7 @@ namespace eDream.GUI {
                 "Delete entry?", MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question) == DialogResult.Yes) {
                 theEntry.ToDelete = true;
-                this.Dispose();
+                Dispose();
                 parent.SetModifiedState();
                 parent.RefreshEntries();
             }
@@ -104,7 +104,7 @@ namespace eDream.GUI {
             editEntry.ShowDialog();
             if (editEntry.CreatedEntry) {
                 parent.SetModifiedState();
-                this.SetEntry();
+                SetEntry();
             }
         }
     }

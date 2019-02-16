@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -143,12 +143,12 @@ namespace eDream
         // Loads the default settings to the settings object
         private void LoadDefaultSettings() {
             // By default load the last database
-            this.defaultSettings.Add(new EvilTools.Settings.SettingsPair() {
+            defaultSettings.Add(new EvilTools.Settings.SettingsPair() {
                 Key = loadLastDBSetting,
                 Value = "yes"
             });
             // By default show the welcome window
-            this.defaultSettings.Add(new EvilTools.Settings.SettingsPair() {
+            defaultSettings.Add(new EvilTools.Settings.SettingsPair() {
                 Key = showWelcomeSetting,
                 Value = "yes"
             });
@@ -158,7 +158,7 @@ namespace eDream
         /// Changes the status bar message
         /// </summary>
         /// <param name="text">Text to display in status bar</param>
-        public void SetStatusBarMsg(String text) {
+        public void SetStatusBarMsg(string text) {
             entriesStatsStatus.Text = text;
         }
 
@@ -168,30 +168,30 @@ namespace eDream
         /// </summary>
         private void InitializeInterface() {
             try {
-                this.StartPosition = FormStartPosition.CenterScreen;
+                StartPosition = FormStartPosition.CenterScreen;
                 SetUnloadedState();
                 // Event handlers
-                this.FormClosing += new FormClosingEventHandler(ClosingApp);
-                this.toolStripLoad.Click +=
+                FormClosing += new FormClosingEventHandler(ClosingApp);
+                toolStripLoad.Click +=
                     new EventHandler(openDatabaseToolStripMenuItem_Click);
-                this.toolStripButtonSave.Click +=
+                toolStripButtonSave.Click +=
                     new EventHandler(saveToolStripMenuItem_Click);
-                this.toolStripAdd.Click += new
+                toolStripAdd.Click += new
                     EventHandler(addEntryToolStripMenuItem_Click);
-                this.toolStripNewDB.Click += new
+                toolStripNewDB.Click += new
                     EventHandler(createNewDatabaseToolStripMenuItem_Click);
-                this.toolStripStats.Click += new
+                toolStripStats.Click += new
                     EventHandler(statisticsToolStripMenuItem_Click);
-                this.listBox1.SelectedIndexChanged +=
+                listBox1.SelectedIndexChanged +=
                     new EventHandler(ShowCurrentDay);
-                this.listBox1.MouseWheel += new MouseEventHandler(ScrollList);
-                this.listBox1.MouseClick += new MouseEventHandler(FocusList);
-                this.tableLayoutPanel1.MouseClick +=
+                listBox1.MouseWheel += new MouseEventHandler(ScrollList);
+                listBox1.MouseClick += new MouseEventHandler(FocusList);
+                tableLayoutPanel1.MouseClick +=
                     new MouseEventHandler(FocusEntryPanel);
-                this.saveLoad.FinishedLoading += new EventHandler(OnEntriesLoaded);
-                this.saveLoad.FinishedSaving += new EventHandler(OnEntriesSaved);
-                this.DebugIncidence += new Debug.OnDebugIncidence(SendToDebugger);
-                this.Shown += new EventHandler(LoadLastDatabase);
+                saveLoad.FinishedLoading += new EventHandler(OnEntriesLoaded);
+                saveLoad.FinishedSaving += new EventHandler(OnEntriesSaved);
+                DebugIncidence += new Debug.OnDebugIncidence(SendToDebugger);
+                Shown += new EventHandler(LoadLastDatabase);
                 // Try to load settings
                 settings = new EvilTools.Settings(settingsFile,
             defaultSettings);
@@ -217,7 +217,7 @@ namespace eDream
                 SetRecentFilesMenu();
                 string[] recent = recentlyOpened.GetPaths();
                 if (recent.Length > 0) {
-                    if (!String.IsNullOrEmpty(recent[0])) {
+                    if (!string.IsNullOrEmpty(recent[0])) {
                         changingFile = (recent[0]);
                         LoadXMLFile();
                     }
@@ -250,7 +250,7 @@ namespace eDream
                 }
             }
             if (EntriesCount > 0 && DayListCount > 0) { // Should avoid division by zero too!
-                    str = String.Format("Database loaded." +
+                    str = string.Format("Database loaded." +
                     " {0} dreams in {1} days ({2} dreams/day)",
                     EntriesCount, DayListCount,
                     ((float)EntriesCount/(float)DayListCount).ToString("0.00"));
@@ -305,7 +305,7 @@ namespace eDream
         /// <param name="e"></param>
         private void OnEntriesLoaded(object sender, EventArgs e) {
             // Invoke since it will be run from outside the main thread
-            this.Invoke(new MethodInvoker(LoadEntriesFromLoader));
+            Invoke(new MethodInvoker(LoadEntriesFromLoader));
         }
 
         /// <summary>
@@ -344,7 +344,7 @@ namespace eDream
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnEntriesSaved(object sender, EventArgs e) {
-            this.Invoke(new MethodInvoker(EvaluateSavedEntries));
+            Invoke(new MethodInvoker(EvaluateSavedEntries));
         }
 
         /// <summary>
@@ -473,13 +473,13 @@ namespace eDream
         /// Unloads from memory the current database and empties the GUI
         /// </summary>
         private void CloseDatabase() {
-            currentFile = String.Empty;
+            currentFile = string.Empty;
             DreamEntries = new List<DreamEntry>();
             DayList = new List<DreamDayList>();
             SetUnloadedState();
             listBox1.Enabled = false;
             SetStatusBarMsg("No database loaded");
-            this.Text = Application.ProductName;
+            Text = Application.ProductName;
             SetUnModifiedState();
         }
 
@@ -500,7 +500,7 @@ namespace eDream
             searchToolStripMenuItem.Enabled = true;
             dreamStats = new DreamTagStatistics();
             dreamStats.GenerateStatistics(DreamEntries, DayList);
-            this.Text = Application.ProductName + " - " + GetFileName();
+            Text = Application.ProductName + " - " + GetFileName();
         }
 
         /// <summary>
@@ -527,7 +527,7 @@ namespace eDream
         private void SetBusyStatus() {
             Enabled = false;
             progressBar1.Visible = true;
-            this.Cursor = Cursors.WaitCursor;
+            Cursor = Cursors.WaitCursor;
         }
 
         /// <summary>
@@ -537,7 +537,7 @@ namespace eDream
         private void SetActiveStatus() {
             Enabled = true;
             progressBar1.Visible = false;
-            this.Cursor = Cursors.Default;
+            Cursor = Cursors.Default;
         }
 
         /// <summary>
@@ -622,7 +622,7 @@ namespace eDream
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="a"></param>
-        private void LoadRecentDatabase(Object sender, EventArgs a) {
+        private void LoadRecentDatabase(object sender, EventArgs a) {
             RecentlyOpenedMenuItem theSender = (RecentlyOpenedMenuItem)sender;
             if (modified) {
                 DialogResult resultM =
@@ -663,7 +663,7 @@ namespace eDream
             }
             DialogResult result = openFileDialog1.ShowDialog();
             if (result == DialogResult.OK) {
-                String oldFile = currentFile;
+                string oldFile = currentFile;
                 currentFile = openFileDialog1.FileName;
                 // If it was correct, we set it through SetCurrentFile to
                 // add it to recently opened
@@ -705,7 +705,7 @@ namespace eDream
         /// </summary>
         /// <param name="file"></param>
         private void SetCurrentFile(string file) {
-            this.currentFile = file;
+            currentFile = file;
             recentlyOpened.AddPath(file);
             recentlyOpened.SavePaths();
             SetRecentFilesMenu();
@@ -726,11 +726,11 @@ namespace eDream
             }
             menuRecent.Enabled = true;
             menuRecent.DropDownItems.Clear();
-            System.Windows.Forms.ToolStripItem[] menuItems = new
-                System.Windows.Forms.ToolStripItem[thePaths.Length];
+            ToolStripItem[] menuItems = new
+                ToolStripItem[thePaths.Length];
             int count = 0;
             for (int i = 0; i < thePaths.Length;  i++) {
-                if (String.IsNullOrEmpty(thePaths[i])) {
+                if (string.IsNullOrEmpty(thePaths[i])) {
                     continue;
                 }
                 RecentlyOpenedMenuItem newI = new RecentlyOpenedMenuItem(thePaths[i],
@@ -739,8 +739,8 @@ namespace eDream
                 menuItems[count] = newI;
                 count++;
             }
-            System.Windows.Forms.ToolStripItem[] menuItemsFinal = new
-                System.Windows.Forms.ToolStripItem[count];
+            ToolStripItem[] menuItemsFinal = new
+                ToolStripItem[count];
             for (int i = 0; i < count; i++) {
                 menuItemsFinal[i] = menuItems[i];
             }
@@ -794,7 +794,7 @@ namespace eDream
                 }
             }
             DialogResult resultSave = saveFileDialog1.ShowDialog();
-            if (resultSave == System.Windows.Forms.DialogResult.OK) {
+            if (resultSave == DialogResult.OK) {
                 currentFile = saveFileDialog1.FileName;
                 SaveXMLFile();
                 saveFileDialog1.FileName = "";
@@ -807,7 +807,7 @@ namespace eDream
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ClosingApp(Object sender, FormClosingEventArgs e) {
+        private void ClosingApp(object sender, FormClosingEventArgs e) {
             if (modified) {
                 SystemSounds.Question.Play();
                 DialogResult result = MessageBox.Show("Your current dream" +
@@ -945,7 +945,7 @@ namespace eDream
             else if (searchWindow == null) {
                 searchWindow = new SearchForm(DreamEntries);
                 searchWindow.OnSearchCompleted +=
-                    new eDream.GUI.SearchForm.SearchEvent(SearchPerformed);
+                    new SearchForm.SearchEvent(SearchPerformed);
                 searchWindow.OnClear += new EventHandler(ClearSearch);
                 searchWindow.Show(this);
             }
@@ -977,11 +977,11 @@ namespace eDream
             if (searcher.Results.Count == 1) {
                 entry = "entry";
             }
-            string msg = String.Format("Your search for the {0} \"{1}\" found" +
+            string msg = string.Format("Your search for the {0} \"{1}\" found" +
             " {2} {3}", searchType, searcher.LastSearchText,
             searcher.Results.Count, entry);
             SetFindsMessage(msg);
-            this.Focus();
+            Focus();
         }
 
         /// <summary>
@@ -1044,7 +1044,7 @@ namespace eDream
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e) {
-            eDream.GUI.Settings settings = new GUI.Settings(this.settings);
+            GUI.Settings settings = new GUI.Settings(this.settings);
             settings.ShowDialog();
             if (settings.Result == GUI.Settings.enumResult.Changed) {
                 this.settings.SaveFile();

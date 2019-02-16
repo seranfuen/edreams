@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -103,7 +103,7 @@ namespace eDream.libs {
         /// <param name="dayList">List of days containing entries</param>
         public void GenerateStatistics(List<DreamEntry> newEntries,
                                        List<DreamDayList> dayList) {
-            this.dreamEntries = newEntries;
+            dreamEntries = newEntries;
             this.dayList = dayList;
             tagStatistics = new List<DreamMainStatTag>();
             // Process all the dreamEntries list
@@ -159,7 +159,7 @@ namespace eDream.libs {
                     "%)" + lineBreak;
                 List<DreamChildStatTag> childTags = tagStatistics[i].ChildTags;
                 for (int j = 0; j < childTags.Count; j++) {
-                    str += EvilTools.StringUtils.GenerateSpaces(leftTab) +
+                    str += StringUtils.GenerateSpaces(leftTab) +
                         childTags[j].TagName + "  —  " +
                         childTags[j].TagCount + "  (" +
                         StringUtils.GeneratePercentageAsStr(childTags[j].TagCount,
@@ -177,7 +177,7 @@ namespace eDream.libs {
         public string[] GetTagList() {
             string[] tagList = new string[tagStatistics.Count];
             for (int i = 0; i < tagStatistics.Count; i++) {
-                if (!String.IsNullOrWhiteSpace(tagStatistics[i].TagName)) {
+                if (!string.IsNullOrWhiteSpace(tagStatistics[i].TagName)) {
                     tagList[i] = tagStatistics[i].TagName;
                 }
             }

@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -33,11 +33,11 @@ namespace eDream.GUI {
     partial class AboutBox1 : Form {
         public AboutBox1() {
             InitializeComponent();
-            this.Text = String.Format("About {0}", AssemblyTitle);
-            this.labelProductName.Text = AssemblyProduct + " - " + 
+            Text = string.Format("About {0}", AssemblyTitle);
+            labelProductName.Text = AssemblyProduct + " - " + 
                 AssemblyDescription;
-            this.labelVersion.Text = 
-                String.Format("Version {0}", AssemblyVersion);
+            labelVersion.Text = 
+                string.Format("Version {0}", AssemblyVersion);
         }
         #region Assembly Attribute Accessors
 

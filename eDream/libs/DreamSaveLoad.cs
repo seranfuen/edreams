@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -250,8 +250,8 @@ namespace eDream.libs {
                 SendFinishedLoadingSignal(enumLoadStatus.Error);
                 return;
             }
-            this.entriesFromXML = XMLReader.LoadFile(currentFile);
-            if (this.entriesFromXML == null) {
+            entriesFromXML = XMLReader.LoadFile(currentFile);
+            if (entriesFromXML == null) {
                 SendFinishedLoadingSignal(enumLoadStatus.Error);
                 return;
             }

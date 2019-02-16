@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -96,11 +96,11 @@ namespace eDream.GUI {
             InitializeComponent();
             SetUpForm();
             this.tagStats = tagStats;
-            this.addEntryButton.Click -= addEntryButton_Click;
-            this.addEntryButton.Click += new EventHandler(saveEdit);
+            addEntryButton.Click -= addEntryButton_Click;
+            addEntryButton.Click += new EventHandler(saveEdit);
             this.editEntry = editEntry;
             addEntryButton.Text = "Edit";
-            this.Text = "Edit dream entry";
+            Text = "Edit dream entry";
             inEdition = true;
             LoadEditEntry();
         }
@@ -109,13 +109,13 @@ namespace eDream.GUI {
         /// Common actions when setting up the form
         /// </summary>
         private void SetUpForm() {
-            this.FormClosing += new FormClosingEventHandler(PreventChildClose);
-            this.StartPosition = FormStartPosition.CenterParent;
+            FormClosing += new FormClosingEventHandler(PreventChildClose);
+            StartPosition = FormStartPosition.CenterParent;
             tagsBox.TextChanged += new EventHandler(entryModified);
             textBox.TextChanged += new EventHandler(entryModified);
             tagsBox.TextChanged += new EventHandler(notifyTagW);
-            this.KeyPreview = true;
-            this.KeyDown += new KeyEventHandler(SendForm);
+            KeyPreview = true;
+            KeyDown += new KeyEventHandler(SendForm);
         }
 
         /// <summary>
@@ -143,8 +143,8 @@ namespace eDream.GUI {
         /// date picker
         /// </summary>
         private void LoadEditEntry() {
-            this.textBox.Text = editEntry.Text;
-            this.tagsBox.Text = editEntry.GetTagsAsString();
+            textBox.Text = editEntry.Text;
+            tagsBox.Text = editEntry.GetTagsAsString();
             datePicker.Text = editEntry.GetDateAsStr();
             CountWords();
         }
@@ -156,7 +156,7 @@ namespace eDream.GUI {
         /// </summary>
         /// <param name="caller"></param>
         /// <param name="a"></param>
-        private void entryModified(Object caller, EventArgs a) {
+        private void entryModified(object caller, EventArgs a) {
             if (caller.Equals(textBox)) {
                 CountWords();
             }
@@ -171,8 +171,8 @@ namespace eDream.GUI {
                      * when the contents in the box don't match the ones in the
                      * original entry
                      */ 
-                    if (String.Compare(textBox.Text, editEntry.Text)
-                        == 0 && String.Compare(tagsBox.Text, 
+                    if (string.Compare(textBox.Text, editEntry.Text)
+                        == 0 && string.Compare(tagsBox.Text, 
                         editEntry.GetTagsAsString()) == 0) {
                         modified = false;
                         return;
@@ -199,7 +199,7 @@ namespace eDream.GUI {
         private void cancelButtonClick(object sender, EventArgs e) {
             if (!modified) {
                 CloseTagWizard();
-                this.Dispose();
+                Dispose();
             } else {
                 SystemSounds.Exclamation.Play();
                 DialogResult result = MessageBox.Show("Do you want to close " +
@@ -208,7 +208,7 @@ namespace eDream.GUI {
                         MessageBoxIcon.Question);
                 if (result == DialogResult.Yes) {
                     CloseTagWizard();
-                    this.Dispose();
+                    Dispose();
                 }
             }
         }
@@ -231,9 +231,9 @@ namespace eDream.GUI {
             }
             editEntry.Text = textBox.Text;
             editEntry.SetTags(tagsBox.Text);
-            editEntry.SetDate(datePicker.Text);
+            editEntry.Date = datePicker.Value;
             createdEntry = true;
-            this.Dispose();
+            Dispose();
         }
 
         /// <summary>
@@ -250,9 +250,9 @@ namespace eDream.GUI {
                     "new entry", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            newEntry = new DreamEntry(datePicker.Text, tagsBox.Text, textBox.Text);
+            newEntry = new DreamEntry(datePicker.Value, tagsBox.Text, textBox.Text);
             createdEntry = true;
-            this.Dispose();
+            Dispose();
         }
 
         /// <summary>

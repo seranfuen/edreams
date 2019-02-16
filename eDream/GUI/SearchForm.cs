@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -103,7 +103,7 @@ namespace eDream.GUI {
         /// </summary>
         public List<DreamEntry> DreamEntries {
             set {
-                this.dreamEntries = value;
+                dreamEntries = value;
             }
         }
 
@@ -128,9 +128,9 @@ namespace eDream.GUI {
 
         public SearchForm(List<DreamEntry> entries) {
             InitializeComponent();
-            this.dreamEntries = entries;
-            this.StartPosition =
-                System.Windows.Forms.FormStartPosition.CenterScreen;
+            dreamEntries = entries;
+            StartPosition =
+                FormStartPosition.CenterScreen;
             textSearchFindButton.Enabled = false;
             findTagsButton.Enabled = false;
             andRadio.Checked = true;
@@ -138,7 +138,7 @@ namespace eDream.GUI {
             textClearButton.Enabled = false;
             fromTimePicker.Value = DateTime.Now;
             toTimePicker.Value = DateTime.Now;
-            this.FormClosing += new FormClosingEventHandler(PreventDestroy);
+            FormClosing += new FormClosingEventHandler(PreventDestroy);
             textSearchBox.TextChanged += new EventHandler(TextSearchBoxChanged);
             tagsTextBox.TextChanged += new EventHandler(TextSearchBoxChanged);
             textSearchBox.KeyDown += new KeyEventHandler(EnterKeyPressed);
@@ -146,7 +146,7 @@ namespace eDream.GUI {
             clearTagsButton.Click += new EventHandler(SendClear);
             textClearButton.Click += new EventHandler(SendClear);
             dateClearButton.Click += new EventHandler(SendClear);
-            this.KeyDown += new KeyEventHandler(CloseWindow);
+            KeyDown += new KeyEventHandler(CloseWindow);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace eDream.GUI {
              * depending on which textBox the object is, to disable. Otherwise,
              * enable it
              */
-            bool isEmpty = String.IsNullOrWhiteSpace(box.Text);
+            bool isEmpty = string.IsNullOrWhiteSpace(box.Text);
             if (box.Equals(textSearchBox)) {
                 textSearchFindButton.Enabled = !isEmpty;
             } else if (box.Equals(tagsTextBox)) {
@@ -206,7 +206,7 @@ namespace eDream.GUI {
             }
             results = searchUtils.SearchEntriesTags(dreamEntries, tags,
                 checkChildTags.Checked, searchType);
-            lastSearchText = String.Join(", ", tags);
+            lastSearchText = string.Join(", ", tags);
             this.searchType = ESearchType.tagsSearch;
             if (OnSearchCompleted != null) {
                 OnSearchCompleted(this, new EventArgs());
@@ -242,7 +242,7 @@ namespace eDream.GUI {
         /// <param name="e"></param>
         private void CloseWindow(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Escape) {
-                this.Close();
+                Close();
             }
         }
 
@@ -260,7 +260,7 @@ namespace eDream.GUI {
                 return;
             }
             e.Cancel = true;
-            this.Visible = false;
+            Visible = false;
         }
 
         /// <summary>

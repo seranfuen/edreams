@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -31,7 +31,7 @@ namespace eDream.program {
     /// usually clarifying or specifying what type of dream the main tag
     /// represents.
     /// </summary>
-    class DreamChildTag : DreamTag {
+    public class DreamChildTag : DreamTag {
 
         /// <summary>
         /// The parent tag name
@@ -43,8 +43,8 @@ namespace eDream.program {
         /// <param name="tagName">The name given to the tag</param>
         /// <param name="parentTagName">The name of its parent tag</param>
         public DreamChildTag(string tagName, string parentTagName) {
-            this.TagName = tagName;
-            this.ParentTagName = parentTagName;
+            TagName = tagName;
+            ParentTagName = parentTagName;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace eDream.program {
         /// </summary>
         public string ParentTagName {
             set {
-                this.parentTagName = StringUtils.CapitalizeString(value);
+                parentTagName = StringUtils.CapitalizeString(value);
             }
             get {
                 return parentTagName;

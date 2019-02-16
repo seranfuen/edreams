@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -32,7 +32,7 @@ namespace eDream.program {
     /// child tags that clarify or specify the meaning or scope of the main
     /// tag
     /// </summary>
-    class DreamMainTag : DreamTag {
+    public class DreamMainTag : DreamTag {
         /// <summary>
         /// A list of the child tags belonging to the parent -main- tag
         /// </summary>
@@ -43,7 +43,7 @@ namespace eDream.program {
         /// </summary>
         /// <param name="tagName">Name given to the tag</param>
         public DreamMainTag(string tagName) {
-            this.TagName = tagName;
+            TagName = tagName;
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace eDream.program {
             if (HasChildTag(childTagName)) {
                 return false;
             }
-            childTags.Add(new DreamChildTag(childTagName, this.TagName));
+            childTags.Add(new DreamChildTag(childTagName, TagName));
             return true;
         }
 
@@ -78,7 +78,7 @@ namespace eDream.program {
         /// <returns></returns>
         public bool HasChildTag(string childTagName) {
             for (int i = 0; i < childTags.Count; i++) {
-                if (String.Compare(childTagName, childTags[i].TagName, true) 
+                if (string.Compare(childTagName, childTags[i].TagName, true) 
                     == 0) {
                         return true;
                 }

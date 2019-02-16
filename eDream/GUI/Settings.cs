@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -76,8 +76,8 @@ namespace eDream.GUI {
         public Settings(EvilTools.Settings settings) {
             this.settings = settings;
             InitializeComponent();
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.KeyDown += new KeyEventHandler(CloseForm);
+            StartPosition = FormStartPosition.CenterScreen;
+            KeyDown += new KeyEventHandler(CloseForm);
             SetOriginalSettings();
         }
 
@@ -85,14 +85,14 @@ namespace eDream.GUI {
         /// Set the elements of the dialog to match the current settings
         /// </summary>
         private void SetOriginalSettings() {
-            if (String.Compare(settings.GetValue(eDreams.loadLastDBSetting),
+            if (string.Compare(settings.GetValue(eDreams.loadLastDBSetting),
                 trueStr, true) == 0) {
                 checkLoadLastDB.Checked = true;
             }
             else {
                 checkLoadLastDB.Checked = false;
             }
-            if (String.Compare(settings.GetValue(eDreams.showWelcomeSetting),
+            if (string.Compare(settings.GetValue(eDreams.showWelcomeSetting),
                 trueStr, true) == 0) {
                 checkShowWelcomeWindow.Checked = true;
             }
@@ -127,18 +127,18 @@ namespace eDream.GUI {
                 value = falseStr;
             }
             settings.ChangeValue(eDreams.showWelcomeSetting, value);
-            this.result = enumResult.Changed;
-            this.Dispose();
+            result = enumResult.Changed;
+            Dispose();
         }
 
         private void button2_Click(object sender, EventArgs e) {
             result = enumResult.Cancelled;
-            this.Dispose();
+            Dispose();
         }
 
         private void CloseForm(object sender, KeyEventArgs e) {
             if (e.KeyData == Keys.Escape) {
-                this.Dispose();
+                Dispose();
             }
         }
 

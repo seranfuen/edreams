@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -29,7 +29,7 @@ namespace eDream.program {
     /// This class represents a tag without any children or stats methods 
     /// associated with it
     /// </summary>
-    class DreamTag {
+    public class DreamTag {
         protected string tagName;
         /// <summary>
         /// The tag name. It is always capitalized (first character set to
@@ -37,8 +37,8 @@ namespace eDream.program {
         /// </summary>
         public string TagName {
             set {
-                if (String.IsNullOrWhiteSpace(value)) {
-                    value = String.Empty;
+                if (string.IsNullOrWhiteSpace(value)) {
+                    value = string.Empty;
                 }
                 else {
                    value = StringUtils.CapitalizeString(value);

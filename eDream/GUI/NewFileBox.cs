@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -87,7 +87,7 @@ namespace eDream.GUI {
         /// <param name="e"></param>
         private void cancelButton_Click(object sender, EventArgs e) {
             action = EAction.Cancel;
-            this.Close();
+            Close();
         }
 
 
@@ -122,7 +122,7 @@ namespace eDream.GUI {
         private void createButton_Click(object sender, EventArgs e) {
             NewFile = newFileText.Text;
             if (NewFile.Length < 4 || 
-                String.Compare(NewFile.Substring(NewFile.Length-4), extension, 
+                string.Compare(NewFile.Substring(NewFile.Length-4), extension, 
                 true) != 0) {
                 NewFile = NewFile + extension;
             }
@@ -141,14 +141,14 @@ namespace eDream.GUI {
                     " already exists. Do you wish to overwrite it?", 
                 "Overwrite file?", MessageBoxButtons.YesNo, 
                 MessageBoxIcon.Exclamation);
-                if (res == System.Windows.Forms.DialogResult.No) {
+                if (res == DialogResult.No) {
                     return;
                 }
             }
             XMLWriter writer = new XMLWriter();
             if (writer.CreateFile(Folder + "\\" + NewFile)) {
                 action = EAction.Created;
-                this.Close();
+                Close();
             }
         }
 

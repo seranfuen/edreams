@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -53,7 +53,7 @@ namespace eDream.GUI {
         public DreamsStatisticsShow(DreamTagStatistics stats) {
             InitializeComponent();
             this.stats = stats;
-            this.StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.CenterScreen;
             SetTableData(GenerateData(stats.TagStatistics));
             DisplayStatisticsLabel(stats.TotalEntries, stats.TotalDays);
         }
@@ -64,7 +64,7 @@ namespace eDream.GUI {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e) {
-            this.Dispose();
+            Dispose();
         }
 
         /// <summary>
@@ -74,10 +74,10 @@ namespace eDream.GUI {
         /// <param name="totalEntries">The number of total entries</param>
         /// <param name="totalDays">The number of total days</param>
         private void DisplayStatisticsLabel(int totalEntries, int totalDays) {
-            string str = String.Format("There are {0} dreams in {1} days",
+            string str = string.Format("There are {0} dreams in {1} days",
                 totalEntries, totalDays);
             if (totalDays > 0)
-                str += String.Format(" ({0} dreams/day)", ((float)totalEntries/
+                str += string.Format(" ({0} dreams/day)", ((float)totalEntries/
                     (float)totalDays).ToString("0.00"));    
             totalDreamsLabel.Text = str;
         }
@@ -150,13 +150,13 @@ namespace eDream.GUI {
                 statsTable.Columns[2].HeaderText = "% of dreams";
                 statsTable.Columns[0].ReadOnly = true;
                 statsTable.Columns[0].SortMode =
-                    System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+                    DataGridViewColumnSortMode.Automatic;
                 statsTable.Columns[1].ReadOnly = true;
                 statsTable.Columns[1].SortMode =
-                    System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+                    DataGridViewColumnSortMode.Automatic;
                 statsTable.Columns[2].ReadOnly = true;
                 statsTable.Columns[2].SortMode =
-                    System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+                    DataGridViewColumnSortMode.Automatic;
             }
             catch (Exception e) {
                 Console.WriteLine("<<DEBUG>>\n Error in SetColumns():\n   " +

@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -46,10 +46,10 @@ namespace eDream.libs {
         /// entries</param>
         /// <returns></returns>
         public List<DreamEntry> SearchEntriesText(List<DreamEntry> entries,
-            String searchFor) {
+            string searchFor) {
                 List<DreamEntry> results = new List<DreamEntry>();
                 for (int i = 0; i < entries.Count; i++) {
-                    if (entries[i].SearchTextFor(searchFor, true)) {
+                    if (entries[i].DreamTextContains(searchFor)) {
                         results.Add(entries[i]);
                     }
                 }
@@ -90,7 +90,7 @@ namespace eDream.libs {
             List<DreamEntry> results = new List<DreamEntry>();
             DateRangeSort sorter = new DateRangeSort(from, to);
             for (int i = 0; i < entries.Count; i++) {
-                if (sorter.EvaluateDate(entries[i].GetDate())) {
+                if (sorter.EvaluateDate(entries[i].Date)) {
                     results.Add(entries[i]);
                 }
             }
@@ -108,7 +108,7 @@ namespace eDream.libs {
             List<DreamEntry> results = new List<DreamEntry>();
             DateRangeSort sorter = new DateRangeSort(day);
             for (int i = 0; i < entries.Count; i++) {
-                if (sorter.EvaluateDate(entries[i].GetDate())) {
+                if (sorter.EvaluateDate(entries[i].Date)) {
                     results.Add(entries[i]);
                 }
             }
@@ -197,12 +197,12 @@ namespace eDream.libs {
                 for (int i = 0; i < mainTags.Count; i++) {
                     // Find if among each main tag a tag in the list is found
                     for (int j = 0; j < tag.Length; j++) {
-                        if (String.IsNullOrWhiteSpace(tag[j])) {
+                        if (string.IsNullOrWhiteSpace(tag[j])) {
                             continue;
                         }
-                        if (String.Compare(tag[j], mainTags[i].TagName, true) 
+                        if (string.Compare(tag[j], mainTags[i].TagName, true) 
                             == 0) {
-                                tag[j] = String.Empty;
+                                tag[j] = string.Empty;
                         }
                     }
                     // If child tags also included, search them
@@ -210,12 +210,12 @@ namespace eDream.libs {
                         List<DreamChildTag> childTags = mainTags[i].ChildTags;
                         for (int j = 0; j < childTags.Count; j++) {
                             for (int k = 0; k < tag.Length; k++) {
-                                if (String.IsNullOrWhiteSpace(tag[k])) {
+                                if (string.IsNullOrWhiteSpace(tag[k])) {
                                     continue;
                                 }
-                                if (String.Compare(tag[k], childTags[j].TagName,
+                                if (string.Compare(tag[k], childTags[j].TagName,
                                     true) == 0) {
-                                        tag[k] = String.Empty;
+                                        tag[k] = string.Empty;
                                 }
                             }
                         }
@@ -243,7 +243,7 @@ namespace eDream.libs {
                 List<DreamMainTag> mainTags = entry.GetTagsAsList();
                 for (int i = 0; i < mainTags.Count; i++) {
                     for (int j = 0; j < tags.Length; j++) {
-                        if (String.Compare(tags[j], mainTags[i].TagName,
+                        if (string.Compare(tags[j], mainTags[i].TagName,
                             true) == 0) {
                                 return true;
                         }
@@ -253,7 +253,7 @@ namespace eDream.libs {
                         List<DreamChildTag> childTags = mainTags[i].ChildTags;
                         for (int j = 0; j < childTags.Count; j++) {
                             for (int k = 0; k < tags.Length; k++) {
-                                if (String.Compare(tags[k], childTags[j].TagName,
+                                if (string.Compare(tags[k], childTags[j].TagName,
                                     true) == 0) {
                                         return true;
                                 }
@@ -275,7 +275,7 @@ namespace eDream.libs {
         private int ToFind(string[] tags) {
             int counter = 0;
             for (int i = 0; i < tags.Length; i++) {
-                if (!String.IsNullOrWhiteSpace(tags[i])) {
+                if (!string.IsNullOrWhiteSpace(tags[i])) {
                     counter++;
                 }
             }

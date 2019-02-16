@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -102,7 +102,7 @@ namespace eDream.program {
         /// <returns>Number of times it has appeared or -1 if not found</returns>
         public int GetChildTagCount(string childName) {
             DreamChildStatTag theTag = GetChildStatTag(childName);
-            return theTag == null ? -1 : theTag.TagCount;
+            return theTag?.TagCount ?? -1;
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace eDream.program {
         /// <returns>Null if not found, or the DreamChildStatTag object</returns>
         private DreamChildStatTag GetChildStatTag(string childTag) {
              for (int i = 0; i < childTags.Count; i++) {
-                if (String.Compare(childTags[i].TagName, childTag, true) 
+                if (string.Compare(childTags[i].TagName, childTag, true) 
                     == 0) {
                     return childTags[i];
                 }

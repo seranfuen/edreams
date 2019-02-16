@@ -1,7 +1,7 @@
 ﻿/****************************************************************************
  * eDreams: a dream diary application
  * Author: Sergio Ángel Verbo
- * Copyright © 2012, Sergio Ángel Verbo
+ * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
     This file is part of eDreams.
@@ -98,16 +98,16 @@ namespace eDream.libs {
             List<DreamEntry> dreamEntries = new List<DreamEntry>();
             try {
                 XMLReader = new XmlTextReader(filename);
-                string text = String.Empty;
-                string date = String.Empty;
-                string tags = String.Empty;
+                string text = string.Empty;
+                string date = string.Empty;
+                string tags = string.Empty;
                 while (XMLReader.Read()) {
                     // If entry node opening, clear text, date and tags
                     if (XMLReader.NodeType == XmlNodeType.Element &&
                     XMLReader.Name == XMLConstants.entry_node) {
-                        text = String.Empty;
-                        date = String.Empty;
-                        tags = String.Empty;
+                        text = string.Empty;
+                        date = string.Empty;
+                        tags = string.Empty;
                     }
                     /* Check if text, tag or date nodes are opening and read
                      * their value to the variables
@@ -129,13 +129,13 @@ namespace eDream.libs {
                     // When entry node closes, create new dream entry
                     else if (XMLReader.NodeType == XmlNodeType.EndElement &&
                         XMLReader.Name == XMLConstants.entry_node) {
-                        dreamEntries.Add(new DreamEntry(date, tags, text));
+                        dreamEntries.Add(new DreamEntry(DateTime.Parse(date), tags, text));
                     }
                 }
                 isValid = true;
             }
             catch (Exception e) {
-                System.Console.WriteLine("<<Debug>>\n\n" + e.Message);
+                Console.WriteLine("<<Debug>>\n\n" + e.Message);
                 isValid = false;
                 dreamEntries = new List<DreamEntry>(); // if exception return empty list
             }
