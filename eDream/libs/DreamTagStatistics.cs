@@ -213,7 +213,7 @@ namespace eDream.libs {
             totalDays = 0;
             // Days are considered valid if they contain at least one entry
             for (int i = 0; i < dayList.Count; i++) {
-                if (dayList[i].GetNumberEntries() > 0) {
+                if (dayList[i].Count > 0) {
                     totalDays++;
                 }
             }

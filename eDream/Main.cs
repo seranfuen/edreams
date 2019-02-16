@@ -239,7 +239,7 @@ namespace eDream
              * Therefore we will only count valid elements
              */ 
             for (int i = 0; i < DayList.Count; i++) {
-                if (DayList[i].GetNumberEntries() > 0) {
+                if (DayList[i].Count > 0) {
                     DayListCount++;
                 }
             }

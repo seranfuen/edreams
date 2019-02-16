@@ -19,45 +19,29 @@
     You should have received a copy of the GNU General Public License
     along with eDreams.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.]
 ****************************************************************************/
-using System;
+
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using eDream.program;
 
-namespace eDream.libs {
+namespace eDream.libs
+{
     /// <summary>
-    /// Create a "calendar", a list of DreamDayList objects that represent
-    /// an individual date
+    ///     Create a "calendar", a list of DreamDayList objects that represent
+    ///     an individual date
     /// </summary>
-    class DreamCalendarCreator {
-        /// <summary>
-        /// This function parses a list of dream entries, creating a list of
-        /// DreamDayList that represents a particular date. Each object
-        /// representing a date will contain the dream entries that correspond
-        /// to that date
-        /// </summary>
-        public static List<DreamDayList> GetDreamDayList(List<DreamEntry> entries) {
-            List<DreamDayList> dayList = new List<DreamDayList>();
-            bool found;
-            for (int i = 0; i < entries.Count; i++) {
-                DreamEntry theEntry = entries[i];
-                found = false;
-                if (theEntry.GetIfValid()) {
-                    // Find an already existing date
-                    for (int j = 0; j < dayList.Count; j++) {
-                        if (dayList[j].IsSameDate(theEntry.Date)) {
-                            found = true;
-                            dayList[j].AddDreamEntry(theEntry);
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        dayList.Add(new DreamDayList(theEntry.Date, 
-                            theEntry));
-                    }
-                }
-            }
-            return dayList;
-        }
+    public class DreamCalendarCreator
+    {
+        public static List<DreamDayList> GetDreamDayList(List<DreamEntry> entries)
+        {
+            var query =
+                from entry in entries
+                where entry.GetIfValid()
+                group entry by entry.Date
+                into g
+                select g;
+
+            return query.Select(g => new DreamDayList(g.Key, g.ToList())).ToList();
+         }
     }
 }
