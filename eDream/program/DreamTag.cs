@@ -19,35 +19,45 @@
     You should have received a copy of the GNU General Public License
     along with eDreams.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.]
 ****************************************************************************/
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 using EvilTools;
 
-namespace eDream.program {
+namespace eDream.program
+{
     /// <summary>
-    /// This class represents a tag without any children or stats methods 
-    /// associated with it
+    ///     This class represents a tag without any children or stats methods
+    ///     associated with it
     /// </summary>
-    public class DreamTag {
-        protected string tagName;
-        /// <summary>
-        /// The tag name. It is always capitalized (first character set to
-        /// upper case)
-        /// </summary>
-        public string TagName {
-            set {
-                if (string.IsNullOrWhiteSpace(value)) {
-                    value = string.Empty;
-                }
-                else {
-                   value = StringUtils.CapitalizeString(value);
-                }
-                tagName = value;
-            }
-            get {
-                return tagName;
-            }
+    public abstract class DreamTag
+    {
+        protected DreamTag(string tagName)
+        {
+            Tag = string.IsNullOrWhiteSpace(tagName) ? string.Empty : StringUtils.CapitalizeString(tagName);
+        }
+
+        public string Tag { get; }
+
+        protected bool Equals(DreamTag other)
+        {
+            return string.Equals(Tag, other.Tag, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((DreamTag) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Tag != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(Tag) : 0;
+        }
+
+        public override string ToString()
+        {
+            return Tag;
         }
     }
 }

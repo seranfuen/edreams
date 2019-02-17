@@ -60,7 +60,7 @@ namespace eDream.program {
             }
         }
 
-        public DreamMainStatTag(string tagName) : base(tagName) { }
+        public DreamMainStatTag(string tag) : base(tag) { }
 
         /// <summary>
         /// Increments the tag count by one
@@ -84,7 +84,7 @@ namespace eDream.program {
                 DreamChildStatTag childTag = GetChildStatTag(childName);
                 if (childTag == null) {
                     DreamChildStatTag newTag = new DreamChildStatTag(childName,
-                        TagName);
+                        Tag);
                     // Increase count since adding one means it was already found
                     newTag.IncreaseCount();
                     childTags.Add(newTag);
@@ -127,7 +127,7 @@ namespace eDream.program {
             int comp = tagCount.CompareTo(o.TagCount);
             // If tag cont is the same, sort them by name
             if (comp == 0) {
-                return -tagName.CompareTo(o.tagName);
+                return -Tag.CompareTo(o.Tag);
             }
             return comp;
         }
@@ -141,7 +141,7 @@ namespace eDream.program {
         /// <returns>Null if not found, or the DreamChildStatTag object</returns>
         private DreamChildStatTag GetChildStatTag(string childTag) {
              for (int i = 0; i < childTags.Count; i++) {
-                if (string.Compare(childTags[i].TagName, childTag, true) 
+                if (string.Compare(childTags[i].Tag, childTag, true) 
                     == 0) {
                     return childTags[i];
                 }

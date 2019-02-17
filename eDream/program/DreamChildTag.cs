@@ -19,44 +19,19 @@
     You should have received a copy of the GNU General Public License
     along with eDreams.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.]
 ****************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Text;
-using eDream.libs;
-using EvilTools;
 
-namespace eDream.program {
+namespace eDream.program
+{
+    /// <inheritdoc />
     /// <summary>
-    /// DreamChildTag objects represent child/subtags belonging to a main tag,
-    /// usually clarifying or specifying what type of dream the main tag
-    /// represents.
+    ///     DreamChildTag objects represent child/subtags belonging to a main tag,
+    ///     usually clarifying or specifying what type of dream the main tag
+    ///     represents.
     /// </summary>
-    public class DreamChildTag : DreamTag {
-
-        /// <summary>
-        /// The parent tag name
-        /// </summary>
-        protected string parentTagName;
-
-        /// <summary>
-        /// </summary>
-        /// <param name="tagName">The name given to the tag</param>
-        /// <param name="parentTagName">The name of its parent tag</param>
-        public DreamChildTag(string tagName, string parentTagName) {
-            TagName = tagName;
-            ParentTagName = parentTagName;
-        }
-
-        /// <summary>
-        /// The name of the parent tag where the child tag is contained
-        /// </summary>
-        public string ParentTagName {
-            set {
-                parentTagName = StringUtils.CapitalizeString(value);
-            }
-            get {
-                return parentTagName;
-            }
+    public class DreamChildTag : DreamTag
+    {
+        public DreamChildTag(string tag) : base(tag)
+        {
         }
     }
 }

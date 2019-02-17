@@ -173,7 +173,7 @@ namespace eDream.GUI {
             }
             for (int i = 0; i < statTags.Count; i++) {
                 tableData.Add(new TagTableData {
-                    Tag = statTags[i].TagName,
+                    Tag = statTags[i].Tag,
                     Count = statTags[i].TagCount
                 });
                 if (showingChildTags) {
@@ -182,7 +182,7 @@ namespace eDream.GUI {
                     for (int j = 0; j < childTags.Count; j++) {
                         tableData.Add(new TagTableData {
                             Tag = EvilTools.StringUtils.GenerateSpaces(childTab)
-                            + childTags[j].TagName, Count = childTags[j].TagCount
+                            + childTags[j].Tag, Count = childTags[j].TagCount
                         });
                     }
                 }
@@ -202,9 +202,9 @@ namespace eDream.GUI {
             List<TagTableData> finds = new List<TagTableData>();
             search = search.ToLower();
                 for (int i = 0; i < stats.Count; i++) {
-                    if (stats[i].TagName.ToLower().IndexOf(search) != -1) {
+                    if (stats[i].Tag.ToLower().IndexOf(search) != -1) {
                         finds.Add(new TagTableData() {
-                            Tag = stats[i].TagName,
+                            Tag = stats[i].Tag,
                             Count = stats[i].TagCount
                         });
                     }
@@ -213,7 +213,7 @@ namespace eDream.GUI {
                         List<DreamChildStatTag> childTags = statTags[i].ChildTags;
                         for (int j = 0; j < childTags.Count; j++) {
                             finds.Add(new TagTableData {
-                                Tag = childTab + childTags[j].TagName,
+                                Tag = childTab + childTags[j].Tag,
                                 Count = childTags[j].TagCount
                             });
                         }
@@ -354,10 +354,10 @@ namespace eDream.GUI {
             string parent = string.Empty;
             for (int i = 0; i < statTags.Count; i++) {
                 for (int j = 0; j < statTags[i].ChildTags.Count; j++) {
-                    if (string.Compare(statTags[i].ChildTags[j].TagName,
+                    if (string.Compare(statTags[i].ChildTags[j].Tag,
                         childTag, true) == 0) {
                             if (maxCount < statTags[i].TagCount) {
-                                parent = statTags[i].TagName;
+                                parent = statTags[i].Tag;
                                 maxCount = statTags[i].TagCount;
                             }
                     }
@@ -390,8 +390,8 @@ namespace eDream.GUI {
             // If it is child
             // If parent tag can't be found, add the child tag with the parent 
             if (!MatchMainTag(parent)) {
-                WriteTag(parent + " " + DreamTagParser.openChildTags +
-                    tag + DreamTagParser.closeChildTags);
+                WriteTag(parent + " " + DreamTagTokens.OpenChildTags +
+                    tag + DreamTagTokens.CloseChildTags);
                 return;
             }
             // If parent found check if it contains no child tags: add them
@@ -399,8 +399,8 @@ namespace eDream.GUI {
                 RegexOptions.IgnoreCase)) {
                     TagText = 
                         Regex.Replace(TagText, @"\b\s*" + parent + @"\s*",
-                        parent + " " + DreamTagParser.openChildTags + tag +
-                        DreamTagParser.closeChildTags, RegexOptions.IgnoreCase);
+                        parent + " " + DreamTagTokens.OpenChildTags + tag +
+                        DreamTagTokens.CloseChildTags, RegexOptions.IgnoreCase);
                     return;
             }
 
@@ -418,12 +418,12 @@ namespace eDream.GUI {
                 return;
             }
             string nTag = mTag.Value.Substring(0, 
-                mTag.Value.LastIndexOf(DreamTagParser.closeChildTags)).Trim();
+                mTag.Value.LastIndexOf(DreamTagTokens.CloseChildTags)).Trim();
             string sep = nTag[nTag.Length - 1] == 
-                DreamTagParser.mainTagSeparator ? " " : 
-                char.ToString(DreamTagParser.mainTagSeparator) + " ";
+                DreamTagTokens.MainTagSeparator ? " " : 
+                char.ToString(DreamTagTokens.MainTagSeparator) + " ";
             TagText = Regex.Replace(TagText, Regex.Escape(mTag.Value),
-                nTag+ sep + tag + char.ToString(DreamTagParser.closeChildTags),
+                nTag+ sep + tag + char.ToString(DreamTagTokens.CloseChildTags),
                 RegexOptions.IgnoreCase);
         }
 
@@ -435,8 +435,8 @@ namespace eDream.GUI {
             string sep = " ";
             if (TagText.Length > 1 && 
                 TagText[TagText.Length - 1] != 
-                DreamTagParser.mainTagSeparator) {
-                    sep = char.ToString(DreamTagParser.mainTagSeparator) + " ";
+                DreamTagTokens.MainTagSeparator) {
+                    sep = char.ToString(DreamTagTokens.MainTagSeparator) + " ";
             }
             TagText += sep + str;
             TagText = TagText.Trim();

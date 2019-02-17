@@ -125,7 +125,7 @@ namespace eDream.libs {
                     // Search for a tentative position of an already existing list
                     int pos = IsInList(tagStatistics, iTags[j]);
                     if (pos == -1) { // Not found, add new stat tag
-                        tagStatistics.Add(new DreamMainStatTag(iTags[j].TagName));
+                        tagStatistics.Add(new DreamMainStatTag(iTags[j].Tag));
                     }
                     else { // Found, set mainTagPos to the pos found
                         mainTagPos = pos;
@@ -134,7 +134,7 @@ namespace eDream.libs {
                     // Parse all its child tags
                     List<DreamChildTag> iChildTags = iTags[j].ChildTags;
                     for (int k = 0; k < iChildTags.Count; k++) {
-                        tagStatistics[mainTagPos].IncreaseChildCount(iChildTags[k].TagName);
+                        tagStatistics[mainTagPos].IncreaseChildCount(iChildTags[k].Tag);
                     }
                 }
             }
@@ -152,7 +152,7 @@ namespace eDream.libs {
         public string GenerateStatisticsStr() {
             string str = RTFHeader;
             for (int i = 0; i < tagStatistics.Count; i++) {
-                str += boldStart + tagStatistics[i].TagName +
+                str += boldStart + tagStatistics[i].Tag +
                     boldEnd + "  —  " +
                     tagStatistics[i].TagCount + "  (" + 
                     StringUtils.GeneratePercentageAsStr(tagStatistics[i].TagCount, TotalEntries) + 
@@ -160,7 +160,7 @@ namespace eDream.libs {
                 List<DreamChildStatTag> childTags = tagStatistics[i].ChildTags;
                 for (int j = 0; j < childTags.Count; j++) {
                     str += StringUtils.GenerateSpaces(leftTab) +
-                        childTags[j].TagName + "  —  " +
+                        childTags[j].Tag + "  —  " +
                         childTags[j].TagCount + "  (" +
                         StringUtils.GeneratePercentageAsStr(childTags[j].TagCount,
                         childTags.Count) + "%)" + lineBreak;
@@ -177,8 +177,8 @@ namespace eDream.libs {
         public string[] GetTagList() {
             string[] tagList = new string[tagStatistics.Count];
             for (int i = 0; i < tagStatistics.Count; i++) {
-                if (!string.IsNullOrWhiteSpace(tagStatistics[i].TagName)) {
-                    tagList[i] = tagStatistics[i].TagName;
+                if (!string.IsNullOrWhiteSpace(tagStatistics[i].Tag)) {
+                    tagList[i] = tagStatistics[i].Tag;
                 }
             }
             return tagList;
@@ -198,8 +198,8 @@ namespace eDream.libs {
                 return -1;
             }
             for (int i = 0; i < list.Count; i++) {
-                if (list[i].TagName.ToLower() ==
-                    element.TagName.ToLower()) {
+                if (list[i].Tag.ToLower() ==
+                    element.Tag.ToLower()) {
                     return i;
                 }
             }

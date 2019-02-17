@@ -21,64 +21,56 @@
 ****************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace eDream.program {
+namespace eDream.program
+{
     /// <summary>
-    /// Represents a child tag (a tag that is contained in a main tag but which
-    /// cannot contain itself any child tags) used for statistics purposes, so
-    /// a counter of how many times it has appeared is kept
+    ///     Represents a child tag (a tag that is contained in a main tag but which
+    ///     cannot contain itself any child tags) used for statistics purposes, so
+    ///     a counter of how many times it has appeared is kept
     /// </summary>
-    class DreamChildStatTag : DreamChildTag, IComparable<DreamChildStatTag> {
-
+    internal class DreamChildStatTag : DreamChildTag, IComparable<DreamChildStatTag>
+    {
         /// <summary>
-        /// Times it has appeared
+        ///     Times it has appeared
         /// </summary>
-        private int tagCount = 0;
+        private int tagCount;
 
-        public DreamChildStatTag(string tagName, string parentName) : 
-            base(tagName, parentName) { }
-
-        /// <summary>
-        /// The number of times the tag has been found
-        /// </summary>
-        public int TagCount {
-            get {
-                return tagCount >= 0 ? tagCount : 0;
-            }
+        public DreamChildStatTag(string tag, string parentName) :
+            base(tag)
+        {
         }
 
         /// <summary>
-        /// Increments the tag count by one
+        ///     The number of times the tag has been found
         /// </summary>
-        public void IncreaseCount() {
-            if (tagCount < 0) {
-                tagCount = 0;
-            }
-            tagCount++;
-        }
+        public int TagCount => tagCount >= 0 ? tagCount : 0;
 
 
         /// <summary>
-        /// A method implemented by the IComparer interface, it compares the
-        /// counter of two DreamChildStatTag objects and returns which is 
-        /// larger
+        ///     A method implemented by the IComparer interface, it compares the
+        ///     counter of two DreamChildStatTag objects and returns which is
+        ///     larger
         /// </summary>
         /// <param name="o">A DreamChildStatTag to compare to</param>
         /// <returns></returns>
-        public int CompareTo(DreamChildStatTag o) {
-            if (o == null) {
-                return 0;
-            }
-            int comp = tagCount.CompareTo(o.TagCount);
+        public int CompareTo(DreamChildStatTag o)
+        {
+            if (o == null) return 0;
+            var comp = tagCount.CompareTo(o.TagCount);
             // If tag cont is the same, sort them by name
-            if (comp == 0) {
-                return -tagName.CompareTo(o.tagName);
-            }
-            else {
-                return comp;
-            }
+            if (comp == 0)
+                return -Tag.CompareTo(o.Tag);
+            return comp;
+        }
+
+        /// <summary>
+        ///     Increments the tag count by one
+        /// </summary>
+        public void IncreaseCount()
+        {
+            if (tagCount < 0) tagCount = 0;
+            tagCount++;
         }
     }
 }

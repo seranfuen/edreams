@@ -93,13 +93,13 @@ namespace eDream.GUI {
                 return tableData;
             }
             for (int i = 0; i < statTags.Count; i++) {
-                tableData.Add(new TagStatTableData(statTags[i].TagName, 
+                tableData.Add(new TagStatTableData(statTags[i].Tag, 
                     statTags[i].TagCount, stats.TotalEntries, false));
                 // Generate child tags too
                 if (showChildTags) {
                     List<DreamChildStatTag> childTags = statTags[i].ChildTags;
                     for (int j = 0; j < childTags.Count; j++) {
-                        tableData.Add(new TagStatTableData(childTags[j].TagName,
+                        tableData.Add(new TagStatTableData(childTags[j].Tag,
                             childTags[j].TagCount, stats.TotalEntries, true));
                     }
                 }

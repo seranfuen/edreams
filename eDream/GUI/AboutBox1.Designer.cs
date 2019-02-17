@@ -108,8 +108,8 @@
             this.copyrightBox.Name = "copyrightBox";
             this.copyrightBox.Size = new System.Drawing.Size(253, 70);
             this.copyrightBox.TabIndex = 25;
-            this.copyrightBox.Text = "  Copyright © 2012, Sergio Ángel Verbo\n\n  Published under GNU License see  \n  htt" +
-                "p://www.gnu.org/licenses/";
+            this.copyrightBox.Text = "  Copyright © 2012-2019, Sergio Ángel Verbo\n\n  Published under GNU License see  \n" +
+    "  http://www.gnu.org/licenses/";
             // 
             // okButton
             // 

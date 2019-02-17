@@ -196,7 +196,7 @@ namespace eDream.GUI {
         /// <param name="e"></param>
         private void findTagsButton_Click(object sender, EventArgs e) {
             string[] tags = 
-                tagsTextBox.Text.Split(DreamTagParser.mainTagSeparator);
+                tagsTextBox.Text.Split(DreamTagTokens.MainTagSeparator);
             DreamSearchUtils.TagSearchType searchType;
             if (orRadio.Checked) {
                 searchType = DreamSearchUtils.TagSearchType.ORSearch;

@@ -200,7 +200,7 @@ namespace eDream.libs {
                         if (string.IsNullOrWhiteSpace(tag[j])) {
                             continue;
                         }
-                        if (string.Compare(tag[j], mainTags[i].TagName, true) 
+                        if (string.Compare(tag[j], mainTags[i].Tag, true) 
                             == 0) {
                                 tag[j] = string.Empty;
                         }
@@ -213,7 +213,7 @@ namespace eDream.libs {
                                 if (string.IsNullOrWhiteSpace(tag[k])) {
                                     continue;
                                 }
-                                if (string.Compare(tag[k], childTags[j].TagName,
+                                if (string.Compare(tag[k], childTags[j].Tag,
                                     true) == 0) {
                                         tag[k] = string.Empty;
                                 }
@@ -243,7 +243,7 @@ namespace eDream.libs {
                 List<DreamMainTag> mainTags = entry.GetTagsAsList();
                 for (int i = 0; i < mainTags.Count; i++) {
                     for (int j = 0; j < tags.Length; j++) {
-                        if (string.Compare(tags[j], mainTags[i].TagName,
+                        if (string.Compare(tags[j], mainTags[i].Tag,
                             true) == 0) {
                                 return true;
                         }
@@ -253,7 +253,7 @@ namespace eDream.libs {
                         List<DreamChildTag> childTags = mainTags[i].ChildTags;
                         for (int j = 0; j < childTags.Count; j++) {
                             for (int k = 0; k < tags.Length; k++) {
-                                if (string.Compare(tags[k], childTags[j].TagName,
+                                if (string.Compare(tags[k], childTags[j].Tag,
                                     true) == 0) {
                                         return true;
                                 }
