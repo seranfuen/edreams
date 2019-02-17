@@ -28,101 +28,21 @@ namespace eDream.libs
 {
     /// <summary>
     ///     Collection of static methods to parse tags from a string to tag objects
-    ///     and viceversa
+    ///     and vice-versa
     /// </summary>
     public static class DreamTagParser
     {
-        /// <summary>
-        ///     Converts a list of DreamMainTag objects to a string showing them
-        ///     as a list in the format tag1,tag2(childTag1;childTag2)
-        /// </summary>
-        /// <param name="tagList">a list of DreamMainTag objects</param>
-        /// <returns>A string showing the tags as a list</returns>
-        public static string TagsToString(List<DreamMainTag> tagList)
+        public static string TagsToString(IList<DreamMainTag> tagList)
         {
-            if (tagList == null || tagList.Count == 0) return string.Empty;
-            var mainTagsStr = new string[tagList.Count];
-            string[] childTagsStr;
-            for (var i = 0; i < tagList.Count; i++)
-            {
-                mainTagsStr[i] = tagList[i].Tag;
-                /* If there are child tags, append them to the main tag string */
-                if (tagList[i].ChildTags.Count <= 0) continue;
-
-                childTagsStr = new string[tagList[i].ChildTags.Count];
-                for (var j = 0; j < tagList[i].ChildTags.Count; j++)
-                    if (!string.IsNullOrEmpty(tagList[i].ChildTags[j].Tag))
-                        childTagsStr[j] = tagList[i].ChildTags[j].Tag;
-                mainTagsStr[i] = mainTagsStr[i] + " " + DreamTagTokens.OpenChildTags +
-                                 string.Join(char.ToString(DreamTagTokens.MainTagSeparator) + " ",
-                                     childTagsStr) + DreamTagTokens.CloseChildTags;
-            }
-
-            return string.Join(char.ToString(DreamTagTokens.MainTagSeparator) + " ",
-                mainTagsStr);
+            return new DreamTagStringBuilder(tagList).ToString();
         }
 
-        /// <summary>
-        ///     Converts a string representation of tags and child tags to a list
-        ///     of dream main tag objects
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static List<DreamMainTag> ParseStringToDreamTags(string str)
+        public static IList<DreamMainTag> ParseStringToDreamTags(string str)
         {
             if (str == null) throw new ArgumentNullException(nameof(str));
 
-            var tagList = new List<DreamMainTag>();
-            var mainTags = ExtractMainTags(str.Trim());
-
-            foreach (var tag in mainTags)
-            {
-                var childStart = tag.IndexOf(DreamTagTokens.OpenChildTags);
-                if (childStart == -1) childStart = tag.Length;
-                var mainTag = tag.Substring(0, childStart);
-                if (string.IsNullOrWhiteSpace(mainTag)) continue;
-
-                var newTag =
-                    new DreamMainTag(mainTag);
-                if (childStart < tag.Length)
-                {
-                    var childTags =
-                        ExtractChildTags(tag.Substring(childStart,
-                            tag.Length - childStart));
-                    foreach (var childTag in childTags)
-                        newTag.AddChildTag(new DreamChildTag(childTag));
-                }
-
-                tagList.Add(newTag);
-            }
-
-            return tagList;
-        }
-
-        private static IEnumerable<string> ExtractMainTags(string stringTagToExtract)
-        {
-            return new DreamTagStringExtractor(stringTagToExtract).Tags;
-        }
-
-        /// <summary>
-        ///     Returns a list with the child tags of a main tag
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns>
-        ///     A string list with the child tags or an empty one
-        ///     if there was an error
-        /// </returns>
-        private static IEnumerable<string> ExtractChildTags(string str)
-        {
-            var startPosition = str.IndexOf(DreamTagTokens.OpenChildTags);
-            var endPosition = str.IndexOf(DreamTagTokens.CloseChildTags);
-            if (endPosition == -1) endPosition = str.Length;
-            if (startPosition == -1 || !(startPosition < str.Length)) return new string[0];
-            var strings =
-                str.Substring(startPosition + 1, endPosition -
-                                                 startPosition - 1).Split(DreamTagTokens.MainTagSeparator);
-            for (var i = 0; i < strings.Length; i++) strings[i] = strings[i].Trim();
-            return strings;
+            var mainTags = new DreamTagStringExtractor(str.Trim()).Tags;
+            return new MainTagParser(mainTags).DreamTags;
         }
     }
 }

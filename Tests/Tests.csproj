@@ -65,7 +65,9 @@
     <Compile Include="Program\DreamEntryTests.cs" />
     <Compile Include="Program\DreamMainTagTests.cs" />
     <Compile Include="Program\DreamTagParserTests.cs" />
+    <Compile Include="Program\DreamTagStringBuilderTests.cs" />
     <Compile Include="Program\DreamTagStringExtractorTests.cs" />
+    <Compile Include="Program\MainTagParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

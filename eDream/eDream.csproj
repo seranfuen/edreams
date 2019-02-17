@@ -129,8 +129,10 @@
     <Compile Include="libs\DreamCalendarCreator.cs" />
     <Compile Include="libs\DreamSaveLoad.cs" />
     <Compile Include="libs\DreamTagStatistics.cs" />
+    <Compile Include="libs\DreamTagStringBuilder.cs" />
     <Compile Include="libs\DreamTagStringExtractor.cs" />
     <Compile Include="libs\DreamTagTokens.cs" />
+    <Compile Include="libs\MainTagParser.cs" />
     <Compile Include="libs\TagStatTableData.cs" />
     <Compile Include="libs\TagTableData.cs" />
     <Compile Include="Main.cs">
