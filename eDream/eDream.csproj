@@ -87,6 +87,7 @@
     <Compile Include="GUI\CreateTags.Designer.cs">
       <DependentUpon>CreateTags.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\DreamEntryViewModel.cs" />
     <Compile Include="GUI\DreamsStatisticsShow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,11 +100,11 @@
     <Compile Include="GUI\Individual Entry.Designer.cs">
       <DependentUpon>Individual Entry.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\NewEntry.cs">
+    <Compile Include="GUI\NewEntryForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\NewEntry.Designer.cs">
-      <DependentUpon>NewEntry.cs</DependentUpon>
+    <Compile Include="GUI\NewEntryForm.Designer.cs">
+      <DependentUpon>NewEntryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\NewFileBox.cs">
       <SubType>Form</SubType>
@@ -154,6 +155,7 @@
     <Compile Include="program\DreamMainStatTag.cs" />
     <Compile Include="program\DreamMainTag.cs" />
     <Compile Include="program\DreamTag.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestBringIntoViewEventArgs.cs" />
     <Compile Include="SystemEventHandler.cs" />
@@ -171,8 +173,8 @@
     <EmbeddedResource Include="GUI\Individual Entry.resx">
       <DependentUpon>Individual Entry.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\NewEntry.resx">
-      <DependentUpon>NewEntry.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\NewEntryForm.resx">
+      <DependentUpon>NewEntryForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\NewFileBox.resx">
       <DependentUpon>NewFileBox.cs</DependentUpon>
@@ -199,6 +201,7 @@
     </Compile>
     <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="Properties\DataSources\eDream.GUI.DreamEntryViewModel.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

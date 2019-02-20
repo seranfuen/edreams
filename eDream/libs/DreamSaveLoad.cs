@@ -189,7 +189,7 @@ namespace eDream.libs {
         /// valid database didn't have any entries
         /// </summary>
         public void LoadEntries() {
-            Thread loadT = new Thread(new ParameterizedThreadStart(StartOperation));
+            Thread loadT = new Thread(StartOperation);
             loadT.Start(operationType.Load);
         }
 
@@ -197,7 +197,7 @@ namespace eDream.libs {
         /// Save entries loaded to EntriesToXML to the currentFile path
         /// </summary>
         public void SaveEntries() {
-            Thread loadT = new Thread(new ParameterizedThreadStart(StartOperation));
+            Thread loadT = new Thread(StartOperation);
             loadT.Start(operationType.Save);
         }
 

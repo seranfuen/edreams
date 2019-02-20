@@ -19,149 +19,109 @@
     You should have received a copy of the GNU General Public License
     along with eDreams.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.]
 ****************************************************************************/
+
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using System.Text.RegularExpressions;
 using System.IO;
-using eDream.libs;
 using System.Media;
+using System.Windows.Forms;
+using eDream.libs;
 
-namespace eDream.GUI {
+namespace eDream.GUI
+{
     /// <summary>
-    /// Displays a window used to create a new database
+    ///     Displays a window used to create a new database
     /// </summary>
-    public partial class NewFileBox : Form {
-
-
-        private string Folder;
-        // Default new file
-        private string NewFile = "my_dreams.xml";
-        // The file extension
-        private const string extension = ".xml";
-        // Describes the action taken after the form is closed
-        public enum EAction {
+    public partial class NewFileBox : Form
+    {
+        public enum CreateFileAction
+        {
             Cancel,
             Created
         }
 
-        private EAction action = EAction.Cancel;
+        private const string Extension = ".xml";
 
-        /// <summary>
-        /// Gets the action (EAction enum) that has been taken by the user
-        /// </summary>
-        public EAction Action {
-            get {
-                return action;
-            }
-        }
+        private string _folder;
+        private string _newFile = "my_dreams.xml";
 
-        /// <summary>
-        /// Gets the path to the file the user wants to create
-        /// </summary>
-        public string File {
-            get {
-                return Folder + "\\" + NewFile;
-            }
-        }
-
-        /// <summary>
-        /// Create a new form to create a new eDream database
-        /// </summary>
-        public NewFileBox() {
+        public NewFileBox()
+        {
             InitializeComponent();
-            Folder = Application.StartupPath;
+            _folder = Application.StartupPath;
             chooseFolderDialog.Description = "Choose or create a new folder";
-            SetFolderText(Folder);
-            SetNewFileText(NewFile);
+            SetFolderText(_folder);
+            SetNewFileText(_newFile);
         }
 
-        /// <summary>
-        /// Cancel the form and do nothing
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void cancelButton_Click(object sender, EventArgs e) {
-            action = EAction.Cancel;
+        public CreateFileAction Action { get; private set; } = CreateFileAction.Cancel;
+
+        public string File => _folder + "\\" + _newFile;
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            Action = CreateFileAction.Cancel;
             Close();
         }
 
 
-        private void SetFolderText(string text) {
+        private void SetFolderText(string text)
+        {
             folderText.Text = text;
         }
 
-        private void SetNewFileText(string text) {
+        private void SetNewFileText(string text)
+        {
             newFileText.Text = text;
         }
 
-        /// <summary>
-        /// Choose a folder
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void chooseFolderButton_Click(object sender, EventArgs e) {
+        private void ChooseFolderButton_Click(object sender, EventArgs e)
+        {
             chooseFolderDialog.RootFolder = Environment.SpecialFolder.MyComputer;
             chooseFolderDialog.SelectedPath = Application.StartupPath;
-            DialogResult result = chooseFolderDialog.ShowDialog();
-            if (result == DialogResult.OK) {
-                Folder = chooseFolderDialog.SelectedPath;
-                SetFolderText(Folder);
-            }
+            if (chooseFolderDialog.ShowDialog() != DialogResult.OK) return;
+
+            _folder = chooseFolderDialog.SelectedPath;
+            SetFolderText(_folder);
         }
 
-        /// <summary>
-        /// Create new file
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void createButton_Click(object sender, EventArgs e) {
-            NewFile = newFileText.Text;
-            if (NewFile.Length < 4 || 
-                string.Compare(NewFile.Substring(NewFile.Length-4), extension, 
-                true) != 0) {
-                NewFile = NewFile + extension;
-            }
+        private void CreateButton_Click(object sender, EventArgs e)
+        {
+            _newFile = newFileText.Text;
+            if (_newFile.Length < 4 ||
+                string.Compare(_newFile.Substring(_newFile.Length - 4), Extension,
+                    true) != 0)
+                _newFile = _newFile + Extension;
             // Check if file name is valid
-            if (!CheckValidFile(NewFile)) {
+            if (!CheckValidFile(_newFile))
+            {
                 SystemSounds.Beep.Play();
                 MessageBox.Show("The file contains illegal characters", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                action = EAction.Cancel;
+                Action = CreateFileAction.Cancel;
                 return;
             }
+
             // If file already exists, prompt to ask if user wants to replace it
-            if (System.IO.File.Exists(Folder + "\\" + NewFile)) {
+            if (System.IO.File.Exists(_folder + "\\" + _newFile))
+            {
                 SystemSounds.Beep.Play();
-                DialogResult res = MessageBox.Show(this, NewFile +
-                    " already exists. Do you wish to overwrite it?", 
-                "Overwrite file?", MessageBoxButtons.YesNo, 
-                MessageBoxIcon.Exclamation);
-                if (res == DialogResult.No) {
-                    return;
-                }
+                var res = MessageBox.Show(this, _newFile +
+                                                " already exists. Do you wish to overwrite it?",
+                    "Overwrite file?", MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Exclamation);
+                if (res == DialogResult.No) return;
             }
-            XMLWriter writer = new XMLWriter();
-            if (writer.CreateFile(Folder + "\\" + NewFile)) {
-                action = EAction.Created;
+
+            var writer = new XMLWriter();
+            if (writer.CreateFile(_folder + "\\" + _newFile))
+            {
+                Action = CreateFileAction.Created;
                 Close();
             }
         }
-
-        /// <summary>
-        /// Check if the file has a correct name
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        private bool CheckValidFile(string fileName) {
-            if (fileName.IndexOfAny(Path.GetInvalidFileNameChars()) != -1) {
-                return false;
-            }
-            return true;
+        private static bool CheckValidFile(string fileName)
+        {
+            return fileName.IndexOfAny(Path.GetInvalidFileNameChars()) == -1;
         }
     }
 }

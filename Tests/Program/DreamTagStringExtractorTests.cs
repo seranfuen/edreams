@@ -10,13 +10,6 @@ namespace Tests.Program
     public class DreamTagStringExtractorTests
     {
         [Test]
-        public void Constructor_null_string_results_in_exception()
-        {
-            Action act = () => new DreamTagStringExtractor(null);
-            act.Should().ThrowExactly<ArgumentNullException>();
-        }
-
-        [Test]
         public void Constructor_empty_string_returns_empty_list()
         {
             var result = new DreamTagStringExtractor("").Tags;
@@ -24,10 +17,10 @@ namespace Tests.Program
         }
 
         [Test]
-        public void With_one_tag_returns_one_tag_exactly()
+        public void Constructor_null_string_results_in_exception()
         {
-            var result = new DreamTagStringExtractor("Friends ").Tags;
-            result.Single().Should().Be("Friends");
+            Action act = () => new DreamTagStringExtractor(null);
+            act.Should().ThrowExactly<ArgumentNullException>();
         }
 
         [Test]
@@ -45,10 +38,10 @@ namespace Tests.Program
         }
 
         [Test]
-        public void With_two_tags_returns_two_elements()
+        public void With_one_tag_returns_one_tag_exactly()
         {
-            var result = new DreamTagStringExtractor("Friends, Beach").Tags;
-            result.Should().HaveCount(2).And.Contain("Friends").And.Contain("Beach");
+            var result = new DreamTagStringExtractor("Friends ").Tags;
+            result.Single().Should().Be("Friends");
         }
 
         [Test]
@@ -56,6 +49,13 @@ namespace Tests.Program
         {
             var result = new DreamTagStringExtractor("Friends  (Pepe, John), Beach (Gandia)").Tags;
             result.Should().HaveCount(2).And.Contain("Friends  (Pepe, John)").And.Contain("Beach (Gandia)");
+        }
+
+        [Test]
+        public void With_two_tags_returns_two_elements()
+        {
+            var result = new DreamTagStringExtractor("Friends, Beach").Tags;
+            result.Should().HaveCount(2).And.Contain("Friends").And.Contain("Beach");
         }
     }
 }

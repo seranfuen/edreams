@@ -59,7 +59,7 @@
             this.chooseFolderButton.TabIndex = 2;
             this.chooseFolderButton.Text = "Choose folder";
             this.chooseFolderButton.UseVisualStyleBackColor = true;
-            this.chooseFolderButton.Click += new System.EventHandler(this.chooseFolderButton_Click);
+            this.chooseFolderButton.Click += new System.EventHandler(this.ChooseFolderButton_Click);
             // 
             // folderText
             // 
@@ -77,7 +77,7 @@
             this.createButton.TabIndex = 4;
             this.createButton.Text = "Create";
             this.createButton.UseVisualStyleBackColor = true;
-            this.createButton.Click += new System.EventHandler(this.createButton_Click);
+            this.createButton.Click += new System.EventHandler(this.CreateButton_Click);
             // 
             // cancelButton
             // 
@@ -88,7 +88,7 @@
             this.cancelButton.TabIndex = 5;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // label2
             // 

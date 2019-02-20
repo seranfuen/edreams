@@ -47,8 +47,8 @@ namespace eDream.libs {
         /// <returns></returns>
         public List<DreamEntry> SearchEntriesText(List<DreamEntry> entries,
             string searchFor) {
-                List<DreamEntry> results = new List<DreamEntry>();
-                for (int i = 0; i < entries.Count; i++) {
+                var results = new List<DreamEntry>();
+                for (var i = 0; i < entries.Count; i++) {
                     if (entries[i].DreamTextContains(searchFor)) {
                         results.Add(entries[i]);
                     }
@@ -87,9 +87,9 @@ namespace eDream.libs {
         /// <returns></returns>
         public List<DreamEntry>SearchEntriesDateRange(List<DreamEntry> entries,
             DateTime from, DateTime to) {
-            List<DreamEntry> results = new List<DreamEntry>();
-            DateRangeSort sorter = new DateRangeSort(from, to);
-            for (int i = 0; i < entries.Count; i++) {
+            var results = new List<DreamEntry>();
+            var sorter = new DateRangeSort(from, to);
+            for (var i = 0; i < entries.Count; i++) {
                 if (sorter.EvaluateDate(entries[i].Date)) {
                     results.Add(entries[i]);
                 }
@@ -105,9 +105,9 @@ namespace eDream.libs {
         /// <returns></returns>
         public List<DreamEntry>SearchEntriesOnDate(List<DreamEntry> entries,
             DateTime day) {
-            List<DreamEntry> results = new List<DreamEntry>();
-            DateRangeSort sorter = new DateRangeSort(day);
-            for (int i = 0; i < entries.Count; i++) {
+            var results = new List<DreamEntry>();
+            var sorter = new DateRangeSort(day);
+            for (var i = 0; i < entries.Count; i++) {
                 if (sorter.EvaluateDate(entries[i].Date)) {
                     results.Add(entries[i]);
                 }
@@ -123,8 +123,8 @@ namespace eDream.libs {
         /// <param name="str"></param>
         /// <returns></returns>
         private string[] CloneString(string[] str) {
-            string[] result = new string[str.Length];
-            for (int i = 0; i < str.Length; i++) {
+            var result = new string[str.Length];
+            for (var i = 0; i < str.Length; i++) {
                 result[i] = (string)str[i].Clone();
             }
             return result;
@@ -137,7 +137,7 @@ namespace eDream.libs {
         /// <param name="str"></param>
         /// <returns></returns>
         private void CleanString(string[] str) {
-            for (int i = 0; i < str.Length; i++) {
+            for (var i = 0; i < str.Length; i++) {
                 str[i] = str[i].Trim();
             }
         }
@@ -153,8 +153,8 @@ namespace eDream.libs {
         /// <returns></returns>
         private List<DreamEntry> DoAndSearch(List<DreamEntry> entries,
             string[] tags, bool includeChildTags) {
-                List<DreamEntry> results = new List<DreamEntry>();
-                for (int i = 0; i < entries.Count; i++) {
+                var results = new List<DreamEntry>();
+                for (var i = 0; i < entries.Count; i++) {
                     if (MatchAndSearch(entries[i], tags, includeChildTags)) {
                         results.Add(entries[i]);
                     }
@@ -173,8 +173,8 @@ namespace eDream.libs {
         /// <returns></returns>
         private List<DreamEntry> DoOrSearch(List<DreamEntry> entries,
             string[] tags, bool includeChildTags) {
-                List<DreamEntry> results = new List<DreamEntry>();
-                for (int i = 0; i < entries.Count; i++) {
+                var results = new List<DreamEntry>();
+                for (var i = 0; i < entries.Count; i++) {
                     if (MatchOrSearch(entries[i], tags, includeChildTags)) {
                         results.Add(entries[i]);
                     }
@@ -192,11 +192,11 @@ namespace eDream.libs {
         /// <returns></returns>
         private bool MatchAndSearch(DreamEntry entry, string[] tags,
             bool includeChildTags) {
-                string[] tag = CloneString(tags);
-                List<DreamMainTag> mainTags = entry.GetTagsAsList();
-                for (int i = 0; i < mainTags.Count; i++) {
+                var tag = CloneString(tags);
+                var mainTags = entry.GetTagsAsList();
+                for (var i = 0; i < mainTags.Count; i++) {
                     // Find if among each main tag a tag in the list is found
-                    for (int j = 0; j < tag.Length; j++) {
+                    for (var j = 0; j < tag.Length; j++) {
                         if (string.IsNullOrWhiteSpace(tag[j])) {
                             continue;
                         }
@@ -207,9 +207,9 @@ namespace eDream.libs {
                     }
                     // If child tags also included, search them
                     if (includeChildTags) {
-                        List<DreamChildTag> childTags = mainTags[i].ChildTags;
-                        for (int j = 0; j < childTags.Count; j++) {
-                            for (int k = 0; k < tag.Length; k++) {
+                        var childTags = mainTags[i].ChildTags;
+                        for (var j = 0; j < childTags.Count; j++) {
+                            for (var k = 0; k < tag.Length; k++) {
                                 if (string.IsNullOrWhiteSpace(tag[k])) {
                                     continue;
                                 }
@@ -240,9 +240,9 @@ namespace eDream.libs {
         /// <returns></returns>
         private bool MatchOrSearch(DreamEntry entry, string[] tags,
             bool includeChildTags) {
-                List<DreamMainTag> mainTags = entry.GetTagsAsList();
-                for (int i = 0; i < mainTags.Count; i++) {
-                    for (int j = 0; j < tags.Length; j++) {
+                var mainTags = entry.GetTagsAsList();
+                for (var i = 0; i < mainTags.Count; i++) {
+                    for (var j = 0; j < tags.Length; j++) {
                         if (string.Compare(tags[j], mainTags[i].Tag,
                             true) == 0) {
                                 return true;
@@ -250,9 +250,9 @@ namespace eDream.libs {
                     }
                     // Search child tags if searching for them
                     if (includeChildTags) {
-                        List<DreamChildTag> childTags = mainTags[i].ChildTags;
-                        for (int j = 0; j < childTags.Count; j++) {
-                            for (int k = 0; k < tags.Length; k++) {
+                        var childTags = mainTags[i].ChildTags;
+                        for (var j = 0; j < childTags.Count; j++) {
+                            for (var k = 0; k < tags.Length; k++) {
                                 if (string.Compare(tags[k], childTags[j].Tag,
                                     true) == 0) {
                                         return true;
@@ -273,8 +273,8 @@ namespace eDream.libs {
         /// <param name="tags"></param>
         /// <returns></returns>
         private int ToFind(string[] tags) {
-            int counter = 0;
-            for (int i = 0; i < tags.Length; i++) {
+            var counter = 0;
+            for (var i = 0; i < tags.Length; i++) {
                 if (!string.IsNullOrWhiteSpace(tags[i])) {
                     counter++;
                 }

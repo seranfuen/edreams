@@ -12,7 +12,7 @@ namespace Tests.Program
         [Test]
         public void Constructor_date_is_stripped_of_time()
         {
-            var entityUnderTest = new DreamDayList(DateTime.Now, new List<DreamEntry>());
+            var entityUnderTest = new DreamDayList(new DateTime(2019, 2, 16, 23, 30, 5), new List<DreamEntry>());
             entityUnderTest.Date.Should().Be(new DateTime(2019, 2, 16));
         }
 

@@ -37,7 +37,7 @@ namespace eDream.program
     public class DreamEntry
     {
         private bool _isTextValid;
-        private List<DreamMainTag> _tags;
+        private IList<DreamMainTag> _tags;
 
         private string _text;
 
@@ -89,7 +89,7 @@ namespace eDream.program
             _tags = DreamTagParser.ParseStringToDreamTags(tags);
         }
 
-        public List<DreamMainTag> GetTagsAsList()
+        public IList<DreamMainTag> GetTagsAsList()
         {
             return _tags ?? new List<DreamMainTag>();
         }

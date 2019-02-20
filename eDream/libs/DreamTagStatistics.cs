@@ -112,7 +112,7 @@ namespace eDream.libs {
                 if (!dreamEntries[i].GetIfValid()) {
                     continue;
                 }
-                List<DreamMainTag> iTags = dreamEntries[i].GetTagsAsList();
+                var iTags = dreamEntries[i].GetTagsAsList();
                 /**
                  * Loops through all the tags obtained from the entry and
                  * searches the current tagStatistics list. If they are found,
