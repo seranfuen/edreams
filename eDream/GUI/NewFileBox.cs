@@ -21,16 +21,10 @@
 ****************************************************************************/
 
 using System;
-using System.IO;
-using System.Media;
 using System.Windows.Forms;
-using eDream.libs;
 
 namespace eDream.GUI
 {
-    /// <summary>
-    ///     Displays a window used to create a new database
-    /// </summary>
     public partial class NewFileBox : Form
     {
         public enum CreateFileAction
@@ -39,23 +33,15 @@ namespace eDream.GUI
             Created
         }
 
-        private const string Extension = ".xml";
-
-        private string _folder;
-        private string _newFile = "my_dreams.xml";
+        private readonly NewFileViewModel _viewModel;
 
         public NewFileBox()
         {
             InitializeComponent();
-            _folder = Application.StartupPath;
-            chooseFolderDialog.Description = "Choose or create a new folder";
-            SetFolderText(_folder);
-            SetNewFileText(_newFile);
+            _viewModel = new NewFileViewModel();
         }
 
         public CreateFileAction Action { get; private set; } = CreateFileAction.Cancel;
-
-        public string File => _folder + "\\" + _newFile;
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
@@ -63,65 +49,39 @@ namespace eDream.GUI
             Close();
         }
 
-
-        private void SetFolderText(string text)
-        {
-            folderText.Text = text;
-        }
-
-        private void SetNewFileText(string text)
-        {
-            newFileText.Text = text;
-        }
-
         private void ChooseFolderButton_Click(object sender, EventArgs e)
         {
-            chooseFolderDialog.RootFolder = Environment.SpecialFolder.MyComputer;
-            chooseFolderDialog.SelectedPath = Application.StartupPath;
-            if (chooseFolderDialog.ShowDialog() != DialogResult.OK) return;
-
-            _folder = chooseFolderDialog.SelectedPath;
-            SetFolderText(_folder);
+            ChooseFolderDialog.RootFolder = Environment.SpecialFolder.MyComputer;
+            ChooseFolderDialog.SelectedPath = Application.StartupPath;
+            if (ChooseFolderDialog.ShowDialog() != DialogResult.OK) return;
         }
 
         private void CreateButton_Click(object sender, EventArgs e)
         {
-            _newFile = newFileText.Text;
-            if (_newFile.Length < 4 ||
-                string.Compare(_newFile.Substring(_newFile.Length - 4), Extension,
-                    true) != 0)
-                _newFile = _newFile + Extension;
-            // Check if file name is valid
-            if (!CheckValidFile(_newFile))
+            if (!_viewModel.IsValid)
             {
-                SystemSounds.Beep.Play();
                 MessageBox.Show("The file contains illegal characters", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Action = CreateFileAction.Cancel;
-                return;
             }
 
-            // If file already exists, prompt to ask if user wants to replace it
-            if (System.IO.File.Exists(_folder + "\\" + _newFile))
-            {
-                SystemSounds.Beep.Play();
-                var res = MessageBox.Show(this, _newFile +
-                                                " already exists. Do you wish to overwrite it?",
-                    "Overwrite file?", MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Exclamation);
-                if (res == DialogResult.No) return;
-            }
+            //// If file already exists, prompt to ask if user wants to replace it
+            //if (System.IO.File.Exists(_folder + "\\" + _newFile))
+            //{
+            //    SystemSounds.Beep.Play();
+            //    var res = MessageBox.Show(this, _newFile +
+            //                                    " already exists. Do you wish to overwrite it?",
+            //        "Overwrite file?", MessageBoxButtons.YesNo,
+            //        MessageBoxIcon.Exclamation);
+            //    if (res == DialogResult.No) return;
+            //}
 
-            var writer = new XMLWriter();
-            if (writer.CreateFile(_folder + "\\" + _newFile))
-            {
-                Action = CreateFileAction.Created;
-                Close();
-            }
-        }
-        private static bool CheckValidFile(string fileName)
-        {
-            return fileName.IndexOfAny(Path.GetInvalidFileNameChars()) == -1;
+            //var writer = new XMLWriter();
+            //if (writer.CreateFile(_folder + "\\" + _newFile))
+            //{
+            //    Action = CreateFileAction.Created;
+            //    Close();
+            //}
         }
     }
 }

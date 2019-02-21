@@ -589,11 +589,11 @@ namespace eDream
         private void createNewDatabaseToolStripMenuItem_Click(object sender, EventArgs e) {
             NewFileBox newFile = new NewFileBox();
             newFile.ShowDialog();
-            if (newFile.Action == NewFileBox.CreateFileAction.Created) {
-                closeToolStripMenuItem.PerformClick();
-                changingFile = newFile.File;
-                LoadXMLFile();
-            }
+            //if (newFile.Action == NewFileBox.CreateFileAction.Created) {
+            //    closeToolStripMenuItem.PerformClick();
+            //    changingFile = newFile.File;
+            //    LoadXMLFile();
+            //}
         }
 
         /// <summary>

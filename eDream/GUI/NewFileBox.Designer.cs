@@ -23,15 +23,18 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewFileBox));
             this.label1 = new System.Windows.Forms.Label();
-            this.newFileText = new System.Windows.Forms.TextBox();
+            this.NewFileText = new System.Windows.Forms.TextBox();
             this.chooseFolderButton = new System.Windows.Forms.Button();
             this.folderText = new System.Windows.Forms.TextBox();
             this.createButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.chooseFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.ChooseFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.BindingSource = new System.Windows.Forms.BindingSource(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.BindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -44,12 +47,13 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Name";
             // 
-            // newFileText
+            // NewFileText
             // 
-            this.newFileText.Location = new System.Drawing.Point(57, 6);
-            this.newFileText.Name = "newFileText";
-            this.newFileText.Size = new System.Drawing.Size(237, 20);
-            this.newFileText.TabIndex = 1;
+            this.NewFileText.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.BindingSource, "FileName", true));
+            this.NewFileText.Location = new System.Drawing.Point(57, 6);
+            this.NewFileText.Name = "NewFileText";
+            this.NewFileText.Size = new System.Drawing.Size(237, 20);
+            this.NewFileText.TabIndex = 1;
             // 
             // chooseFolderButton
             // 
@@ -63,6 +67,7 @@
             // 
             // folderText
             // 
+            this.folderText.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.BindingSource, "Folder", true));
             this.folderText.Location = new System.Drawing.Point(57, 34);
             this.folderText.Name = "folderText";
             this.folderText.ReadOnly = true;
@@ -100,9 +105,14 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "Folder";
             // 
-            // chooseFolderDialog
+            // ChooseFolderDialog
             // 
-            this.chooseFolderDialog.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            this.ChooseFolderDialog.Description = "Choose or create a new folder";
+            this.ChooseFolderDialog.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            // 
+            // BindingSource
+            // 
+            this.BindingSource.DataSource = typeof(eDream.GUI.NewFileViewModel);
             // 
             // NewFileBox
             // 
@@ -110,13 +120,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(306, 95);
+            this.ClientSize = new System.Drawing.Size(306, 94);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.createButton);
             this.Controls.Add(this.folderText);
             this.Controls.Add(this.chooseFolderButton);
-            this.Controls.Add(this.newFileText);
+            this.Controls.Add(this.NewFileText);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -125,6 +135,7 @@
             this.Name = "NewFileBox";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create a new dream database";
+            ((System.ComponentModel.ISupportInitialize)(this.BindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -133,12 +144,13 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox newFileText;
+        private System.Windows.Forms.TextBox NewFileText;
         private System.Windows.Forms.Button chooseFolderButton;
         private System.Windows.Forms.TextBox folderText;
         private System.Windows.Forms.Button createButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.FolderBrowserDialog chooseFolderDialog;
+        private System.Windows.Forms.FolderBrowserDialog ChooseFolderDialog;
+        private System.Windows.Forms.BindingSource BindingSource;
     }
 }
