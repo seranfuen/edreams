@@ -20,6 +20,18 @@ namespace Tests.GUI
             return entityUnderTest.WordCount;
         }
 
+        [TestCase("", "", ExpectedResult = false)]
+        [TestCase("abc", "", ExpectedResult = true)]
+        [TestCase("", "abc", ExpectedResult = true)]
+        [TestCase(null, null, ExpectedResult = false)]
+        public bool HasNoTextOrTags_for_cases(string text, string tags)
+        {
+            var entityUnderTest = DreamEntryViewModel.ForNewDream();
+            entityUnderTest.DreamText = text;
+            entityUnderTest.Tags = tags;
+            return entityUnderTest.HasTextOrTags;
+        }
+
         [Test]
         public void DreamText_when_changed_fires_PropertyChanged_for_DreamText_and_WordCount_and_WordCountDisplay()
         {

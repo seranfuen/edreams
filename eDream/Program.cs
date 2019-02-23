@@ -1,23 +1,23 @@
 ﻿/****************************************************************************
- * eDreams: a dream diary application
+ * FrmMain: a dream diary application
  * Author: Sergio Ángel Verbo
  * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
-    This file is part of eDreams.
+    This file is part of FrmMain.
 
-    eDreams is free software: you can redistribute it and/or modify
+    FrmMain is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    eDreams is distributed in the hope that it will be useful,
+    FrmMain is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with eDreams.  If not, see <http://www.gnu.org/licenses/>.]
+    along with FrmMain.  If not, see <http://www.gnu.org/licenses/>.]
 ****************************************************************************/
 using System;
 using System.Collections.Generic;
@@ -43,7 +43,7 @@ namespace eDream
              */ 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new eDreams());
+            Application.Run(new FrmMain());
         }
     }
 }

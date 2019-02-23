@@ -28,6 +28,7 @@ namespace eDream.GUI
         public DateTime DreamDate { get; set; }
         public int WordCount => Regex.Split(DreamText?.Trim() ?? "", @"\s").Count(x => !string.IsNullOrWhiteSpace(x));
         public string WordCountDisplay => $"Number of words: {WordCount}";
+        public bool HasTextOrTags => !string.IsNullOrWhiteSpace(DreamText) || !string.IsNullOrWhiteSpace(Tags);
 
         public event PropertyChangedEventHandler PropertyChanged;
 

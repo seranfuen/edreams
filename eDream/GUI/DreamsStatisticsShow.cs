@@ -1,23 +1,23 @@
 ﻿/****************************************************************************
- * eDreams: a dream diary application
+ * FrmMain: a dream diary application
  * Author: Sergio Ángel Verbo
  * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
-    This file is part of eDreams.
+    This file is part of FrmMain.
 
-    eDreams is free software: you can redistribute it and/or modify
+    FrmMain is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    eDreams is distributed in the hope that it will be useful,
+    FrmMain is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with eDreams.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.]
+    along with FrmMain.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.]
 ****************************************************************************/
 using System;
 using System.Collections.Generic;
@@ -40,10 +40,10 @@ namespace eDream.GUI {
         /// <summary>
         /// The raw dream tag statistics
         /// </summary>
-        private DreamTagStatistics stats;
+        private readonly DreamTagStatistics _stats;
 
         // If flag to true, will show child tags
-        private bool showChildTags = true;
+        private bool _showChildTags = true;
 
         /// <summary>
         /// Create a new form
@@ -52,7 +52,7 @@ namespace eDream.GUI {
         /// parsed</param>
         public DreamsStatisticsShow(DreamTagStatistics stats) {
             InitializeComponent();
-            this.stats = stats;
+            this._stats = stats;
             StartPosition = FormStartPosition.CenterScreen;
             SetTableData(GenerateData(stats.TagStatistics));
             DisplayStatisticsLabel(stats.TotalEntries, stats.TotalDays);
@@ -94,13 +94,13 @@ namespace eDream.GUI {
             }
             for (int i = 0; i < statTags.Count; i++) {
                 tableData.Add(new TagStatTableData(statTags[i].Tag, 
-                    statTags[i].TagCount, stats.TotalEntries, false));
+                    statTags[i].TagCount, _stats.TotalEntries, false));
                 // Generate child tags too
-                if (showChildTags) {
+                if (_showChildTags) {
                     List<DreamChildStatTag> childTags = statTags[i].ChildTags;
                     for (int j = 0; j < childTags.Count; j++) {
                         tableData.Add(new TagStatTableData(childTags[j].Tag,
-                            childTags[j].TagCount, stats.TotalEntries, true));
+                            childTags[j].TagCount, _stats.TotalEntries, true));
                     }
                 }
             }
@@ -171,9 +171,9 @@ namespace eDream.GUI {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void childTagsCheck_CheckedChanged(object sender, EventArgs e) {
-            if (childTagsCheck.Checked != showChildTags) {
-                showChildTags = childTagsCheck.Checked;
-                SetTableData(GenerateData(stats.TagStatistics));
+            if (childTagsCheck.Checked != _showChildTags) {
+                _showChildTags = childTagsCheck.Checked;
+                SetTableData(GenerateData(_stats.TagStatistics));
             }
         }
     }

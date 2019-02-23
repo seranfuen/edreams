@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using eDream.libs;
 
@@ -28,6 +29,14 @@ namespace eDream.GUI
             return !Path.HasExtension(RequiredFileExtension)
                 ? Path.ChangeExtension(FileName, RequiredFileExtension)
                 : FileName;
+        }
+
+        public void CreateNewFile()
+        {
+            if (!IsValid)
+                throw new InvalidOperationException("Unable to use a path with errors");
+
+            _fileService.CreateDatabaseFile(FilePath);
         }
     }
 }

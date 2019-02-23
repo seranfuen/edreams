@@ -191,7 +191,7 @@
             this.Name = "NewEntryForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Add a new dream entry";
+            this.Text = "Dream entry";
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.BindingSource)).EndInit();
             this.groupBox2.ResumeLayout(false);

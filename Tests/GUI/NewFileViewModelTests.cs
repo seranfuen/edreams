@@ -1,4 +1,5 @@
-﻿using eDream.GUI;
+﻿using System;
+using eDream.GUI;
 using eDream.libs;
 using FluentAssertions;
 using NSubstitute;
@@ -9,6 +10,28 @@ namespace Tests.GUI
     [TestFixture]
     public class NewFileViewModelTests
     {
+        [Test]
+        public void CreateNewFile_delegates_to_FileService()
+        {
+            var mockService = Substitute.For<IFileService>();
+            mockService.FileExists(Arg.Any<string>()).Returns(true);
+            var entityUnderTest = new NewFileViewModel(mockService)
+                {Folder = @"C:\Example\MyFolder", FileName = "here"};
+            entityUnderTest.CreateNewFile();
+            mockService.Received(1).CreateDatabaseFile(@"C:\Example\MyFolder\here.xml");
+        }
+
+        [Test]
+        public void CreateNewFile_with_not_validated_path_throws_InvalidOperationException()
+        {
+            var mockService = Substitute.For<IFileService>();
+            mockService.FileExists(Arg.Any<string>()).Returns(true);
+            var entityUnderTest = new NewFileViewModel(mockService)
+                { Folder = @"C:\Example\MyFolder", FileName = "??he" };
+            Action act = () => entityUnderTest.CreateNewFile();
+            act.Should().ThrowExactly<InvalidOperationException>().WithMessage("Unable to use a path with errors");
+        }
+
         [Test]
         public void FileAlreadyExists_delegates_to_FileService()
         {

@@ -1,23 +1,23 @@
 ﻿/****************************************************************************
- * eDreams: a dream diary application
+ * FrmMain: a dream diary application
  * Author: Sergio Ángel Verbo
  * Copyright © 2012-2019, Sergio Ángel Verbo
  ****************************************************************************/
 /****************************************************************************
-    This file is part of eDreams.
+    This file is part of FrmMain.
 
-    eDreams is free software: you can redistribute it and/or modify
+    FrmMain is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    eDreams is distributed in the hope that it will be useful,
+    FrmMain is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with eDreams.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.]
+    along with FrmMain.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.]
 ****************************************************************************/
 
 using System;
@@ -55,7 +55,6 @@ namespace eDream.GUI
             CmdSave.Click -= AddEntryButton_Click;
             CmdSave.Click += SaveEdit;
             _editEntry = editEntry;
-            Text = "Edit dream entry";
             LoadEditEntry();
         }
 
@@ -87,11 +86,9 @@ namespace eDream.GUI
 
         private void SaveEdit(object sender, EventArgs e)
         {
-            if (DreamTextBox.Text.Length == 0)
+            if (!_viewModel.HasTextOrTags)
             {
-                MessageBox.Show("The dream entry has no text!", "Can't save " +
-                                                                "this entry",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ShowNoTextOrTagsError();
                 return;
             }
 
@@ -102,13 +99,18 @@ namespace eDream.GUI
             Dispose();
         }
 
+        private static void ShowNoTextOrTagsError()
+        {
+            MessageBox.Show(GuiStrings.NewEntryForm_SaveEdit_NoTextOrTagsMessage,
+                GuiStrings.NewEntryForm_SaveEdit_NoTextOrTagsTitle,
+                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+
         private void AddEntryButton_Click(object sender, EventArgs e)
         {
-            if (DreamTextBox.Text.Length == 0)
+            if (!_viewModel.HasTextOrTags)
             {
-                MessageBox.Show("The dream entry has no text!", "Can't add " +
-                                                                "new entry", MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                ShowNoTextOrTagsError();
                 return;
             }
 

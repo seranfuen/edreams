@@ -85,11 +85,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GUI\AboutBox1.cs">
+    <Compile Include="GUI\DreamDatabaseViewModel.cs" />
+    <Compile Include="GUI\FrmAboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\AboutBox1.Designer.cs">
-      <DependentUpon>AboutBox1.cs</DependentUpon>
+    <Compile Include="GUI\FrmAboutBox.Designer.cs">
+      <DependentUpon>FrmAboutBox.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\CreateTags.cs">
       <SubType>Form</SubType>
@@ -104,6 +105,11 @@
     <Compile Include="GUI\DreamsStatisticsShow.Designer.cs">
       <DependentUpon>DreamsStatisticsShow.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\GuiStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GuiStrings.resx</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Individual Entry.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -116,11 +122,11 @@
     <Compile Include="GUI\NewEntryForm.Designer.cs">
       <DependentUpon>NewEntryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\NewFileBox.cs">
+    <Compile Include="GUI\FrmNewFileCreator.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\NewFileBox.Designer.cs">
-      <DependentUpon>NewFileBox.cs</DependentUpon>
+    <Compile Include="GUI\FrmNewFileCreator.Designer.cs">
+      <DependentUpon>FrmNewFileCreator.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\NewFileViewModel.cs" />
     <Compile Include="GUI\RecentlyOpenedMenuItem.cs">
@@ -139,6 +145,7 @@
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="libs\DreamCalendarCreator.cs" />
+    <Compile Include="libs\DreamFileService.cs" />
     <Compile Include="libs\DreamSaveLoad.cs" />
     <Compile Include="libs\DreamTagStatistics.cs" />
     <Compile Include="libs\DreamTagStringBuilder.cs" />
@@ -148,11 +155,11 @@
     <Compile Include="libs\MainTagParser.cs" />
     <Compile Include="libs\TagStatTableData.cs" />
     <Compile Include="libs\TagTableData.cs" />
-    <Compile Include="Main.cs">
+    <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Designer.cs">
-      <DependentUpon>Main.cs</DependentUpon>
+    <Compile Include="FrmMain.Designer.cs">
+      <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
     <Compile Include="libs\DreamSearchUtils.cs" />
     <Compile Include="libs\DreamTagParser.cs" />
@@ -162,7 +169,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="program\DreamChildStatTag.cs" />
     <Compile Include="program\DreamChildTag.cs" />
-    <Compile Include="program\DreamDayList.cs" />
+    <Compile Include="program\DreamDayEntry.cs" />
     <Compile Include="program\DreamEntry.cs" />
     <Compile Include="program\DreamMainStatTag.cs" />
     <Compile Include="program\DreamMainTag.cs" />
@@ -172,8 +179,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestBringIntoViewEventArgs.cs" />
     <Compile Include="SystemEventHandler.cs" />
-    <EmbeddedResource Include="GUI\AboutBox1.resx">
-      <DependentUpon>AboutBox1.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\FrmAboutBox.resx">
+      <DependentUpon>FrmAboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\CreateTags.resx">
@@ -183,14 +190,18 @@
       <DependentUpon>DreamsStatisticsShow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\GuiStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>GuiStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\Individual Entry.resx">
       <DependentUpon>Individual Entry.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\NewEntryForm.resx">
       <DependentUpon>NewEntryForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\NewFileBox.resx">
-      <DependentUpon>NewFileBox.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\FrmNewFileCreator.resx">
+      <DependentUpon>FrmNewFileCreator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\SearchForm.resx">
       <DependentUpon>SearchForm.cs</DependentUpon>
@@ -198,8 +209,8 @@
     <EmbeddedResource Include="GUI\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Main.resx">
-      <DependentUpon>Main.cs</DependentUpon>
+    <EmbeddedResource Include="FrmMain.resx">
+      <DependentUpon>FrmMain.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -215,6 +226,7 @@
     <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\eDream.GUI.DreamDatabaseViewModel.datasource" />
     <None Include="Properties\DataSources\eDream.GUI.DreamEntryViewModel.datasource" />
     <None Include="Properties\DataSources\eDream.GUI.NewFileViewModel.datasource" />
     <None Include="Properties\Settings.settings">
