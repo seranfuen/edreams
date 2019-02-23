@@ -7,7 +7,7 @@ I decided to use this as an exercise of how to refactor legacy code to make it u
 
 One great thing about pet projects such as this one is that, unlike what you write at work, I'm free to show it to everyone and to follow up on how my views on programming evolve.
 
-Honestly, as I read once, any programmer who thinks that code he or she wrote 2-3 years ago should stay the way it was has a serious career development problem.
+Honestly, as I read once, any programmer who thinks that code he or she wrote 2-3 years ago should stay the way it was has a serious career development problem - if you are really interested in this trade, you always absorb new things both from experience and from what you read or others share with you.
 
 Without changing the structure (this is a too simple an application to bother doing something more sophisticated, or even migrating to WPF) I want to make this application fully unit testable and easy to change and modify.
 
