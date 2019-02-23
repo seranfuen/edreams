@@ -113,5 +113,32 @@ namespace eDream.GUI {
                 return ResourceManager.GetString("NewFileBox_CreateButton_FileNameValidationErrorTitle", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No dream diary loaded.
+        /// </summary>
+        internal static string StatusBar_NoDreamDiaryLoaded {
+            get {
+                return ResourceManager.GetString("StatusBar_NoDreamDiaryLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No dreams.
+        /// </summary>
+        internal static string StatusBarMessage_NoDreams {
+            get {
+                return ResourceManager.GetString("StatusBarMessage_NoDreams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} {1} in {2} {3} ({4:n2} dreams/day).
+        /// </summary>
+        internal static string StatusBarMessage_NumberDreamsAndDays {
+            get {
+                return ResourceManager.GetString("StatusBarMessage_NumberDreamsAndDays", resourceCulture);
+            }
+        }
     }
 }

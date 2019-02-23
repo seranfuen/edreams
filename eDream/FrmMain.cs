@@ -58,7 +58,6 @@ namespace eDream
 
         private List<DreamDayEntry> _currentDayList;
 
-        private string _currentFile;
         private List<DreamDayEntry> _dayList;
 
         private Debug.OnDebugIncidence _debugIncidence;
@@ -116,55 +115,38 @@ namespace eDream
         /// </summary>
         private void InitializeInterface()
         {
-            try
-            {
-                StartPosition = FormStartPosition.CenterScreen;
-                SetUnloadedState();
+            SetUnloadedState();
 
-                toolStripLoad.Click +=
-                    openDatabaseToolStripMenuItem_Click;
-                toolStripButtonSave.Click +=
-                    SaveToolStripMenuItem_Click;
-                toolStripAdd.Click += AddEntryToolStripMenuItem_Click;
-                toolStripNewDB.Click += CreateNewDatabaseToolStripMenuItem_Click;
-                toolStripStats.Click += statisticsToolStripMenuItem_Click;
-                DreamListBox.SelectedIndexChanged +=
-                    ShowCurrentDay;
-                DreamListBox.MouseWheel += ScrollList;
-                DreamListBox.MouseClick += FocusList;
-                tableLayoutPanel1.MouseClick +=
-                    FocusEntryPanel;
-                _saveLoad.FinishedLoading += OnEntriesLoaded;
-                _saveLoad.FinishedSaving += OnEntriesSaved;
-                _debugIncidence += SendToDebugger;
-                Shown += LoadLastDatabase;
-                // Try to load settings
-                _settings = new Settings(SettingsFile,
-                    _defaultSettings);
-            }
-            catch (Exception e)
-            {
-                ProcessIncidence(e, "Error loading the interface");
-            }
+            DreamListBox.SelectedIndexChanged +=
+                ShowCurrentDay;
+            DreamListBox.MouseWheel += ScrollList;
+            DreamListBox.MouseClick += FocusList;
+            tableLayoutPanel1.MouseClick +=
+                FocusEntryPanel;
+            _saveLoad.FinishedLoading += OnEntriesLoaded;
+            _saveLoad.FinishedSaving += OnEntriesSaved;
+            _debugIncidence += SendToDebugger;
+            Shown += LoadLastDatabase;
+            // Try to load settings
+            _settings = new Settings(SettingsFile,
+                _defaultSettings);
         }
 
         private void LoadLastDatabase(object sender, EventArgs e)
         {
-            if (!_loadedFirstTime &&
-                _settings.GetValue(LoadLastDbSetting) == "yes")
-            {
-                _recentlyOpened.LoadPaths();
-                SetRecentFilesMenu();
-                var recent = _recentlyOpened.GetPaths();
-                if (recent.Length > 0)
-                    if (!string.IsNullOrEmpty(recent[0]))
-                    {
-                        _changingFile = recent[0];
-                        LoadXmlFile();
-                    }
+            if (_loadedFirstTime || _settings.GetValue(LoadLastDbSetting) != "yes") return;
 
-                _loadedFirstTime = true;
-            }
+            _recentlyOpened.LoadPaths();
+            SetRecentFilesMenu();
+            var recent = _recentlyOpened.GetPaths();
+            if (recent.Length > 0)
+                if (!string.IsNullOrEmpty(recent[0]))
+                {
+                    _changingFile = recent[0];
+                    LoadXmlFile();
+                }
+
+            _loadedFirstTime = true;
         }
 
         /// <summary>
@@ -172,31 +154,15 @@ namespace eDream
         /// </summary>
         private void SetStatusBarStats()
         {
-            var str = "No entries loaded";
-            var dayListCount = 0;
-            var entriesCount = 0;
-            /**
-             * Sometimes a day list object or a dream entry object may be
-             * loaded in memory but be flagged for deletion, or empty.
-             * Therefore we will only count valid elements
-             */
-            for (var i = 0; i < _dayList.Count; i++)
-                if (_dayList[i].Count > 0)
-                    dayListCount++;
-            for (var i = 0; i < _dreamEntries.Count; i++)
-                if (!_dreamEntries[i].ToDelete &&
-                    _dreamEntries[i].GetIfValid())
-                    entriesCount++;
-            if (entriesCount > 0 && dayListCount > 0)
-                str = "Database loaded." +
-                      $" {entriesCount} dreams in {dayListCount} days ({(entriesCount / (float) dayListCount).ToString("0.00")} dreams/day)";
-            SetStatusBarMsg(str);
+            SetStatusBarMsg(_viewModel.StatusBarMessage);
         }
 
         public void ShowCurrentDay(object sender, EventArgs e)
         {
-            if (_currentDayList != null && _currentDayList.Count > 0)
-                LoadDayEntries(_currentDayList[DreamListBox.SelectedIndex]);
+            if (_currentDayList == null || _currentDayList.Count <= 0) return;
+            if (DreamListBox.SelectedIndex < 0 || DreamListBox.SelectedIndex >= _currentDayList.Count) return;
+
+            LoadDayEntries(_currentDayList[DreamListBox.SelectedIndex]);
         }
 
         /// <summary>
@@ -248,14 +214,14 @@ namespace eDream
         private void LoadEntriesFromLoader()
         {
             SetActiveStatus();
-            if (_saveLoad.LoadStatus == DreamSaveLoad.enumLoadStatus.Error)
+            if (_saveLoad.LoadStatus == DreamSaveLoad.LoadingResult.Error)
             {
                 ShowErrorMessage("Error", "The file " + _changingFile + " is " +
                                           "not a valid FrmMain XML file or is corrupted", true);
                 return;
             }
 
-            _dreamEntries = _saveLoad.EntriesFromXML;
+            _dreamEntries = _saveLoad.EntriesFromXml;
             _dayList = DreamCalendarCreator.GetDreamDayList(_dreamEntries);
             LoadEntriesToList(_dayList);
             SetCurrentFile(_changingFile);
@@ -268,8 +234,8 @@ namespace eDream
         /// </summary>
         public void SaveXmlFile()
         {
-            _saveLoad.CurrentFile = _currentFile;
-            _saveLoad.EntriesToXML = _dreamEntries;
+            _saveLoad.CurrentFile = _viewModel.CurrentDatabasePath;
+            _saveLoad.EntriesToXml = _dreamEntries;
             SetBusyStatus();
             _saveLoad.SaveEntries();
         }
@@ -291,25 +257,16 @@ namespace eDream
         private void EvaluateSavedEntries()
         {
             SetActiveStatus();
-            if (_saveLoad.SaveStatus == DreamSaveLoad.enumSaveStatus.Error)
+            if (_saveLoad.SaveStatus == DreamSaveLoad.SavingResult.Error)
             {
                 ShowErrorMessage("Error", "There was an error saving the database" +
-                                          " to" + _currentFile, true);
+                                          " to" + _viewModel.CurrentDatabasePath, true);
                 return;
             }
 
             SetLoadedState();
         }
 
-        /// <summary>
-        ///     Loads DreamList objects to the list, allowing their dream entries
-        ///     to be shown on the right when selected
-        /// </summary>
-        /// <param name="entries">A list of DreamDayEntry objects</param>
-        /// <param name="reverseOrder">
-        ///     True if ordered in descending order,
-        ///     false if ascending
-        /// </param>
         private void LoadEntriesToList(List<DreamDayEntry> entries)
         {
             tableLayoutPanel1.Visible = false;
@@ -332,20 +289,12 @@ namespace eDream
             SetStatusBarStats();
         }
 
-        /// <summary>
-        ///     Empties the entries list and adds a "no entries" dummy entry
-        /// </summary>
         private void EmptyEntryList()
         {
-            // Just send a null value to LoadEntriesToList and let it handle it
             LoadEntriesToList(null);
         }
 
-        /// <summary>
-        ///     Loads the contents of the entries in a DreamDayEntry object (represents
-        ///     a day as shown in the list) in the right panel
-        /// </summary>
-        /// <param name="day"></param>
+
         private void LoadDayEntries(DreamDayEntry day)
         {
             var entries = day.DreamEntries;
@@ -413,13 +362,13 @@ namespace eDream
 
         private void CloseDatabase()
         {
-            _currentFile = string.Empty;
+            _viewModel.CurrentDatabasePath = string.Empty;
             _dreamEntries = new List<DreamEntry>();
             _dayList = new List<DreamDayEntry>();
             SetUnloadedState();
             DreamListBox.Enabled = false;
-            SetStatusBarMsg("No database loaded");
-            Text = Application.ProductName;
+            SetStatusBarMsg(GuiStrings.StatusBar_NoDreamDiaryLoaded);
+            Text = _viewModel.FormText;
         }
 
         private void SetLoadedState()
@@ -436,7 +385,7 @@ namespace eDream
             searchToolStripMenuItem.Enabled = true;
             _dreamStats = new DreamTagStatistics();
             _dreamStats.GenerateStatistics(_dreamEntries, _dayList);
-            Text = Application.ProductName + " - " + GetFileName();
+            Text = _viewModel.FormText;
         }
 
         private void SetUnloadedState()
@@ -492,22 +441,9 @@ namespace eDream
             LoadXmlFile();
         }
 
-        /// <summary>
-        ///     Close the database, ask if user wishes to save it before
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var res = MessageBox.Show("Your dream database has been " +
-                                      "modified. Do you wish to save it before closing it?" +
-                                      " If you don't, all changes will be lost.", "Save database?",
-                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (res == DialogResult.Cancel)
-                return;
-            if (res == DialogResult.Yes) SaveXmlFile();
-
-
+            SaveXmlFile();
             CloseDatabase();
         }
 
@@ -527,7 +463,7 @@ namespace eDream
             LoadXmlFile();
         }
 
-        private void openDatabaseToolStripMenuItem_Click(object sender,
+        private void OpenDatabaseToolStripMenuItem_Click(object sender,
             EventArgs e)
         {
             var resultM =
@@ -542,21 +478,12 @@ namespace eDream
             var result = openFileDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                var oldFile = _currentFile;
-                _currentFile = openFileDialog1.FileName;
+                _viewModel.CurrentDatabasePath = openFileDialog1.FileName;
                 // If it was correct, we set it through SetCurrentFile to
                 // add it to recently opened
                 _changingFile = openFileDialog1.FileName;
                 LoadXmlFile();
             }
-        }
-
-        private string GetFileName()
-        {
-            var i = _currentFile.LastIndexOf("\\");
-            var fileName = _currentFile;
-            if (i > -1) fileName = _currentFile.Substring(_currentFile.LastIndexOf("\\") + 1);
-            return fileName;
         }
 
         public void ShowErrorMessage(string title, string text, bool playSound)
@@ -567,7 +494,7 @@ namespace eDream
 
         private void SetCurrentFile(string file)
         {
-            _currentFile = file;
+            _viewModel.CurrentDatabasePath = file;
             _recentlyOpened.AddPath(file);
             _recentlyOpened.SavePaths();
             SetRecentFilesMenu();
@@ -614,23 +541,18 @@ namespace eDream
             SaveXmlFile();
         }
 
-        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveXmlFile();
-        }
-
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var resultSave = saveFileDialog1.ShowDialog();
             if (resultSave == DialogResult.OK)
             {
-                _currentFile = saveFileDialog1.FileName;
+                _viewModel.CurrentDatabasePath = saveFileDialog1.FileName;
                 SaveXmlFile();
                 saveFileDialog1.FileName = "";
             }
         }
 
-        private void statisticsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void StatisticsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _dreamStats.GenerateStatistics(_dreamEntries, _dayList);
             var statWindow = new DreamsStatisticsShow(_dreamStats);
@@ -762,7 +684,7 @@ namespace eDream
         }
 
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var settings = new GUI.Settings(_settings);
             settings.ShowDialog();

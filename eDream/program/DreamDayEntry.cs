@@ -38,6 +38,7 @@ namespace eDream.program
 
         public List<DreamEntry> DreamEntries { get; }
 
+
         public int Count => DreamEntries.Count(entry => !entry.ToDelete);
 
         public int CompareTo(DreamDayEntry dreamDay)

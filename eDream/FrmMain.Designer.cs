@@ -36,7 +36,7 @@
             this.fdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createNewDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.openDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OpenDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
@@ -120,7 +120,7 @@
             this.fdToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createNewDatabaseToolStripMenuItem,
             this.toolStripSeparator1,
-            this.openDatabaseToolStripMenuItem,
+            this.OpenDatabaseToolStripMenuItem,
             this.toolStripSeparator6,
             this.closeToolStripMenuItem,
             this.toolStripSeparator5,
@@ -146,13 +146,13 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(190, 6);
             // 
-            // openDatabaseToolStripMenuItem
+            // OpenDatabaseToolStripMenuItem
             // 
-            this.openDatabaseToolStripMenuItem.Name = "openDatabaseToolStripMenuItem";
-            this.openDatabaseToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openDatabaseToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.openDatabaseToolStripMenuItem.Text = "Open";
-            this.openDatabaseToolStripMenuItem.Click += new System.EventHandler(this.openDatabaseToolStripMenuItem_Click);
+            this.OpenDatabaseToolStripMenuItem.Name = "OpenDatabaseToolStripMenuItem";
+            this.OpenDatabaseToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.OpenDatabaseToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.OpenDatabaseToolStripMenuItem.Text = "Open";
+            this.OpenDatabaseToolStripMenuItem.Click += new System.EventHandler(this.OpenDatabaseToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
@@ -165,7 +165,7 @@
             this.closeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
             this.closeToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
             this.closeToolStripMenuItem.Text = "Close";
-            this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
+            this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
@@ -234,7 +234,7 @@
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
             // entryToolStripMenuItem
             // 
@@ -259,7 +259,7 @@
             this.statisticsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
             this.statisticsToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.statisticsToolStripMenuItem.Text = "Statistics";
-            this.statisticsToolStripMenuItem.Click += new System.EventHandler(this.statisticsToolStripMenuItem_Click);
+            this.statisticsToolStripMenuItem.Click += new System.EventHandler(this.StatisticsToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -361,7 +361,7 @@
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(706, 458);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(708, 458);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // toolStrip1
@@ -475,6 +475,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(700, 300);
             this.Name = "FrmMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmMain";
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
@@ -514,7 +515,7 @@
         private System.Windows.Forms.ToolStripMenuItem fdToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createNewDatabaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem openDatabaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem OpenDatabaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;

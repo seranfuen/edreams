@@ -116,4 +116,13 @@
   <data name="NewEntryForm_SaveEdit_NoTextOrTagsTitle" xml:space="preserve">
     <value>Missing dream information</value>
   </data>
+  <data name="StatusBar_NoDreamDiaryLoaded" xml:space="preserve">
+    <value>No dream diary loaded</value>
+  </data>
+  <data name="StatusBarMessage_NoDreams" xml:space="preserve">
+    <value>No dreams</value>
+  </data>
+  <data name="StatusBarMessage_NumberDreamsAndDays" xml:space="preserve">
+    <value>{0} {1} in {2} {3} ({4:n2} dreams/day)</value>
+  </data>
 </root>
