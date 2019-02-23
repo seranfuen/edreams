@@ -15,7 +15,7 @@ namespace Tests.GUI
         {
             var entityUnderTest = new DreamDatabaseViewModel();
             entityUnderTest.CurrentDatabasePath.Should().BeNullOrEmpty();
-            entityUnderTest.FormText.Should().Be("eDreams (No dream database loaded)");
+            entityUnderTest.FormText.Should().Be("eDreams (No dream diary loaded)");
         }
 
         [Test]

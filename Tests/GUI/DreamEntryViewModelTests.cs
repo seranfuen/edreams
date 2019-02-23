@@ -81,7 +81,7 @@ namespace Tests.GUI
             var entry = entityUnderTest.ToDreamEntry();
             entry.Date.Should().Be(new DateTime(2019, 2, 20));
             entry.Text.Should().Be("Hello there. General Kenobi");
-            entry.GetTagsAsString().Should().Be("Friends, Beach (Gandía)");
+            entry.GetTagString().Should().Be("Friends, Beach (Gandía)");
         }
     }
 }

@@ -27,7 +27,6 @@ E:\Código\eDream\eDream\bin\Debug\EvilTools.pdb
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.csprojAssemblyReference.cache
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.CreateTags.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.DreamsStatisticsShow.resources
-E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.Individual_Entry.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.NewEntryForm.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.SearchForm.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.Settings.resources
@@ -143,3 +142,4 @@ E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.FrmAboutBox.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.GuiStrings.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.FrmNewFileCreator.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.FrmMain.resources
+E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.CtrEntryViewer.resources

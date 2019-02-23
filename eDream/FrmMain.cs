@@ -121,7 +121,7 @@ namespace eDream
                 ShowCurrentDay;
             DreamListBox.MouseWheel += ScrollList;
             DreamListBox.MouseClick += FocusList;
-            tableLayoutPanel1.MouseClick +=
+            TableLayoutPanel.MouseClick +=
                 FocusEntryPanel;
             _saveLoad.FinishedLoading += OnEntriesLoaded;
             _saveLoad.FinishedSaving += OnEntriesSaved;
@@ -179,8 +179,8 @@ namespace eDream
         /// </summary>
         private void ClearRightPanel()
         {
-            tableLayoutPanel1.RowCount = 0;
-            tableLayoutPanel1.Controls.Clear();
+            TableLayoutPanel.RowCount = 0;
+            TableLayoutPanel.Controls.Clear();
         }
 
         /// <summary>
@@ -269,7 +269,7 @@ namespace eDream
 
         private void LoadEntriesToList(List<DreamDayEntry> entries)
         {
-            tableLayoutPanel1.Visible = false;
+            TableLayoutPanel.Visible = false;
             DreamListBox.Enabled = false;
             if (entries == null || entries.Count == 0)
             {
@@ -285,7 +285,7 @@ namespace eDream
 
             DreamListBox.SelectedIndex = Math.Max(0, entries.Count - 1);
             ShowCurrentDay(DreamListBox, new EventArgs());
-            tableLayoutPanel1.Visible = true;
+            TableLayoutPanel.Visible = true;
             SetStatusBarStats();
         }
 
@@ -308,21 +308,22 @@ namespace eDream
             }
 
             // Improves visuals when quickly transitioning through different days
-            tableLayoutPanel1.Visible = false;
-            for (var i = 0; i < entries.Count; i++)
+            TableLayoutPanel.Visible = false;
+            var entryCount = 1;
+            foreach (var entry in entries)
             {
-                if (entries[i].ToDelete) continue;
-                var newEntry = new Individual_Entry(entries[i],
-                    i + 1, this);
-                tableLayoutPanel1.Controls.Add(newEntry);
+                if (entry.ToDelete) continue;
+                var newEntry = new CtrEntryViewer();
+                newEntry.SetViewModel(EntryViewerModel.FromEntry(entry, entryCount++));
+                TableLayoutPanel.Controls.Add(newEntry);
             }
 
             /**
              * Set autosize to avoid visual problems, all entries will have
              * same size
              */
-            for (var i = 0; i < tableLayoutPanel1.RowStyles.Count; i++)
-                tableLayoutPanel1.RowStyles[i].SizeType = SizeType.AutoSize;
+            for (var i = 0; i < TableLayoutPanel.RowStyles.Count; i++)
+                TableLayoutPanel.RowStyles[i].SizeType = SizeType.AutoSize;
             /**
              * Add handlers to capture a click and focus on the panel if
              * any entry clicked. Since it becomes pretty complicated
@@ -331,17 +332,17 @@ namespace eDream
              */
             try
             {
-                for (var i = 0; i < tableLayoutPanel1.Controls.Count; i++)
-                for (var j = 0; j < tableLayoutPanel1.Controls[i].Controls.Count; j++)
+                for (var i = 0; i < TableLayoutPanel.Controls.Count; i++)
+                for (var j = 0; j < TableLayoutPanel.Controls[i].Controls.Count; j++)
                 {
-                    tableLayoutPanel1.Controls[i].Controls[j].MouseClick +=
+                    TableLayoutPanel.Controls[i].Controls[j].MouseClick +=
                         FocusEntryPanel;
-                    for (var k = 0; k < tableLayoutPanel1.Controls[i].Controls[j].Controls.Count; k++)
+                    for (var k = 0; k < TableLayoutPanel.Controls[i].Controls[j].Controls.Count; k++)
                     {
-                        tableLayoutPanel1.Controls[i].Controls[j].Controls[k].MouseClick +=
+                        TableLayoutPanel.Controls[i].Controls[j].Controls[k].MouseClick +=
                             FocusEntryPanel;
-                        for (var l = 0; l < tableLayoutPanel1.Controls[i].Controls[j].Controls[k].Controls.Count; l++)
-                            tableLayoutPanel1.Controls[i].Controls[j].Controls[k].Controls[l].MouseClick +=
+                        for (var l = 0; l < TableLayoutPanel.Controls[i].Controls[j].Controls[k].Controls.Count; l++)
+                            TableLayoutPanel.Controls[i].Controls[j].Controls[k].Controls[l].MouseClick +=
                                 FocusEntryPanel; //This is the panel where we click on the most
                     }
                 }
@@ -356,7 +357,7 @@ namespace eDream
             }
             finally
             {
-                tableLayoutPanel1.Visible = true;
+                TableLayoutPanel.Visible = true;
             }
         }
 
@@ -607,7 +608,7 @@ namespace eDream
 
         private void FocusEntryPanel(object sender, MouseEventArgs e)
         {
-            tableLayoutPanel1.Focus();
+            TableLayoutPanel.Focus();
         }
 
 

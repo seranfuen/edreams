@@ -94,7 +94,7 @@ namespace eDream.program
             return _tags ?? new List<DreamMainTag>();
         }
 
-        public string GetTagsAsString()
+        public string GetTagString()
         {
             return DreamTagParser.TagsToString(_tags);
         }

@@ -74,7 +74,7 @@ namespace eDream.GUI
         private void LoadEditEntry()
         {
             DreamTextBox.Text = _editEntry.Text;
-            TagsBox.Text = _editEntry.GetTagsAsString();
+            TagsBox.Text = _editEntry.GetTagString();
             DreamDatePicker.Text = _editEntry.GetDateAsStr();
         }
 

@@ -109,7 +109,7 @@ namespace eDream.libs {
                 XMLSaver.WriteWhitespace("\n" +
                     StringUtils.GenerateSpaces(XMLConstants.second_level_tab));
                 XMLSaver.WriteElementString(XMLConstants.tags_node,
-                    dreamList[i].GetTagsAsString());
+                    dreamList[i].GetTagString());
                 XMLSaver.WriteWhitespace("\n" +
                     StringUtils.GenerateSpaces(XMLConstants.first_level_tab));
                 XMLSaver.WriteEndElement();

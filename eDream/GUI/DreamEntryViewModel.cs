@@ -49,7 +49,7 @@ namespace eDream.GUI
             {
                 DreamText = editEntry.Text,
                 DreamDate = editEntry.Date,
-                Tags = editEntry.GetTagsAsString()
+                Tags = editEntry.GetTagString()
             };
         }
 

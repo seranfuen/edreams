@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GUI\DreamDatabaseViewModel.cs" />
+    <Compile Include="GUI\EntryViewerModel.cs" />
     <Compile Include="GUI\FrmAboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,11 +111,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GuiStrings.resx</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Individual Entry.cs">
+    <Compile Include="GUI\CtrEntryViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\Individual Entry.Designer.cs">
-      <DependentUpon>Individual Entry.cs</DependentUpon>
+    <Compile Include="GUI\CtrEntryViewer.Designer.cs">
+      <DependentUpon>CtrEntryViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\NewEntryForm.cs">
       <SubType>Form</SubType>
@@ -194,8 +195,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>GuiStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Individual Entry.resx">
-      <DependentUpon>Individual Entry.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\CtrEntryViewer.resx">
+      <DependentUpon>CtrEntryViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\NewEntryForm.resx">
       <DependentUpon>NewEntryForm.cs</DependentUpon>
@@ -228,6 +229,7 @@
     <None Include="packages.config" />
     <None Include="Properties\DataSources\eDream.GUI.DreamDatabaseViewModel.datasource" />
     <None Include="Properties\DataSources\eDream.GUI.DreamEntryViewModel.datasource" />
+    <None Include="Properties\DataSources\eDream.GUI.EntryViewerModel.datasource" />
     <None Include="Properties\DataSources\eDream.GUI.NewFileViewModel.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
