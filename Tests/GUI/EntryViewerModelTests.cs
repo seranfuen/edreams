@@ -2,6 +2,7 @@
 using eDream.GUI;
 using eDream.program;
 using FluentAssertions;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Tests.GUI
@@ -14,6 +15,30 @@ namespace Tests.GUI
             return new DreamEntry(new DateTime(2018, 2, 23), "tag1, tag2 (tag2a)", "my dream text");
         }
 
+        private static IDreamDiaryBus GetBus()
+        {
+            return Substitute.For<IDreamDiaryBus>();
+        }
+
+        [Test]
+        public void DeleteEntity_delegates_persisting_to_bus()
+        {
+            var bus = GetBus();
+            var entityUnderTest = EntryViewerModel.FromEntry(InitializeTestEntry(), 100, bus);
+            entityUnderTest.DeleteEntry();
+            bus.Received(1).PersistDiary();
+        }
+
+        [Test]
+        public void DeleteEntity_marks_entry_for_deletion()
+        {
+            var entry = InitializeTestEntry();
+            var entityUnderTest = EntryViewerModel.FromEntry(entry, 100, GetBus());
+            entry.ToDelete.Should().BeFalse();
+            entityUnderTest.DeleteEntry();
+            entry.ToDelete.Should().BeTrue();
+        }
+
         // We use SetCulture to be able to control the formatting of the date
         // With this we can at least know that it will be shown properly to the user
         // with their particular culture. This is a dependency we have but I don't think it makes sense
@@ -24,21 +49,21 @@ namespace Tests.GUI
         [SetUICulture("es-ES")]
         public void FromEntry_sets_date()
         {
-            var entityUnderTest = EntryViewerModel.FromEntry(InitializeTestEntry(), 100);
+            var entityUnderTest = EntryViewerModel.FromEntry(InitializeTestEntry(), 100, GetBus());
             entityUnderTest.DreamDate.Should().Be("23/02/2018");
         }
 
         [Test]
         public void FromEntry_sets_entry_number()
         {
-            var entityUnderTest = EntryViewerModel.FromEntry(InitializeTestEntry(), 100);
+            var entityUnderTest = EntryViewerModel.FromEntry(InitializeTestEntry(), 100, GetBus());
             entityUnderTest.EntryNumber.Should().Be("Entry #100");
         }
 
         [Test]
         public void FromEntry_sets_tags()
         {
-            var entityUnderTest = EntryViewerModel.FromEntry(InitializeTestEntry(), 100);
+            var entityUnderTest = EntryViewerModel.FromEntry(InitializeTestEntry(), 100, GetBus());
             // Notice the principle of least surprise: this is a side effect of another class (the tag parser) so we need to explain why we get
             // Tag1 instead of tag1. NSubstitute allows us to use the 'because' argument
             entityUnderTest.DreamTags.Should()
@@ -48,7 +73,7 @@ namespace Tests.GUI
         [Test]
         public void FromEntry_sets_text()
         {
-            var entityUnderTest = EntryViewerModel.FromEntry(InitializeTestEntry(), 100);
+            var entityUnderTest = EntryViewerModel.FromEntry(InitializeTestEntry(), 100, GetBus());
             entityUnderTest.DreamText.Should().Be("my dream text");
         }
     }

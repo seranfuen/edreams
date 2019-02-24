@@ -33,8 +33,8 @@
             this.dateLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.entryStatusLabel = new System.Windows.Forms.Label();
-            this.deleteButton = new System.Windows.Forms.Button();
-            this.editButton = new System.Windows.Forms.Button();
+            this.DeleteButton = new System.Windows.Forms.Button();
+            this.EditButton = new System.Windows.Forms.Button();
             this.dreamText = new System.Windows.Forms.RichTextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -75,8 +75,8 @@
             this.wrapperBox.Controls.Add(this.dateLabel);
             this.wrapperBox.Controls.Add(this.label1);
             this.wrapperBox.Controls.Add(this.entryStatusLabel);
-            this.wrapperBox.Controls.Add(this.deleteButton);
-            this.wrapperBox.Controls.Add(this.editButton);
+            this.wrapperBox.Controls.Add(this.DeleteButton);
+            this.wrapperBox.Controls.Add(this.EditButton);
             this.wrapperBox.Controls.Add(this.dreamText);
             this.wrapperBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.BindingSource, "EntryNumber", true));
             this.wrapperBox.Location = new System.Drawing.Point(13, 3);
@@ -140,25 +140,25 @@
             this.entryStatusLabel.Size = new System.Drawing.Size(0, 13);
             this.entryStatusLabel.TabIndex = 11;
             // 
-            // deleteButton
+            // DeleteButton
             // 
-            this.deleteButton.Location = new System.Drawing.Point(67, 276);
-            this.deleteButton.Name = "deleteButton";
-            this.deleteButton.Size = new System.Drawing.Size(49, 23);
-            this.deleteButton.TabIndex = 10;
-            this.deleteButton.Text = "Delete";
-            this.deleteButton.UseVisualStyleBackColor = true;
-            this.deleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
+            this.DeleteButton.Location = new System.Drawing.Point(67, 276);
+            this.DeleteButton.Name = "DeleteButton";
+            this.DeleteButton.Size = new System.Drawing.Size(49, 23);
+            this.DeleteButton.TabIndex = 10;
+            this.DeleteButton.Text = "Delete";
+            this.DeleteButton.UseVisualStyleBackColor = true;
+            this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
             // 
-            // editButton
+            // EditButton
             // 
-            this.editButton.Location = new System.Drawing.Point(12, 276);
-            this.editButton.Name = "editButton";
-            this.editButton.Size = new System.Drawing.Size(49, 23);
-            this.editButton.TabIndex = 9;
-            this.editButton.Text = "Edit";
-            this.editButton.UseVisualStyleBackColor = true;
-            this.editButton.Click += new System.EventHandler(this.EditButton_Click);
+            this.EditButton.Location = new System.Drawing.Point(12, 276);
+            this.EditButton.Name = "EditButton";
+            this.EditButton.Size = new System.Drawing.Size(49, 23);
+            this.EditButton.TabIndex = 9;
+            this.EditButton.Text = "Edit";
+            this.EditButton.UseVisualStyleBackColor = true;
+            this.EditButton.Click += new System.EventHandler(this.EditButton_Click);
             // 
             // dreamText
             // 
@@ -204,8 +204,8 @@
         private System.Windows.Forms.Label dateLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label entryStatusLabel;
-        private System.Windows.Forms.Button deleteButton;
-        private System.Windows.Forms.Button editButton;
+        private System.Windows.Forms.Button DeleteButton;
+        private System.Windows.Forms.Button EditButton;
         private System.Windows.Forms.RichTextBox dreamText;
         private System.Windows.Forms.BindingSource BindingSource;
     }

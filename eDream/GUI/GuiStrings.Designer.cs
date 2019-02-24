@@ -61,6 +61,24 @@ namespace eDream.GUI {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you really want to delete this dream entry?.
+        /// </summary>
+        internal static string EntryViewer_ConfirmDeleteMessage {
+            get {
+                return ResourceManager.GetString("EntryViewer_ConfirmDeleteMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete entry?.
+        /// </summary>
+        internal static string EntryViewer_ConfirmDeleteTitle {
+            get {
+                return ResourceManager.GetString("EntryViewer_ConfirmDeleteTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your dream entry doesn&apos;t have either a text or tags..
         /// </summary>
         internal static string NewEntryForm_SaveEdit_NoTextOrTagsMessage {

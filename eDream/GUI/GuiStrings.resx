@@ -125,4 +125,10 @@
   <data name="StatusBarMessage_NumberDreamsAndDays" xml:space="preserve">
     <value>{0} {1} in {2} {3} ({4:n2} dreams/day)</value>
   </data>
+  <data name="EntryViewer_ConfirmDeleteMessage" xml:space="preserve">
+    <value>Do you really want to delete this dream entry?</value>
+  </data>
+  <data name="EntryViewer_ConfirmDeleteTitle" xml:space="preserve">
+    <value>Delete entry?</value>
+  </data>
 </root>

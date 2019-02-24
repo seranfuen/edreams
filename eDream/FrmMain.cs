@@ -314,7 +314,8 @@ namespace eDream
             {
                 if (entry.ToDelete) continue;
                 var newEntry = new CtrEntryViewer();
-                newEntry.SetViewModel(EntryViewerModel.FromEntry(entry, entryCount++));
+                newEntry.SetViewModel(EntryViewerModel.FromEntry(entry, entryCount++,
+                    InjectionKernel.Get<IDreamDiaryBus>()));
                 TableLayoutPanel.Controls.Add(newEntry);
             }
 

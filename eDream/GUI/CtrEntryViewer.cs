@@ -28,6 +28,8 @@ namespace eDream.GUI
 {
     public partial class CtrEntryViewer : UserControl
     {
+        private EntryViewerModel _viewModel;
+
         public CtrEntryViewer()
         {
             InitializeComponent();
@@ -36,31 +38,21 @@ namespace eDream.GUI
         public void SetViewModel([NotNull] EntryViewerModel viewModel)
         {
             BindingSource.DataSource = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
+            _viewModel = viewModel;
         }
 
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            //SystemSounds.Exclamation.Play();
-            //if (MessageBox.Show("Do you really want to delete this entry?",
-            //        "Delete entry?", MessageBoxButtons.YesNo,
-            //        MessageBoxIcon.Question) == DialogResult.Yes)
-            //{
-            //    theEntry.ToDelete = true;
-            //    Dispose();
-            //    parent.SaveXmlFile();
-            //    parent.RefreshEntries();
-            //}
+            if (MessageBox.Show(GuiStrings.EntryViewer_ConfirmDeleteMessage,
+                    GuiStrings.EntryViewer_ConfirmDeleteTitle, MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question) != DialogResult.Yes) return;
+            _viewModel.DeleteEntry();
         }
 
         private void EditButton_Click(object sender, EventArgs e)
         {
-            //var editEntry = new NewEntryForm(theEntry, parent.TagStatistics);
-            //editEntry.ShowDialog();
-            //if (editEntry.CreatedEntry)
-            //{
-            //    parent.SaveXmlFile();
-            //}
+            _viewModel.EditEntry();
         }
     }
 }
