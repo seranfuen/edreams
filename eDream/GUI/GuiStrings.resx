@@ -131,4 +131,16 @@
   <data name="EntryViewer_ConfirmDeleteTitle" xml:space="preserve">
     <value>Delete entry?</value>
   </data>
+  <data name="SavingDiaryFailed_Message" xml:space="preserve">
+    <value>There was an error saving your diary to {0}</value>
+  </data>
+  <data name="SavingDiaryFailed_Title" xml:space="preserve">
+    <value>Saving your diary failed</value>
+  </data>
+  <data name="FrmMain_ShowLoadingErrorMessage" xml:space="preserve">
+    <value>The file {0} is not a valid dream diary format or it has become corrupted.</value>
+  </data>
+  <data name="FrmMain_ShowLoadingErrorTitle" xml:space="preserve">
+    <value>Error loading the diary</value>
+  </data>
 </root>

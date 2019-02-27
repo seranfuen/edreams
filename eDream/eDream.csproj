@@ -147,11 +147,14 @@
     </Compile>
     <Compile Include="libs\DreamCalendarCreator.cs" />
     <Compile Include="libs\DreamFileService.cs" />
-    <Compile Include="libs\DreamSaveLoad.cs" />
+    <Compile Include="libs\DreamSaveLoadService.cs" />
     <Compile Include="libs\DreamTagStatistics.cs" />
     <Compile Include="libs\DreamTagStringBuilder.cs" />
     <Compile Include="libs\DreamTagStringExtractor.cs" />
     <Compile Include="libs\DreamTagTokens.cs" />
+    <Compile Include="libs\FinishedLoadingEventArgs.cs" />
+    <Compile Include="libs\FinishedPersistingEventArgs.cs" />
+    <Compile Include="libs\IDreamDiaryPersistenceService.cs" />
     <Compile Include="libs\IFileService.cs" />
     <Compile Include="libs\MainTagParser.cs" />
     <Compile Include="libs\TagStatTableData.cs" />
@@ -171,6 +174,7 @@
     <Compile Include="program\DreamChildStatTag.cs" />
     <Compile Include="program\DreamChildTag.cs" />
     <Compile Include="program\DreamDayEntry.cs" />
+    <Compile Include="program\DreamDiaryBus.cs" />
     <Compile Include="program\DreamEntry.cs" />
     <Compile Include="program\DreamMainStatTag.cs" />
     <Compile Include="program\DreamMainTag.cs" />

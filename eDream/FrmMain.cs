@@ -50,10 +50,8 @@ namespace eDream
         private readonly LastOpened _recentlyOpened = new LastOpened();
 
 
-        private readonly DreamSaveLoad _saveLoad = new DreamSaveLoad();
-        private readonly DreamDatabaseViewModel _viewModel = new DreamDatabaseViewModel();
-
-        private string _changingFile;
+        private readonly DreamDatabaseViewModel _viewModel =
+            new DreamDatabaseViewModel(InjectionKernel.Get<IDreamDiaryPersistenceService>());
 
 
         private List<DreamDayEntry> _currentDayList;
@@ -78,83 +76,10 @@ namespace eDream
             InitializeInterface();
         }
 
-        /// <summary>
-        ///     Gets a list of parsed Main tag statistics
-        /// </summary>
         public List<DreamMainStatTag> TagStatistics => _dreamStats.TagStatistics;
-
-        // Loads the default settings to the settings object
-        private void LoadDefaultSettings()
-        {
-            // By default load the last database
-            _defaultSettings.Add(new Settings.SettingsPair
-            {
-                Key = LoadLastDbSetting,
-                Value = "yes"
-            });
-            // By default show the welcome window
-            _defaultSettings.Add(new Settings.SettingsPair
-            {
-                Key = ShowWelcomeSetting,
-                Value = "yes"
-            });
-        }
-
-        /// <summary>
-        ///     Changes the status bar message
-        /// </summary>
-        /// <param name="text">Text to display in status bar</param>
         public void SetStatusBarMsg(string text)
         {
             entriesStatsStatus.Text = text;
-        }
-
-        /// <summary>
-        ///     Performs any one-time operations when loading the interface for
-        ///     the first time
-        /// </summary>
-        private void InitializeInterface()
-        {
-            SetUnloadedState();
-
-            DreamListBox.SelectedIndexChanged +=
-                ShowCurrentDay;
-            DreamListBox.MouseWheel += ScrollList;
-            DreamListBox.MouseClick += FocusList;
-            TableLayoutPanel.MouseClick +=
-                FocusEntryPanel;
-            _saveLoad.FinishedLoading += OnEntriesLoaded;
-            _saveLoad.FinishedSaving += OnEntriesSaved;
-            _debugIncidence += SendToDebugger;
-            Shown += LoadLastDatabase;
-            // Try to load settings
-            _settings = new Settings(SettingsFile,
-                _defaultSettings);
-        }
-
-        private void LoadLastDatabase(object sender, EventArgs e)
-        {
-            if (_loadedFirstTime || _settings.GetValue(LoadLastDbSetting) != "yes") return;
-
-            _recentlyOpened.LoadPaths();
-            SetRecentFilesMenu();
-            var recent = _recentlyOpened.GetPaths();
-            if (recent.Length > 0)
-                if (!string.IsNullOrEmpty(recent[0]))
-                {
-                    _changingFile = recent[0];
-                    LoadXmlFile();
-                }
-
-            _loadedFirstTime = true;
-        }
-
-        /// <summary>
-        ///     Display statistics about number of loaded entries in status bar
-        /// </summary>
-        private void SetStatusBarStats()
-        {
-            SetStatusBarMsg(_viewModel.StatusBarMessage);
         }
 
         public void ShowCurrentDay(object sender, EventArgs e)
@@ -165,13 +90,27 @@ namespace eDream
             LoadDayEntries(_currentDayList[DreamListBox.SelectedIndex]);
         }
 
-        /// <summary>
-        ///     Refresh the list and display all loaded entries
-        /// </summary>
-        public void RefreshEntries()
+        public void ShowErrorMessage(string title, string text)
         {
-            LoadEntriesToList(DreamCalendarCreator.GetDreamDayList(_dreamEntries)
-            );
+            MessageBox.Show(text, title, MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
+
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FrmAboutBox().ShowDialog();
+        }
+
+        private void AddEntryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _dreamStats.GenerateStatistics(_dreamEntries, _dayList);
+            var addEntryBox = new NewEntryForm(_dreamStats.TagStatistics);
+            addEntryBox.ShowDialog();
+            if (!addEntryBox.CreatedEntry) return;
+            _dreamEntries.Add(addEntryBox.NewEntry);
+            _dayList = DreamCalendarCreator.GetDreamDayList(_dreamEntries);
+            LoadEntriesToList(_dayList);
+            PersistDiary();
         }
 
         /// <summary>
@@ -183,115 +122,86 @@ namespace eDream
             TableLayoutPanel.Controls.Clear();
         }
 
-        /// <summary>
-        ///     Try to load the entries from the current XML file. It will set
-        ///     the status of the application to busy (disallows interaction with
-        ///     the GUI showing a progress bar), waiting for the signal from
-        ///     the parser
-        /// </summary>
-        private void LoadXmlFile()
+        private void ClearSearch(object sender, EventArgs e)
         {
-            _saveLoad.CurrentFile = _changingFile;
-            SetBusyStatus();
-            _saveLoad.LoadEntries();
-        }
-
-        /// <summary>
-        ///     Act when the parser informs that the loading process is finished
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnEntriesLoaded(object sender, EventArgs e)
-        {
-            // Invoke since it will be run from outside the main thread
-            Invoke(new MethodInvoker(LoadEntriesFromLoader));
-        }
-
-        /// <summary>
-        ///     Load entries from loader when it has emitted the singal that it's
-        ///     finished
-        /// </summary>
-        private void LoadEntriesFromLoader()
-        {
-            SetActiveStatus();
-            if (_saveLoad.LoadStatus == DreamSaveLoad.LoadingResult.Error)
-            {
-                ShowErrorMessage("Error", "The file " + _changingFile + " is " +
-                                          "not a valid FrmMain XML file or is corrupted", true);
-                return;
-            }
-
-            _dreamEntries = _saveLoad.EntriesFromXml;
-            _dayList = DreamCalendarCreator.GetDreamDayList(_dreamEntries);
+            SetFindsMessage("Showing all dreams");
             LoadEntriesToList(_dayList);
-            SetCurrentFile(_changingFile);
-            SetLoadedState();
+            _currentDayList = _dayList;
         }
 
-        /// <summary>
-        ///     Send the entries loaded in memory to the XML saver, set the interface
-        ///     to busy (frozen) state after which we will wait for a signal
-        /// </summary>
-        public void SaveXmlFile()
+        private void CloseDatabase()
         {
-            _saveLoad.CurrentFile = _viewModel.CurrentDatabasePath;
-            _saveLoad.EntriesToXml = _dreamEntries;
-            SetBusyStatus();
-            _saveLoad.SaveEntries();
-        }
-
-        /// <summary>
-        ///     Act when the parser informs that the saving process is finished
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnEntriesSaved(object sender, EventArgs e)
-        {
-            Invoke(new MethodInvoker(EvaluateSavedEntries));
-        }
-
-        /// <summary>
-        ///     When the saving process is finished, unfreeze the interface and
-        ///     inform, if necessary, that there was an error
-        /// </summary>
-        private void EvaluateSavedEntries()
-        {
-            SetActiveStatus();
-            if (_saveLoad.SaveStatus == DreamSaveLoad.SavingResult.Error)
-            {
-                ShowErrorMessage("Error", "There was an error saving the database" +
-                                          " to" + _viewModel.CurrentDatabasePath, true);
-                return;
-            }
-
-            SetLoadedState();
-        }
-
-        private void LoadEntriesToList(List<DreamDayEntry> entries)
-        {
-            TableLayoutPanel.Visible = false;
+            _viewModel.CurrentDatabasePath = string.Empty;
+            _dreamEntries = new List<DreamEntry>();
+            _dayList = new List<DreamDayEntry>();
+            SetUnloadedState();
             DreamListBox.Enabled = false;
-            if (entries == null || entries.Count == 0)
-            {
-                ClearRightPanel();
-                return;
-            }
+            SetStatusBarMsg(GuiStrings.StatusBar_NoDreamDiaryLoaded);
+            Text = _viewModel.FormText;
+        }
 
-            DreamListBox.Enabled = true;
-            entries.Sort();
+        private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PersistDiary();
+            CloseDatabase();
+        }
 
-            _currentDayList = entries;
-            _viewModel.DreamList = entries;
+        private void CreateNewDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateNewDreamDatabase();
+        }
 
-            DreamListBox.SelectedIndex = Math.Max(0, entries.Count - 1);
-            ShowCurrentDay(DreamListBox, new EventArgs());
-            TableLayoutPanel.Visible = true;
-            SetStatusBarStats();
+        private void CreateNewDreamDatabase()
+        {
+            var newFile = new FrmNewFileCreator();
+            newFile.ShowDialog();
+            if (newFile.Action != FrmNewFileCreator.CreateFileAction.Created) return;
+
+            closeToolStripMenuItem.PerformClick();
+            _viewModel.CurrentDatabasePath = newFile.ChosenPath;
+            LoadDiary();
         }
 
         private void EmptyEntryList()
         {
             LoadEntriesToList(null);
+        }
+
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+
+        private void FocusEntryPanel(object sender, MouseEventArgs e)
+        {
+            TableLayoutPanel.Focus();
+        }
+
+        private void FocusList(object sender, MouseEventArgs e)
+        {
+            DreamListBox.Focus();
+        }
+        private void InitializeInterface()
+        {
+            SetUnloadedState();
+
+            DreamListBox.SelectedIndexChanged +=
+                ShowCurrentDay;
+            DreamListBox.MouseWheel += ScrollList;
+            DreamListBox.MouseClick += FocusList;
+            TableLayoutPanel.MouseClick +=
+                FocusEntryPanel;
+
+            _viewModel.PersistenceFailed += (s, e) => OnPersistenceFailed();
+            _viewModel.PersistenceSucceeded += (s, e) => OnPersistenceSucceeded();
+            _viewModel.LoadingSucceeded += (s, e) => LoadEntriesFromLoader();
+            _viewModel.LoadingFailed += (s, e) => ShowLoadingErrorMessage();
+            _debugIncidence += SendToDebugger;
+            Shown += LoadLastDatabase;
+
+            _settings = new Settings(SettingsFile,
+                _defaultSettings);
         }
 
 
@@ -303,7 +213,7 @@ namespace eDream
             {
                 ShowErrorMessage("Error loading entries",
                     "This day contains no entries. Database may be" +
-                    " corrupted", true);
+                    " corrupted");
                 return;
             }
 
@@ -362,91 +272,74 @@ namespace eDream
             }
         }
 
-        private void CloseDatabase()
+        // Loads the default settings to the settings object
+        private void LoadDefaultSettings()
         {
-            _viewModel.CurrentDatabasePath = string.Empty;
-            _dreamEntries = new List<DreamEntry>();
-            _dayList = new List<DreamDayEntry>();
-            SetUnloadedState();
+            _defaultSettings.Add(new Settings.SettingsPair
+            {
+                Key = LoadLastDbSetting,
+                Value = "yes"
+            });
+
+            _defaultSettings.Add(new Settings.SettingsPair
+            {
+                Key = ShowWelcomeSetting,
+                Value = "yes"
+            });
+        }
+
+        private void LoadDiary()
+        {
+            SetBusyStatus();
+            _viewModel.LoadDiary();
+        }
+
+        private void LoadEntriesFromLoader()
+        {
+            SetActiveStatus();
+            LoadEntriesToList(_viewModel.GetDayList());
+            SetCurrentFile(_viewModel.CurrentDatabasePath);
+            SetLoadedState();
+        }
+
+
+        private void LoadEntriesToList(List<DreamDayEntry> entries)
+        {
+            TableLayoutPanel.Visible = false;
             DreamListBox.Enabled = false;
-            SetStatusBarMsg(GuiStrings.StatusBar_NoDreamDiaryLoaded);
-            Text = _viewModel.FormText;
-        }
+            if (entries == null || entries.Count == 0)
+            {
+                ClearRightPanel();
+                return;
+            }
 
-        private void SetLoadedState()
-        {
-            entryToolStripMenuItem.Enabled = true;
-            saveAsToolStripMenuItem.Enabled = true;
-            closeToolStripMenuItem.Enabled = true;
-            addEntryToolStripMenuItem.Enabled = true;
-            toolStripAdd.Enabled = true;
-            toolStripStats.Enabled = true;
-            ClearRightPanel();
-            LoadEntriesToList(_dayList);
+            DreamListBox.Enabled = true;
+            entries.Sort();
+
+            _currentDayList = entries;
+            _viewModel.DreamList = entries;
+
+            DreamListBox.SelectedIndex = Math.Max(0, entries.Count - 1);
+            ShowCurrentDay(DreamListBox, new EventArgs());
+            TableLayoutPanel.Visible = true;
             SetStatusBarStats();
-            searchToolStripMenuItem.Enabled = true;
-            _dreamStats = new DreamTagStatistics();
-            _dreamStats.GenerateStatistics(_dreamEntries, _dayList);
-            Text = _viewModel.FormText;
         }
 
-        private void SetUnloadedState()
+        private void LoadLastDatabase(object sender, EventArgs e)
         {
-            entryToolStripMenuItem.Enabled = false;
-            saveAsToolStripMenuItem.Enabled = false;
-            closeToolStripMenuItem.Enabled = false;
-            addEntryToolStripMenuItem.Enabled = false;
-            toolStripAdd.Enabled = false;
-            toolStripStats.Enabled = false;
-            searchToolStripMenuItem.Enabled = false;
-            EmptyEntryList();
-            ClearRightPanel();
-        }
+            if (_loadedFirstTime || _settings.GetValue(LoadLastDbSetting) != "yes") return;
 
-        private void SetBusyStatus()
-        {
-            Enabled = false;
-            progressBar1.Visible = true;
-            Cursor = Cursors.WaitCursor;
-        }
+            _recentlyOpened.LoadPaths();
+            SetRecentFilesMenu();
+            var recent = _recentlyOpened.GetPaths();
+            if (recent.Length > 0)
+                if (!string.IsNullOrEmpty(recent[0]))
+                {
+                    _viewModel.CurrentDatabasePath = recent[0];
+                    LoadDiary();
+                }
 
-        private void SetActiveStatus()
-        {
-            Enabled = true;
-            progressBar1.Visible = false;
-            Cursor = Cursors.Default;
-        }
-
-        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new FrmAboutBox().ShowDialog();
-        }
-
-        private void CreateNewDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CreateNewDreamDatabase();
-        }
-
-        private void CreateNewDreamDatabase()
-        {
-            var newFile = new FrmNewFileCreator();
-            newFile.ShowDialog();
-            if (newFile.Action != FrmNewFileCreator.CreateFileAction.Created) return;
-
-            closeToolStripMenuItem.PerformClick();
-            _changingFile = newFile.ChosenPath;
-            LoadXmlFile();
-        }
-
-        private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveXmlFile();
-            CloseDatabase();
+            _loadedFirstTime = true;
         }
 
         private void LoadRecentDatabase(object sender, EventArgs a)
@@ -459,10 +352,39 @@ namespace eDream
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (resultM == DialogResult.Cancel)
                 return;
-            if (resultM == DialogResult.Yes) SaveXmlFile();
+            if (resultM == DialogResult.Yes) PersistDiary();
 
-            _changingFile = theSender.FilePath;
-            LoadXmlFile();
+            _viewModel.CurrentDatabasePath = theSender.FilePath;
+            LoadDiary();
+        }
+
+        private void OnDiaryLoaded(object sender, FinishedLoadingEventArgs e)
+        {
+            Invoke((Action) LoadEntriesFromLoader);
+        }
+
+        private void OnPersistenceFailed()
+        {
+            BeginInvoke((Action) (() =>
+            {
+                ShowErrorMessage(GuiStrings.SavingDiaryFailed_Title,
+                    string.Format(GuiStrings.SavingDiaryFailed_Message, _viewModel.CurrentDatabasePath));
+                SetActiveStatus();
+                SetLoadedState();
+            }));
+        }
+
+        /// <summary>
+        ///     When the saving process is finished, unfreeze the interface and
+        ///     inform, if necessary, that there was an error
+        /// </summary>
+        private void OnPersistenceSucceeded()
+        {
+            BeginInvoke((Action) (() =>
+            {
+                SetActiveStatus();
+                SetLoadedState();
+            }));
         }
 
         private void OpenDatabaseToolStripMenuItem_Click(object sender,
@@ -474,7 +396,7 @@ namespace eDream
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (resultM == DialogResult.Cancel)
                 return;
-            if (resultM == DialogResult.Yes) SaveXmlFile();
+            if (resultM == DialogResult.Yes) PersistDiary();
 
 
             var result = openFileDialog1.ShowDialog();
@@ -483,64 +405,27 @@ namespace eDream
                 _viewModel.CurrentDatabasePath = openFileDialog1.FileName;
                 // If it was correct, we set it through SetCurrentFile to
                 // add it to recently opened
-                _changingFile = openFileDialog1.FileName;
-                LoadXmlFile();
+                _viewModel.CurrentDatabasePath = openFileDialog1.FileName;
+                LoadDiary();
             }
         }
 
-        public void ShowErrorMessage(string title, string text, bool playSound)
+        private void PersistDiary()
         {
-            MessageBox.Show(text, title, MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
-        }
-
-        private void SetCurrentFile(string file)
-        {
-            _viewModel.CurrentDatabasePath = file;
-            _recentlyOpened.AddPath(file);
-            _recentlyOpened.SavePaths();
-            SetRecentFilesMenu();
+            SetBusyStatus();
+            _viewModel.Persist();
         }
 
 
-        private void SetRecentFilesMenu()
+        private void ProcessIncidence(Exception e, string msg)
         {
-            menuRecent.Enabled = false;
-            _recentlyOpened.LoadPaths();
-            var thePaths = _recentlyOpened.GetPaths();
-            thePaths.Reverse();
-            if (thePaths.Length == 0) return;
-            menuRecent.Enabled = true;
-            menuRecent.DropDownItems.Clear();
-            var menuItems = new
-                ToolStripItem[thePaths.Length];
-            var count = 0;
-            for (var i = 0; i < thePaths.Length; i++)
+            var args = new Debug.DebugArgs
             {
-                if (string.IsNullOrEmpty(thePaths[i])) continue;
-                var newI = new RecentlyOpenedMenuItem(thePaths[i],
-                    _recentlyOpened.ShortenPath(thePaths[i]));
-                newI.Click += LoadRecentDatabase;
-                menuItems[count] = newI;
-                count++;
-            }
-
-            var menuItemsFinal = new
-                ToolStripItem[count];
-            for (var i = 0; i < count; i++) menuItemsFinal[i] = menuItems[i];
-            menuRecent.DropDownItems.AddRange(menuItemsFinal);
-        }
-
-        private void AddEntryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _dreamStats.GenerateStatistics(_dreamEntries, _dayList);
-            var addEntryBox = new NewEntryForm(_dreamStats.TagStatistics);
-            addEntryBox.ShowDialog();
-            if (!addEntryBox.CreatedEntry) return;
-            _dreamEntries.Add(addEntryBox.NewEntry);
-            _dayList = DreamCalendarCreator.GetDreamDayList(_dreamEntries);
-            LoadEntriesToList(_dayList);
-            SaveXmlFile();
+                Message = msg,
+                ExceptionMessage = e.Message,
+                StackTrace = e.StackTrace
+            };
+            _debugIncidence?.Invoke(args);
         }
 
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -549,29 +434,9 @@ namespace eDream
             if (resultSave == DialogResult.OK)
             {
                 _viewModel.CurrentDatabasePath = saveFileDialog1.FileName;
-                SaveXmlFile();
+                PersistDiary();
                 saveFileDialog1.FileName = "";
             }
-        }
-
-        private void StatisticsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _dreamStats.GenerateStatistics(_dreamEntries, _dayList);
-            var statWindow = new DreamsStatisticsShow(_dreamStats);
-            statWindow.ShowDialog();
-        }
-
-
-        private void SetFindsMessage(string str)
-        {
-            textBoxFinds.Text = str;
-        }
-
-        private void ClearSearch(object sender, EventArgs e)
-        {
-            SetFindsMessage("Showing all dreams");
-            LoadEntriesToList(_dayList);
-            _currentDayList = _dayList;
         }
 
         private void ScrollList(object sender, MouseEventArgs e)
@@ -601,38 +466,6 @@ namespace eDream
             ee.Handled = true;
         }
 
-        private void FocusList(object sender, MouseEventArgs e)
-        {
-            DreamListBox.Focus();
-        }
-
-
-        private void FocusEntryPanel(object sender, MouseEventArgs e)
-        {
-            TableLayoutPanel.Focus();
-        }
-
-
-        private void ShowSearch(object sender, EventArgs e)
-        {
-            if (_searchWindow != null && _searchWindow.Visible)
-            {
-                _searchWindow.Focus();
-            }
-            else if (_searchWindow == null)
-            {
-                _searchWindow = new SearchForm(_dreamEntries);
-                _searchWindow.OnSearchCompleted +=
-                    SearchPerformed;
-                _searchWindow.OnClear += ClearSearch;
-                _searchWindow.Show(this);
-            }
-            else
-            {
-                _searchWindow.Visible = true;
-            }
-        }
-
 
         private void SearchPerformed(object sender, EventArgs e)
         {
@@ -656,27 +489,15 @@ namespace eDream
         }
 
 
-        private void SearchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ShowSearch(this, e);
-        }
-
-
         private void SearchStripButton_Click(object sender, EventArgs e)
         {
             ShowSearch(this, e);
         }
 
 
-        private void ProcessIncidence(Exception e, string msg)
+        private void SearchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var args = new Debug.DebugArgs
-            {
-                Message = msg,
-                ExceptionMessage = e.Message,
-                StackTrace = e.StackTrace
-            };
-            _debugIncidence?.Invoke(args);
+            ShowSearch(this, e);
         }
 
 
@@ -685,12 +506,144 @@ namespace eDream
             _debug.AcceptDebug(args);
         }
 
+        private void SetActiveStatus()
+        {
+            Enabled = true;
+            progressBar1.Visible = false;
+            Cursor = Cursors.Default;
+        }
+
+        private void SetBusyStatus()
+        {
+            Enabled = false;
+            progressBar1.Visible = true;
+            Cursor = Cursors.WaitCursor;
+        }
+
+        private void SetCurrentFile(string file)
+        {
+            _viewModel.CurrentDatabasePath = file;
+            _recentlyOpened.AddPath(file);
+            _recentlyOpened.SavePaths();
+            SetRecentFilesMenu();
+        }
+
+
+        private void SetFindsMessage(string str)
+        {
+            textBoxFinds.Text = str;
+        }
+
+        private void SetLoadedState()
+        {
+            entryToolStripMenuItem.Enabled = true;
+            saveAsToolStripMenuItem.Enabled = true;
+            closeToolStripMenuItem.Enabled = true;
+            addEntryToolStripMenuItem.Enabled = true;
+            toolStripAdd.Enabled = true;
+            toolStripStats.Enabled = true;
+            ClearRightPanel();
+            LoadEntriesToList(_dayList);
+            SetStatusBarStats();
+            searchToolStripMenuItem.Enabled = true;
+            _dreamStats = new DreamTagStatistics();
+            _dreamStats.GenerateStatistics(_dreamEntries, _dayList);
+            Text = _viewModel.FormText;
+        }
+
+
+        private void SetRecentFilesMenu()
+        {
+            menuRecent.Enabled = false;
+            _recentlyOpened.LoadPaths();
+            var thePaths = _recentlyOpened.GetPaths().Reverse();
+
+            var paths = thePaths.ToList();
+            if (!paths.Any()) return;
+            menuRecent.Enabled = true;
+            menuRecent.DropDownItems.Clear();
+            var menuItems = new
+                ToolStripItem[paths.Count];
+            var count = 0;
+            foreach (var path in paths)
+            {
+                if (string.IsNullOrEmpty(path)) continue;
+                var newI = new RecentlyOpenedMenuItem(path,
+                    _recentlyOpened.ShortenPath(path));
+                newI.Click += LoadRecentDatabase;
+                menuItems[count] = newI;
+                count++;
+            }
+
+            var menuItemsFinal = new
+                ToolStripItem[count];
+            for (var i = 0; i < count; i++) menuItemsFinal[i] = menuItems[i];
+            menuRecent.DropDownItems.AddRange(menuItemsFinal);
+        }
+
+        /// <summary>
+        ///     Display statistics about number of loaded entries in status bar
+        /// </summary>
+        private void SetStatusBarStats()
+        {
+            SetStatusBarMsg(_viewModel.StatusBarMessage);
+        }
+
 
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var settings = new GUI.Settings(_settings);
             settings.ShowDialog();
             if (settings.Result == GUI.Settings.enumResult.Changed) _settings.SaveFile();
+        }
+
+        private void SetUnloadedState()
+        {
+            entryToolStripMenuItem.Enabled = false;
+            saveAsToolStripMenuItem.Enabled = false;
+            closeToolStripMenuItem.Enabled = false;
+            addEntryToolStripMenuItem.Enabled = false;
+            toolStripAdd.Enabled = false;
+            toolStripStats.Enabled = false;
+            searchToolStripMenuItem.Enabled = false;
+            EmptyEntryList();
+            ClearRightPanel();
+        }
+
+        private void ShowLoadingErrorMessage()
+        {
+            SetActiveStatus();
+
+            ShowErrorMessage(GuiStrings.FrmMain_ShowLoadingErrorTitle,
+                string.Format(GuiStrings.FrmMain_ShowLoadingErrorMessage, _viewModel.CurrentDatabasePath));
+        }
+
+
+        private void ShowSearch(object sender, EventArgs e)
+        {
+            if (_searchWindow != null && _searchWindow.Visible)
+            {
+                _searchWindow.Focus();
+            }
+            else if (_searchWindow == null)
+            {
+                _searchWindow = new SearchForm(_dreamEntries);
+                _searchWindow.OnSearchCompleted +=
+                    SearchPerformed;
+                _searchWindow.OnClear += ClearSearch;
+                _searchWindow.Show(this);
+            }
+            else
+            {
+                _searchWindow.Visible = true;
+            }
+        }
+
+        private void StatisticsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _dreamStats.GenerateStatistics(_dreamEntries, _dayList);
+            var statWindow = new DreamsStatisticsShow(_dreamStats);
+            statWindow.ShowDialog();
         }
     }
 }

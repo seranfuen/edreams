@@ -79,6 +79,24 @@ namespace eDream.GUI {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The file {0} is not a valid dream diary format or it has become corrupted..
+        /// </summary>
+        internal static string FrmMain_ShowLoadingErrorMessage {
+            get {
+                return ResourceManager.GetString("FrmMain_ShowLoadingErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error loading the diary.
+        /// </summary>
+        internal static string FrmMain_ShowLoadingErrorTitle {
+            get {
+                return ResourceManager.GetString("FrmMain_ShowLoadingErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your dream entry doesn&apos;t have either a text or tags..
         /// </summary>
         internal static string NewEntryForm_SaveEdit_NoTextOrTagsMessage {
@@ -129,6 +147,24 @@ namespace eDream.GUI {
         internal static string NewFileBox_CreateButton_FileNameValidationErrorTitle {
             get {
                 return ResourceManager.GetString("NewFileBox_CreateButton_FileNameValidationErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was an error saving your diary to {0}.
+        /// </summary>
+        internal static string SavingDiaryFailed_Message {
+            get {
+                return ResourceManager.GetString("SavingDiaryFailed_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saving your diary failed.
+        /// </summary>
+        internal static string SavingDiaryFailed_Title {
+            get {
+                return ResourceManager.GetString("SavingDiaryFailed_Title", resourceCulture);
             }
         }
         

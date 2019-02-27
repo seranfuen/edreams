@@ -26,13 +26,9 @@ using eDream.program;
 
 namespace eDream.libs
 {
-    /// <summary>
-    ///     Create a "calendar", a list of DreamDayEntry objects that represent
-    ///     an individual date
-    /// </summary>
     public class DreamCalendarCreator
     {
-        public static List<DreamDayEntry> GetDreamDayList(List<DreamEntry> entries)
+        public static List<DreamDayEntry> GetDreamDayList(IEnumerable<DreamEntry> entries)
         {
             var query =
                 from entry in entries
@@ -41,7 +37,7 @@ namespace eDream.libs
                 into g
                 select g;
 
-            return query.Select(g => new DreamDayEntry(g.Key, g.ToList())).ToList();
-         }
+            return query.Select(g => new DreamDayEntry(g.Key, g.ToList())).OrderBy(x => x.Date).ToList();
+        }
     }
 }
