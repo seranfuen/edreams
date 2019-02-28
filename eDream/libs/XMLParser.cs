@@ -94,7 +94,7 @@ namespace eDream.libs {
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        public List<DreamEntry> LoadFile(string filename) {
+        public IEnumerable<DreamEntry> LoadFile(string filename) {
             List<DreamEntry> dreamEntries = new List<DreamEntry>();
             try {
                 XMLReader = new XmlTextReader(filename);

@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+﻿    /****************************************************************************
  * FrmMain: a dream diary application
  * Author: Sergio Ángel Verbo
  * Copyright © 2012-2019, Sergio Ángel Verbo
@@ -543,11 +543,11 @@ namespace eDream
             toolStripAdd.Enabled = true;
             toolStripStats.Enabled = true;
             ClearRightPanel();
-            LoadEntriesToList(_dayList);
+            LoadEntriesToList(_viewModel.DreamList);
             SetStatusBarStats();
             searchToolStripMenuItem.Enabled = true;
             _dreamStats = new DreamTagStatistics();
-            _dreamStats.GenerateStatistics(_dreamEntries, _dayList);
+            //_dreamStats.GenerateStatistics(_dreamEntries, _dayList);
             Text = _viewModel.FormText;
         }
 

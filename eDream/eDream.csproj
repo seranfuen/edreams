@@ -157,6 +157,7 @@
     <Compile Include="libs\IDreamDiaryPersistenceService.cs" />
     <Compile Include="libs\IFileService.cs" />
     <Compile Include="libs\MainTagParser.cs" />
+    <Compile Include="libs\PersistDreamEntriesArgs.cs" />
     <Compile Include="libs\TagStatTableData.cs" />
     <Compile Include="libs\TagTableData.cs" />
     <Compile Include="FrmMain.cs">

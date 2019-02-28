@@ -29,7 +29,7 @@ namespace eDream.program
     ///     cannot contain itself any child tags) used for statistics purposes, so
     ///     a counter of how many times it has appeared is kept
     /// </summary>
-    internal class DreamChildStatTag : DreamChildTag, IComparable<DreamChildStatTag>
+    public class DreamChildStatTag : DreamChildTag, IComparable<DreamChildStatTag>
     {
         /// <summary>
         ///     Times it has appeared

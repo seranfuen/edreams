@@ -143,4 +143,7 @@
   <data name="FrmMain_ShowLoadingErrorTitle" xml:space="preserve">
     <value>Error loading the diary</value>
   </data>
+  <data name="ValueCannotBeNullOrWhitespace" xml:space="preserve">
+    <value>Value cannot be null or whitespace.</value>
+  </data>
 </root>

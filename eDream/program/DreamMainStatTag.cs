@@ -19,140 +19,145 @@
     You should have received a copy of the GNU General Public License
     along with FrmMain.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.]
 ****************************************************************************/
+
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace eDream.program {
+namespace eDream.program
+{
     /// <summary>
-    /// It represents a main tag (a tag that can have children) that is used
-    /// for statistics purposes, so a counter is added to keep track of
-    /// how many times the tag has been found (for example in the whole database)
+    ///     It represents a main tag (a tag that can have children) that is used
+    ///     for statistics purposes, so a counter is added to keep track of
+    ///     how many times the tag has been found (for example in the whole database)
     /// </summary>
-    class DreamMainStatTag : DreamMainTag, IComparable<DreamMainStatTag> {
-        
-        // Number of times the tag has been found in all the entries
-        private int tagCount = 0;
-
+    public class DreamMainStatTag : DreamMainTag, IComparable<DreamMainStatTag>
+    {
         /* List of DreamChildStatTags, redefined from main tag because we are
          * using DreamChildStatTag children to hold statistics, rather than 
          * ChildStatTag objects */
-        new private List<DreamChildStatTag> childTags = 
+        private readonly List<DreamChildStatTag> childTags =
             new List<DreamChildStatTag>();
 
+        // Number of times the tag has been found in all the entries
+        private int tagCount;
+
+        public DreamMainStatTag(string tag) : base(tag)
+        {
+        }
+
         /// <summary>
-        /// The list of DreamChildStatTag objects the main tag contains. It is
-        /// returned already sorted by count, descending order.
+        ///     The list of DreamChildStatTag objects the main tag contains. It is
+        ///     returned already sorted by count, descending order.
         /// </summary>
-        new public List<DreamChildStatTag> ChildTags {
-            get {
+        public List<DreamChildStatTag> ChildTags
+        {
+            get
+            {
                 SortChildTags();
                 return childTags;
             }
         }
 
         /// <summary>
-        /// The number of times the tag has been found
+        ///     The number of times the tag has been found
         /// </summary>
-        public int TagCount {
-            get {
-                return tagCount >= 0 ? tagCount : 0;
-            }
-        }
-
-        public DreamMainStatTag(string tag) : base(tag) { }
+        public int TagCount => tagCount >= 0 ? tagCount : 0;
 
         /// <summary>
-        /// Increments the tag count by one
-        /// </summary>
-        public void IncreaseCount() {
-            if (tagCount < 0) {
-                tagCount = 0;
-            }
-            tagCount++;
-        }
-
-        /// <summary>
-        /// This method will increase the count of a child tag by one.
-        /// If the child tag is found, its counter is increased by one. If it
-        /// is not found, a new child stat tag will be added and its counter
-        /// set to 1
-        /// </summary>
-        /// <param name="childName">Name of the child tag whose counter
-        /// we want to increase</param>
-        public void IncreaseChildCount(string childName) {
-                DreamChildStatTag childTag = GetChildStatTag(childName);
-                if (childTag == null) {
-                    DreamChildStatTag newTag = new DreamChildStatTag(childName,
-                        Tag);
-                    // Increase count since adding one means it was already found
-                    newTag.IncreaseCount();
-                    childTags.Add(newTag);
-                }
-                else { // If not necessary to add new child tag, just increase it
-                    childTag.IncreaseCount();
-                }
-        }
-
-        /// <summary>
-        /// Returns the number of times a child tag as appeared or -1 if the
-        /// child tag was not found
-        /// </summary>
-        /// <param name="childName">Name of DreamChildStatTag</param>
-        /// <returns>Number of times it has appeared or -1 if not found</returns>
-        public int GetChildTagCount(string childName) {
-            DreamChildStatTag theTag = GetChildStatTag(childName);
-            return theTag?.TagCount ?? -1;
-        }
-
-        /// <summary>
-        /// Counts the number of valid child tags contained by the main tag
-        /// </summary>
-        /// <returns>Number of child tags</returns>
-        public new int CountChildTags() {
-            return childTags.Count;
-        }
-
-        /// <summary>
-        /// A method implemented by the IComparer interface, it compares the
-        /// counter of two DreamMainStatTag objects and returns which is 
-        /// larger
+        ///     A method implemented by the IComparer interface, it compares the
+        ///     counter of two DreamMainStatTag objects and returns which is
+        ///     larger
         /// </summary>
         /// <param name="o">A DreamMainStatTag to compare to</param>
         /// <returns></returns>
-        public int CompareTo(DreamMainStatTag o) {
-            if (o == null) {
-                return 0;
-            }
-            int comp = tagCount.CompareTo(o.TagCount);
+        public int CompareTo(DreamMainStatTag o)
+        {
+            if (o == null) return 0;
+            var comp = tagCount.CompareTo(o.TagCount);
             // If tag cont is the same, sort them by name
-            if (comp == 0) {
-                return -Tag.CompareTo(o.Tag);
-            }
+            if (comp == 0) return -Tag.CompareTo(o.Tag);
             return comp;
         }
 
         /// <summary>
-        /// Returns a child stat tag matching the name given or null if child
-        /// tag was not found. Care should be taken because there can be 
-        /// null returns
+        ///     Counts the number of valid child tags contained by the main tag
+        /// </summary>
+        /// <returns>Number of child tags</returns>
+        public int CountChildTags()
+        {
+            return childTags.Count;
+        }
+
+        /// <summary>
+        ///     Returns the number of times a child tag as appeared or -1 if the
+        ///     child tag was not found
+        /// </summary>
+        /// <param name="childName">Name of DreamChildStatTag</param>
+        /// <returns>Number of times it has appeared or -1 if not found</returns>
+        public int GetChildTagCount(string childName)
+        {
+            var theTag = GetChildStatTag(childName);
+            return theTag?.TagCount ?? -1;
+        }
+
+        /// <summary>
+        ///     This method will increase the count of a child tag by one.
+        ///     If the child tag is found, its counter is increased by one. If it
+        ///     is not found, a new child stat tag will be added and its counter
+        ///     set to 1
+        /// </summary>
+        /// <param name="childName">
+        ///     Name of the child tag whose counter
+        ///     we want to increase
+        /// </param>
+        public void IncreaseChildCount(string childName)
+        {
+            var childTag = GetChildStatTag(childName);
+            if (childTag == null)
+            {
+                var newTag = new DreamChildStatTag(childName,
+                    Tag);
+                // Increase count since adding one means it was already found
+                newTag.IncreaseCount();
+                childTags.Add(newTag);
+            }
+            else
+            {
+                // If not necessary to add new child tag, just increase it
+                childTag.IncreaseCount();
+            }
+        }
+
+        /// <summary>
+        ///     Increments the tag count by one
+        /// </summary>
+        public void IncreaseCount()
+        {
+            if (tagCount < 0) tagCount = 0;
+            tagCount++;
+        }
+
+        /// <summary>
+        ///     Returns a child stat tag matching the name given or null if child
+        ///     tag was not found. Care should be taken because there can be
+        ///     null returns
         /// </summary>
         /// <param name="childTag">Name of child stat tag. Non case sensitive</param>
         /// <returns>Null if not found, or the DreamChildStatTag object</returns>
-        private DreamChildStatTag GetChildStatTag(string childTag) {
-             for (int i = 0; i < childTags.Count; i++) {
-                if (string.Compare(childTags[i].Tag, childTag, true) 
-                    == 0) {
+        private DreamChildStatTag GetChildStatTag(string childTag)
+        {
+            for (var i = 0; i < childTags.Count; i++)
+                if (string.Compare(childTags[i].Tag, childTag, true)
+                    == 0)
                     return childTags[i];
-                }
-            }
             return null;
         }
 
         /// <summary>
-        /// Sorts by count in reverse order the list of ChildTags
+        ///     Sorts by count in reverse order the list of ChildTags
         /// </summary>
-        private void SortChildTags() {
+        private void SortChildTags()
+        {
             childTags.Sort();
             childTags.Reverse();
         }
