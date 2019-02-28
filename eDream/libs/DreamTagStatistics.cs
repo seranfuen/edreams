@@ -19,210 +19,131 @@
     You should have received a copy of the GNU General Public License
     along with FrmMain.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.]
 ****************************************************************************/
+
 using System;
 using System.Collections.Generic;
-using System.Text;
 using eDream.program;
 using EvilTools;
 
-namespace eDream.libs {
+namespace eDream.libs
+{
+    public class DreamTagStatistics
+    {
+        private const int LeftTab = 5;
 
-    /// <summary>
-    /// This class parses the tags of a list of dream entries and generates
-    /// statistics of the number of times each tag has appeared, or a list
-    /// of unique tags found
-    /// </summary>
-    class DreamTagStatistics {
-    
-        /// <summary>
-        /// Number of spaces on the left for making child tags distinct from
-        /// their parents in the formatted list
-        /// </summary>
-        private const int leftTab = 5;
+        private const string RtfHeader =
+            @"{\rtf1\ansi{\fonttbl\f0\fswiss Helvetica;}\fs20";
 
-        /// <summary>
-        /// RTF commands for the formatted list
-        /// </summary>
-        private const string RTFHeader = 
-                            @"{\rtf1\ansi{\fonttbl\f0\fswiss Helvetica;}\fs20";
-        private const string boldStart = @"\b ";
-        private const string boldEnd = @"\b0 ";
-        private const string lineBreak = @"\line";
+        private const string BoldStart = @"\b ";
+        private const string BoldEnd = @"\b0 ";
+        private const string LineBreak = @"\line";
 
-        /// <summary>
-        /// Separator for a list of tags
-        /// </summary>
-        private const string tagListSeparator = ", ";
-        
-        /// <summary>
-        /// List objects for parsing the tags
-        /// </summary>
-        private List<DreamEntry> dreamEntries;
-        private List<DreamDayEntry> dayList;
-        /// <summary>
-        /// The list of DreamMainStatTag objects once the entries are parsed
-        /// </summary>
-        private List<DreamMainStatTag> tagStatistics;
-        /// <summary>
-        /// Number of (valid) total days and (valid) total entries contained
-        /// </summary>
-        private int totalDays = 0;
-        private int totalEntries = 0;
+        private const string TagListSeparator = ", ";
+        private List<DreamDayEntry> _dayList;
 
-        /// <summary>
-        /// Gets the number of different days that have entries
-        /// </summary>
-        public int TotalDays {
-            get {
-                return totalDays;
-            }
-        }
 
-        /// <summary>
-        /// Total number of entries parsed
-        /// </summary>
-        public int TotalEntries {
-            get {
-                return totalEntries;
-            }
-        }
+        private List<DreamEntry> _dreamEntries;
 
-        /// <summary>
-        /// Returns the list of DreamMainStatTag objects
-        /// </summary>
-        public List<DreamMainStatTag> TagStatistics {
-            get {
-                return tagStatistics;
-            }
-        }
+        public int TotalDays { get; private set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="newEntries">The Entries to be Parsed</param>
-        /// <param name="dayList">List of days containing entries</param>
+        public int TotalEntries { get; private set; }
+
+        public List<DreamMainStatTag> TagStatistics { get; private set; }
+
         public void GenerateStatistics(List<DreamEntry> newEntries,
-                                       List<DreamDayEntry> dayList) {
-            dreamEntries = newEntries;
-            this.dayList = dayList;
-            tagStatistics = new List<DreamMainStatTag>();
+            List<DreamDayEntry> dayList)
+        {
+            _dreamEntries = newEntries;
+            _dayList = dayList;
+            TagStatistics = new List<DreamMainStatTag>();
             // Process all the dreamEntries list
-            for (int i = 0; i < dreamEntries.Count; i++) {
+            foreach (var t in _dreamEntries)
+            {
                 // Skip if invalid entry (e.g. set to delete)
-                if (!dreamEntries[i].GetIfValid()) {
-                    continue;
-                }
-                var iTags = dreamEntries[i].GetTagsAsList();
+                if (!t.GetIfValid()) continue;
+                var iTags = t.GetTagsAsList();
                 /**
                  * Loops through all the tags obtained from the entry and
                  * searches the current tagStatistics list. If they are found,
                  * their count will be increased. If not found, a new StatTag
                  * will be created at the end of the list
-                 */ 
-                for (int j = 0; j < iTags.Count; j++) {
+                 */
+                foreach (var tag in iTags)
+                {
                     // Tag will be at this position if it is added to the list
-                    int mainTagPos = tagStatistics.Count; 
+                    var mainTagPos = TagStatistics.Count;
                     // Search for a tentative position of an already existing list
-                    int pos = IsInList(tagStatistics, iTags[j]);
-                    if (pos == -1) { // Not found, add new stat tag
-                        tagStatistics.Add(new DreamMainStatTag(iTags[j].Tag));
-                    }
-                    else { // Found, set mainTagPos to the pos found
+                    var pos = IsInList(TagStatistics, tag);
+                    if (pos == -1)
+                        TagStatistics.Add(new DreamMainStatTag(tag.Tag));
+                    else
                         mainTagPos = pos;
-                    }
-                    tagStatistics[mainTagPos].IncreaseCount();
-                    // Parse all its child tags
-                    List<DreamChildTag> iChildTags = iTags[j].ChildTags;
-                    for (int k = 0; k < iChildTags.Count; k++) {
-                        tagStatistics[mainTagPos].IncreaseChildCount(iChildTags[k].Tag);
-                    }
+                    TagStatistics[mainTagPos].IncreaseCount();
+
+                    var iChildTags = tag.ChildTags;
+                    foreach (var childTag in iChildTags) TagStatistics[mainTagPos].IncreaseChildCount(childTag.Tag);
                 }
             }
-            // Sort by tag count in reverse order the main tags
-            tagStatistics.Sort();
-            tagStatistics.Reverse();
+
+            TagStatistics.Sort();
+            TagStatistics.Reverse();
             CountEntriesAndDays();
         }
-        
-        /// <summary>
-        /// Generates an RTF format string with the statistics from higher count
-        /// to lower, including child tags
-        /// </summary>
-        /// <returns></returns>
-        public string GenerateStatisticsStr() {
-            string str = RTFHeader;
-            for (int i = 0; i < tagStatistics.Count; i++) {
-                str += boldStart + tagStatistics[i].Tag +
-                    boldEnd + "  —  " +
-                    tagStatistics[i].TagCount + "  (" + 
-                    StringUtils.GeneratePercentageAsStr(tagStatistics[i].TagCount, TotalEntries) + 
-                    "%)" + lineBreak;
-                List<DreamChildStatTag> childTags = tagStatistics[i].ChildTags;
-                for (int j = 0; j < childTags.Count; j++) {
-                    str += StringUtils.GenerateSpaces(leftTab) +
-                        childTags[j].Tag + "  —  " +
-                        childTags[j].TagCount + "  (" +
-                        StringUtils.GeneratePercentageAsStr(childTags[j].TagCount,
-                        childTags.Count) + "%)" + lineBreak;
-                }
-                str += lineBreak;
+
+
+        public string GenerateStatisticsStr()
+        {
+            var str = RtfHeader;
+            foreach (var tag in TagStatistics)
+            {
+                str += BoldStart + tag.Tag +
+                       BoldEnd + "  —  " +
+                       tag.TagCount + "  (" +
+                       StringUtils.GeneratePercentageAsStr(tag.TagCount, TotalEntries) +
+                       "%)" + LineBreak;
+                var childTags = tag.ChildTags;
+                foreach (var childTag in childTags)
+                    str += StringUtils.GenerateSpaces(LeftTab) +
+                           childTag.Tag + "  —  " +
+                           childTag.TagCount + "  (" +
+                           StringUtils.GeneratePercentageAsStr(childTag.TagCount,
+                               childTags.Count) + "%)" + LineBreak;
+                str += LineBreak;
             }
+
             return str;
         }
 
-        /// <summary>
-        /// Returns a string array containing the names of all the tags parsed
-        /// </summary>
-        /// <returns></returns>
-        public string[] GetTagList() {
-            string[] tagList = new string[tagStatistics.Count];
-            for (int i = 0; i < tagStatistics.Count; i++) {
-                if (!string.IsNullOrWhiteSpace(tagStatistics[i].Tag)) {
-                    tagList[i] = tagStatistics[i].Tag;
-                }
-            }
+        public string[] GetTagList()
+        {
+            var tagList = new string[TagStatistics.Count];
+            for (var i = 0; i < TagStatistics.Count; i++)
+                if (!string.IsNullOrWhiteSpace(TagStatistics[i].Tag))
+                    tagList[i] = TagStatistics[i].Tag;
             return tagList;
         }
 
-        /// <summary>
-        /// Searches the tagStatistics list for the given tag. If it is found,
-        /// will return its index position within the list. If not found, will
-        /// return -1
-        /// </summary>
-        /// <param name="list">The list where it will be searched</param>
-        /// <param name="element">A DreamTag object to search in list</param>
-        /// <returns>-1 if not found, index number within the provided list
-        /// if found</returns>
-        private int IsInList(List<DreamMainStatTag> list, DreamTag element) {
-            if (element == null || list == null) {
-                return -1;
-            }
-            for (int i = 0; i < list.Count; i++) {
-                if (list[i].Tag.ToLower() ==
-                    element.Tag.ToLower()) {
-                    return i;
-                }
-            }
-            return -1;
+
+        private void CountEntriesAndDays()
+        {
+            TotalDays = 0;
+            // Days are considered valid if they contain at least one entry
+            foreach (var day in _dayList)
+                if (day.Count > 0)
+                    TotalDays++;
+            TotalEntries = 0;
+            foreach (var entry in _dreamEntries)
+                if (entry.GetIfValid())
+                    TotalEntries++;
         }
 
-        /// <summary>
-        /// Counts the number of valid days and entries
-        /// </summary>
-        private void CountEntriesAndDays() {
-            totalDays = 0;
-            // Days are considered valid if they contain at least one entry
-            for (int i = 0; i < dayList.Count; i++) {
-                if (dayList[i].Count > 0) {
-                    totalDays++;
-                }
-            }
-            totalEntries = 0;
-            for (int i = 0; i < dreamEntries.Count; i++) {
-                if (dreamEntries[i].GetIfValid()) {
-                    totalEntries++;
-                }
-            }
+        private static int IsInList(IReadOnlyList<DreamMainStatTag> list, DreamTag element)
+        {
+            if (element == null || list == null) return -1;
+            for (var i = 0; i < list.Count; i++)
+                if (string.Equals(list[i].Tag, element.Tag, StringComparison.CurrentCultureIgnoreCase))
+                    return i;
+            return -1;
         }
     }
 }

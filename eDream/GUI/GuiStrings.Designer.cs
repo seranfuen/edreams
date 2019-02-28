@@ -194,5 +194,14 @@ namespace eDream.GUI {
                 return ResourceManager.GetString("StatusBarMessage_NumberDreamsAndDays", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value cannot be null or whitespace..
+        /// </summary>
+        internal static string ValueCannotBeNullOrWhitespace {
+            get {
+                return ResourceManager.GetString("ValueCannotBeNullOrWhitespace", resourceCulture);
+            }
+        }
     }
 }
