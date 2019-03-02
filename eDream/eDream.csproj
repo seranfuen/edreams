@@ -169,8 +169,8 @@
     <Compile Include="libs\DreamSearchUtils.cs" />
     <Compile Include="libs\DreamTagParser.cs" />
     <Compile Include="libs\XMLConstants.cs" />
-    <Compile Include="libs\XMLParser.cs" />
-    <Compile Include="libs\XMLWriter.cs" />
+    <Compile Include="libs\DiaryXmlReader.cs" />
+    <Compile Include="libs\DiaryXmlWriter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="program\DreamChildStatTag.cs" />
     <Compile Include="program\DreamChildTag.cs" />

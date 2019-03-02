@@ -11,7 +11,7 @@ namespace eDream.libs
 
         public void CreateDatabaseFile(string path)
         {
-            var writer = new XMLWriter();
+            var writer = new DiaryXmlWriter();
             writer.CreateFile(path);
         }
     }

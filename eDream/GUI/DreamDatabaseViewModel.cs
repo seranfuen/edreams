@@ -118,5 +118,10 @@ namespace eDream.GUI
         {
             return DreamCount > 1 ? "dreams" : "dream";
         }
+
+        public DreamTagStatistics GetDreamTagStatistics()
+        {
+            return new DreamTagStatistics(_dreamEntries);
+        }
     }
 }

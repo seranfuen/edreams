@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using eDream.Annotations;
 using eDream.GUI;
 using eDream.program;
@@ -61,7 +62,7 @@ namespace eDream.libs
         {
             if (!(e.Argument is string path)) return;
 
-            var xmlReader = new XMLParser();
+            var xmlReader = new DiaryXmlReader();
             e.Result = !xmlReader.IsFileValid(path) ? null : xmlReader.LoadFile(path);
         }
 
@@ -75,10 +76,10 @@ namespace eDream.libs
 
         private static void PersistBackgroundWorkerOnDoWork(object sender, DoWorkEventArgs e)
         {
-            var xmlSaver = new XMLWriter();
+            var xmlSaver = new DiaryXmlWriter();
             var arg = (PersistDreamEntriesArgs) e.Argument;
 
-            var result = xmlSaver.ParseEntries(arg.Path, arg.Entries);
+            var result = xmlSaver.WriteEntriesToFile(arg.Path, arg.Entries.Where(entry => !entry.ToDelete));
             e.Result = result ? PersistenceOperationResult.Successful : PersistenceOperationResult.Error;
         }
 

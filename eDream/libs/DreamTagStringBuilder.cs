@@ -19,9 +19,7 @@ namespace eDream.libs
 
         public override string ToString()
         {
-            var formattedTags = _tags.Select(FormatTag);
-
-            return string.Join(Separator, formattedTags);
+            return string.Join(Separator, _tags.Select(FormatTag));
         }
 
         private static string FormatTag(DreamMainTag tag)

@@ -1,4 +1,4 @@
-﻿    /****************************************************************************
+﻿/****************************************************************************
  * FrmMain: a dream diary application
  * Author: Sergio Ángel Verbo
  * Copyright © 2012-2019, Sergio Ángel Verbo
@@ -62,8 +62,6 @@ namespace eDream
 
         private List<DreamEntry> _dreamEntries;
 
-        private DreamTagStatistics _dreamStats;
-
         private bool _loadedFirstTime;
         private SearchForm _searchWindow;
         private Settings _settings;
@@ -76,7 +74,6 @@ namespace eDream
             InitializeInterface();
         }
 
-        public List<DreamMainStatTag> TagStatistics => _dreamStats.TagStatistics;
         public void SetStatusBarMsg(string text)
         {
             entriesStatsStatus.Text = text;
@@ -103,7 +100,7 @@ namespace eDream
 
         private void AddEntryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var addEntryBox = new NewEntryForm(_dreamStats.TagStatistics);
+            var addEntryBox = new NewEntryForm(_viewModel.GetDreamTagStatistics().TagStatistics);
             addEntryBox.ShowDialog();
             if (!addEntryBox.CreatedEntry) return;
             _dreamEntries.Add(addEntryBox.NewEntry);
@@ -181,6 +178,7 @@ namespace eDream
         {
             DreamListBox.Focus();
         }
+
         private void InitializeInterface()
         {
             SetUnloadedState();
@@ -545,7 +543,6 @@ namespace eDream
             LoadEntriesToList(_viewModel.DreamList);
             SetStatusBarStats();
             searchToolStripMenuItem.Enabled = true;
-            //_dreamStats.GenerateStatistics(_dreamEntries, _dayList);
             Text = _viewModel.FormText;
         }
 
@@ -639,7 +636,7 @@ namespace eDream
 
         private void StatisticsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var statWindow = new DreamsStatisticsShow(_dreamStats);
+            var statWindow = new DreamsStatisticsShow(_viewModel.GetDreamTagStatistics());
             statWindow.ShowDialog();
         }
     }
