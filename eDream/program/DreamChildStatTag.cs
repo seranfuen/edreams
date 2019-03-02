@@ -21,56 +21,35 @@
 ****************************************************************************/
 
 using System;
+using eDream.Annotations;
+using EvilTools;
 
 namespace eDream.program
 {
-    /// <summary>
-    ///     Represents a child tag (a tag that is contained in a main tag but which
-    ///     cannot contain itself any child tags) used for statistics purposes, so
-    ///     a counter of how many times it has appeared is kept
-    /// </summary>
-    public class DreamChildStatTag : DreamChildTag, IComparable<DreamChildStatTag>
+    public class DreamChildStatTag : IComparable<DreamChildStatTag>
     {
-        /// <summary>
-        ///     Times it has appeared
-        /// </summary>
-        private int tagCount;
-
-        public DreamChildStatTag(string tag, string parentName) :
-            base(tag)
+        public DreamChildStatTag([NotNull] string tag)
         {
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
+            Tag = StringUtils.CapitalizeString(tag);
         }
 
-        /// <summary>
-        ///     The number of times the tag has been found
-        /// </summary>
-        public int TagCount => tagCount >= 0 ? tagCount : 0;
+        public string Tag { get; }
 
+        public int TagCount { get; private set; }
 
-        /// <summary>
-        ///     A method implemented by the IComparer interface, it compares the
-        ///     counter of two DreamChildStatTag objects and returns which is
-        ///     larger
-        /// </summary>
-        /// <param name="o">A DreamChildStatTag to compare to</param>
-        /// <returns></returns>
         public int CompareTo(DreamChildStatTag o)
         {
             if (o == null) return 0;
-            var comp = tagCount.CompareTo(o.TagCount);
-            // If tag cont is the same, sort them by name
+            var comp = TagCount.CompareTo(o.TagCount);
             if (comp == 0)
-                return -Tag.CompareTo(o.Tag);
+                return -string.Compare(Tag, o.Tag, StringComparison.Ordinal);
             return comp;
         }
 
-        /// <summary>
-        ///     Increments the tag count by one
-        /// </summary>
         public void IncreaseCount()
         {
-            if (tagCount < 0) tagCount = 0;
-            tagCount++;
+            TagCount++;
         }
     }
 }

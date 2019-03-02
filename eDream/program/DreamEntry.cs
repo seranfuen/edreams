@@ -70,8 +70,10 @@ namespace eDream.program
         public bool ToDelete
         {
             set => _toDelete = value;
-            get => _toDelete || !GetIfValid();
+            get => _toDelete || !IsValid;
         }
+
+        public bool IsValid => _isTextValid && !_toDelete;
 
 
         public string GetDateAsStr()
@@ -97,11 +99,6 @@ namespace eDream.program
         public string GetTagString()
         {
             return DreamTagParser.TagsToString(_tags);
-        }
-
-        public bool GetIfValid()
-        {
-            return _isTextValid && !_toDelete;
         }
 
         public bool DreamTextContains(string value)

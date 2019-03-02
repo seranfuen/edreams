@@ -97,7 +97,7 @@ namespace eDream.GUI {
                     statTags[i].TagCount, _stats.TotalEntries, false));
                 // Generate child tags too
                 if (_showChildTags) {
-                    List<DreamChildStatTag> childTags = statTags[i].ChildTags;
+                    List<DreamChildStatTag> childTags = statTags[i].ChildStatTags;
                     for (int j = 0; j < childTags.Count; j++) {
                         tableData.Add(new TagStatTableData(childTags[j].Tag,
                             childTags[j].TagCount, _stats.TotalEntries, true));

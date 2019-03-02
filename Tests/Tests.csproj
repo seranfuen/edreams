@@ -81,8 +81,10 @@
     <Compile Include="GUI\NewFileViewModelTests.cs" />
     <Compile Include="Program\DreamDayListTests.cs" />
     <Compile Include="Program\DreamEntryTests.cs" />
+    <Compile Include="Program\DreamMainStatTagTests.cs" />
     <Compile Include="Program\DreamMainTagTests.cs" />
     <Compile Include="Program\DreamTagParserTests.cs" />
+    <Compile Include="Program\DreamTagStatisticsTests.cs" />
     <Compile Include="Program\DreamTagStringBuilderTests.cs" />
     <Compile Include="Program\DreamTagStringExtractorTests.cs" />
     <Compile Include="Program\MainTagParserTests.cs" />

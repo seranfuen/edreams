@@ -22,144 +22,80 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using eDream.Annotations;
+using EvilTools;
 
 namespace eDream.program
 {
-    /// <summary>
-    ///     It represents a main tag (a tag that can have children) that is used
-    ///     for statistics purposes, so a counter is added to keep track of
-    ///     how many times the tag has been found (for example in the whole database)
-    /// </summary>
-    public class DreamMainStatTag : DreamMainTag, IComparable<DreamMainStatTag>
+    public class DreamMainStatTag : IComparable<DreamMainStatTag>
     {
-        /* List of DreamChildStatTags, redefined from main tag because we are
-         * using DreamChildStatTag children to hold statistics, rather than 
-         * ChildStatTag objects */
-        private readonly List<DreamChildStatTag> childTags =
+        private readonly List<DreamChildStatTag> _childTags =
             new List<DreamChildStatTag>();
 
-        // Number of times the tag has been found in all the entries
-        private int tagCount;
-
-        public DreamMainStatTag(string tag) : base(tag)
+        public DreamMainStatTag([NotNull] string tag)
         {
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
+            Tag = StringUtils.CapitalizeString(tag);
         }
 
-        /// <summary>
-        ///     The list of DreamChildStatTag objects the main tag contains. It is
-        ///     returned already sorted by count, descending order.
-        /// </summary>
-        public List<DreamChildStatTag> ChildTags
+        public List<DreamChildStatTag> ChildStatTags
         {
             get
             {
                 SortChildTags();
-                return childTags;
+                return _childTags.ToList();
             }
         }
 
-        /// <summary>
-        ///     The number of times the tag has been found
-        /// </summary>
-        public int TagCount => tagCount >= 0 ? tagCount : 0;
+        public string Tag { get; }
 
-        /// <summary>
-        ///     A method implemented by the IComparer interface, it compares the
-        ///     counter of two DreamMainStatTag objects and returns which is
-        ///     larger
-        /// </summary>
-        /// <param name="o">A DreamMainStatTag to compare to</param>
-        /// <returns></returns>
+        public int TagCount { get; private set; }
+
         public int CompareTo(DreamMainStatTag o)
         {
             if (o == null) return 0;
-            var comp = tagCount.CompareTo(o.TagCount);
-            // If tag cont is the same, sort them by name
-            if (comp == 0) return -Tag.CompareTo(o.Tag);
+            var comp = TagCount.CompareTo(o.TagCount);
+            if (comp == 0) return -string.Compare(Tag, o.Tag, StringComparison.Ordinal);
             return comp;
         }
 
-        /// <summary>
-        ///     Counts the number of valid child tags contained by the main tag
-        /// </summary>
-        /// <returns>Number of child tags</returns>
-        public int CountChildTags()
-        {
-            return childTags.Count;
-        }
 
-        /// <summary>
-        ///     Returns the number of times a child tag as appeared or -1 if the
-        ///     child tag was not found
-        /// </summary>
-        /// <param name="childName">Name of DreamChildStatTag</param>
-        /// <returns>Number of times it has appeared or -1 if not found</returns>
-        public int GetChildTagCount(string childName)
-        {
-            var theTag = GetChildStatTag(childName);
-            return theTag?.TagCount ?? -1;
-        }
-
-        /// <summary>
-        ///     This method will increase the count of a child tag by one.
-        ///     If the child tag is found, its counter is increased by one. If it
-        ///     is not found, a new child stat tag will be added and its counter
-        ///     set to 1
-        /// </summary>
-        /// <param name="childName">
-        ///     Name of the child tag whose counter
-        ///     we want to increase
-        /// </param>
         public void IncreaseChildCount(string childName)
         {
             var childTag = GetChildStatTag(childName);
             if (childTag == null)
             {
-                var newTag = new DreamChildStatTag(childName,
-                    Tag);
-                // Increase count since adding one means it was already found
+                var newTag = new DreamChildStatTag(childName);
                 newTag.IncreaseCount();
-                childTags.Add(newTag);
+                _childTags.Add(newTag);
             }
             else
             {
-                // If not necessary to add new child tag, just increase it
                 childTag.IncreaseCount();
             }
         }
 
-        /// <summary>
-        ///     Increments the tag count by one
-        /// </summary>
         public void IncreaseCount()
         {
-            if (tagCount < 0) tagCount = 0;
-            tagCount++;
+            TagCount++;
         }
 
-        /// <summary>
-        ///     Returns a child stat tag matching the name given or null if child
-        ///     tag was not found. Care should be taken because there can be
-        ///     null returns
-        /// </summary>
-        /// <param name="childTag">Name of child stat tag. Non case sensitive</param>
-        /// <returns>Null if not found, or the DreamChildStatTag object</returns>
-        private DreamChildStatTag GetChildStatTag(string childTag)
+        private DreamChildStatTag GetChildStatTag(string childTagName)
         {
-            for (var i = 0; i < childTags.Count; i++)
-                if (string.Compare(childTags[i].Tag, childTag, true)
-                    == 0)
-                    return childTags[i];
-            return null;
+            return _childTags.FirstOrDefault(tag =>
+                string.Equals(tag.Tag, childTagName, StringComparison.OrdinalIgnoreCase));
         }
 
-        /// <summary>
-        ///     Sorts by count in reverse order the list of ChildTags
-        /// </summary>
         private void SortChildTags()
         {
-            childTags.Sort();
-            childTags.Reverse();
+            _childTags.Sort();
+            _childTags.Reverse();
+        }
+
+        public bool IsTag(string tagName)
+        {
+            return string.Equals(Tag, tagName, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

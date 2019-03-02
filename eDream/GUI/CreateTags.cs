@@ -178,7 +178,7 @@ namespace eDream.GUI {
                 });
                 if (showingChildTags) {
                     // Add child tags
-                    List<DreamChildStatTag> childTags = statTags[i].ChildTags;
+                    List<DreamChildStatTag> childTags = statTags[i].ChildStatTags;
                     for (int j = 0; j < childTags.Count; j++) {
                         tableData.Add(new TagTableData {
                             Tag = EvilTools.StringUtils.GenerateSpaces(childTab)
@@ -210,7 +210,7 @@ namespace eDream.GUI {
                     }
                     // Add child tags
                     if (showingChildTags) {
-                        List<DreamChildStatTag> childTags = statTags[i].ChildTags;
+                        List<DreamChildStatTag> childTags = statTags[i].ChildStatTags;
                         for (int j = 0; j < childTags.Count; j++) {
                             finds.Add(new TagTableData {
                                 Tag = childTab + childTags[j].Tag,
@@ -353,8 +353,8 @@ namespace eDream.GUI {
             int maxCount = 0;
             string parent = string.Empty;
             for (int i = 0; i < statTags.Count; i++) {
-                for (int j = 0; j < statTags[i].ChildTags.Count; j++) {
-                    if (string.Compare(statTags[i].ChildTags[j].Tag,
+                for (int j = 0; j < statTags[i].ChildStatTags.Count; j++) {
+                    if (string.Compare(statTags[i].ChildStatTags[j].Tag,
                         childTag, true) == 0) {
                             if (maxCount < statTags[i].TagCount) {
                                 parent = statTags[i].Tag;

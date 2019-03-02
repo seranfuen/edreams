@@ -22,82 +22,60 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using eDream.Annotations;
 using eDream.program;
 
 namespace eDream.libs
 {
     public class DreamTagStatistics
     {
-        private List<DreamDayEntry> _dayList;
+        private readonly IEnumerable<DreamEntry> _dreamEntries;
+        private readonly List<DreamMainStatTag> _tagStatistics = new List<DreamMainStatTag>();
 
-        private List<DreamEntry> _dreamEntries;
-
-        public int TotalDays { get; private set; }
-
-        public int TotalEntries { get; private set; }
-
-        public List<DreamMainStatTag> TagStatistics { get; private set; }
-
-        public void GenerateStatistics(List<DreamEntry> newEntries,
-            List<DreamDayEntry> dayList)
+        public DreamTagStatistics([NotNull] IEnumerable<DreamEntry> dreamEntries)
         {
-            _dreamEntries = newEntries;
-            _dayList = dayList;
-            TagStatistics = new List<DreamMainStatTag>();
-            // Process all the dreamEntries list
-            foreach (var t in _dreamEntries)
-            {
-                // Skip if invalid entry (e.g. set to delete)
-                if (!t.GetIfValid()) continue;
-                var iTags = t.GetTagsAsList();
-                /**
-                 * Loops through all the tags obtained from the entry and
-                 * searches the current tagStatistics list. If they are found,
-                 * their count will be increased. If not found, a new StatTag
-                 * will be created at the end of the list
-                 */
-                foreach (var tag in iTags)
-                {
-                    // Tag will be at this position if it is added to the list
-                    var mainTagPos = TagStatistics.Count;
-                    // Search for a tentative position of an already existing list
-                    var pos = IsInList(TagStatistics, tag);
-                    if (pos == -1)
-                        TagStatistics.Add(new DreamMainStatTag(tag.Tag));
-                    else
-                        mainTagPos = pos;
-                    TagStatistics[mainTagPos].IncreaseCount();
+            _dreamEntries = dreamEntries ?? throw new ArgumentNullException(nameof(dreamEntries));
+            var dreamEntryList = dreamEntries.ToList();
+            TotalDays = dreamEntryList.GroupBy(dream => dream.Date.Date).Count();
+            TotalEntries = dreamEntryList.Count;
+            GenerateStatistics();
+        }
 
-                    var iChildTags = tag.ChildTags;
-                    foreach (var childTag in iChildTags) TagStatistics[mainTagPos].IncreaseChildCount(childTag.Tag);
+        public int TotalDays { get; }
+
+        public int TotalEntries { get; }
+
+        public List<DreamMainStatTag> TagStatistics => _tagStatistics.ToList();
+
+        private void GenerateStatistics()
+        {
+            foreach (var dreamEntry in _dreamEntries)
+            {
+                if (!dreamEntry.IsValid) continue;
+
+                var tags = dreamEntry.GetTagsAsList();
+
+                foreach (var tag in tags)
+                {
+                    var mainStatTag = GetExistingOrCreateMainTag(tag.Tag);
+                    mainStatTag.IncreaseCount();
+                    foreach (var childTag in tag.ChildTags) mainStatTag.IncreaseChildCount(childTag.Tag);
                 }
             }
 
             TagStatistics.Sort();
             TagStatistics.Reverse();
-            CountEntriesAndDays();
         }
 
-        private void CountEntriesAndDays()
+        private DreamMainStatTag GetExistingOrCreateMainTag(string tagName)
         {
-            TotalDays = 0;
-            // Days are considered valid if they contain at least one entry
-            foreach (var day in _dayList)
-                if (day.Count > 0)
-                    TotalDays++;
-            TotalEntries = 0;
-            foreach (var entry in _dreamEntries)
-                if (entry.GetIfValid())
-                    TotalEntries++;
-        }
+            var existingTag = TagStatistics.SingleOrDefault(x => x.IsTag(tagName));
+            if (existingTag != null) return existingTag;
 
-        private static int IsInList(IReadOnlyList<DreamMainStatTag> list, DreamTag element)
-        {
-            if (element == null || list == null) return -1;
-            for (var i = 0; i < list.Count; i++)
-                if (string.Equals(list[i].Tag, element.Tag, StringComparison.CurrentCultureIgnoreCase))
-                    return i;
-            return -1;
+            var newStatTag = new DreamMainStatTag(tagName);
+            _tagStatistics.Add(newStatTag);
+            return newStatTag;
         }
     }
 }

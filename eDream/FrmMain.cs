@@ -103,7 +103,6 @@ namespace eDream
 
         private void AddEntryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _dreamStats.GenerateStatistics(_dreamEntries, _dayList);
             var addEntryBox = new NewEntryForm(_dreamStats.TagStatistics);
             addEntryBox.ShowDialog();
             if (!addEntryBox.CreatedEntry) return;
@@ -546,7 +545,6 @@ namespace eDream
             LoadEntriesToList(_viewModel.DreamList);
             SetStatusBarStats();
             searchToolStripMenuItem.Enabled = true;
-            _dreamStats = new DreamTagStatistics();
             //_dreamStats.GenerateStatistics(_dreamEntries, _dayList);
             Text = _viewModel.FormText;
         }
@@ -641,7 +639,6 @@ namespace eDream
 
         private void StatisticsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _dreamStats.GenerateStatistics(_dreamEntries, _dayList);
             var statWindow = new DreamsStatisticsShow(_dreamStats);
             statWindow.ShowDialog();
         }

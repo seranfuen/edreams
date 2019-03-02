@@ -32,7 +32,7 @@ namespace eDream.libs
         {
             var query =
                 from entry in entries
-                where entry.GetIfValid()
+                where entry.IsValid
                 group entry by entry.Date
                 into g
                 select g;
