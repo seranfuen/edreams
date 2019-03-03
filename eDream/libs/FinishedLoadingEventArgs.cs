@@ -10,7 +10,7 @@ namespace eDream.libs
         public FinishedLoadingEventArgs(LoadingResult result, [NotNull] IEnumerable<DreamEntry> loadedDreamEntries)
         {
             Result = result;
-            LoadedDreamEntries = loadedDreamEntries ?? throw new ArgumentNullException(nameof(loadedDreamEntries));
+            LoadedDreamEntries = loadedDreamEntries;
         }
 
         public LoadingResult Result { get; }

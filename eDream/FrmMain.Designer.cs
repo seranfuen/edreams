@@ -419,7 +419,7 @@
             this.toolStripAdd.Name = "toolStripAdd";
             this.toolStripAdd.Size = new System.Drawing.Size(23, 22);
             this.toolStripAdd.Text = "Add new entry";
-
+            this.toolStripAdd.Click += new System.EventHandler(this.ToolStripAdd_Click);
             // 
             // searchStripButton
             // 

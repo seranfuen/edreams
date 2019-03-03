@@ -14,19 +14,33 @@ namespace eDream.GUI
     {
         private const string ApplicationName = "eDreams";
         private readonly IDreamDiaryPersistenceService _dreamDiaryPersistenceService;
+        private readonly IDreamSettings _dreamSettings;
         private IEnumerable<DreamEntry> _dreamEntries;
         private List<DreamDayEntry> _dreamList;
+        private string _currentDatabasePath;
+        public event EventHandler<LoadingRecentlyOpenedDiariesEventArgs> LoadingRecentlyOpenedDiaries;
 
-        public DreamDatabaseViewModel([NotNull] IDreamDiaryPersistenceService dreamDiaryPersistenceService)
+        public DreamDatabaseViewModel([NotNull] IDreamDiaryPersistenceService dreamDiaryPersistenceService,
+            [NotNull] IDreamSettings dreamSettings)
         {
             _dreamDiaryPersistenceService = dreamDiaryPersistenceService ??
                                             throw new ArgumentNullException(nameof(dreamDiaryPersistenceService));
+            _dreamSettings = dreamSettings ?? throw new ArgumentNullException(nameof(dreamSettings));
             _dreamDiaryPersistenceService.FinishedPersisting += DreamDiaryPersistenceServiceOnFinishedPersisting;
             _dreamDiaryPersistenceService.FinishedLoading += DreamDiaryPersistenceServiceOnFinishedLoading;
         }
 
 
-        public string CurrentDatabasePath { get; set; }
+        public string CurrentDatabasePath
+        {
+            get => _currentDatabasePath;
+            set
+            {
+                _currentDatabasePath = value;
+                if (string.IsNullOrWhiteSpace(value)) return;
+                _dreamSettings.AddPathToRecentlyOpenedPaths(value);
+            }
+        }
 
         private IEnumerable<DreamEntry> DreamEntries => DreamList.SelectMany(x => x.DreamEntries);
 
@@ -122,6 +136,26 @@ namespace eDream.GUI
         public DreamTagStatistics GetDreamTagStatistics()
         {
             return new DreamTagStatistics(_dreamEntries);
+        } 
+
+        public void LoadLastDiary()
+        {
+            OnLoadingRecentlyOpenedDiaries(_dreamSettings.RecentlyOpenedDiaries);
+            if (!_dreamSettings.ShouldLoadLastDreamDiary || string.IsNullOrWhiteSpace(_dreamSettings.LastDreamDatabase)) return;
+
+            CurrentDatabasePath = _dreamSettings.LastDreamDatabase;
+            LoadDiary();
+        }
+
+        private void OnLoadingRecentlyOpenedDiaries(IList<string> recentlyOpenedDiaries)
+        {
+            LoadingRecentlyOpenedDiaries?.Invoke(this,
+                new LoadingRecentlyOpenedDiariesEventArgs(recentlyOpenedDiaries));
+        }
+
+        public IList<string> GetRecentlyOpenedDiaryPaths()
+        {
+            return _dreamSettings.RecentlyOpenedDiaries;
         }
     }
 }

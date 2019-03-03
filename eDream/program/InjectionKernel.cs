@@ -1,4 +1,5 @@
-﻿using eDream.libs;
+﻿using eDream.GUI;
+using eDream.libs;
 using Ninject;
 
 namespace eDream.program
@@ -12,6 +13,7 @@ namespace eDream.program
             Kernel.Bind<IFileService>().To<DreamFileService>();
             Kernel.Bind<IDreamDiaryPersistenceService>().To<DreamSaveLoadService>();
             Kernel.Bind<IDreamDiaryBus>().To<DreamDiaryBus>();
+            Kernel.Bind<IDreamSettings>().To<DreamSettings>();
         }
 
         public static T Get<T>()

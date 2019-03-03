@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Media;
 using System.Windows.Forms;
@@ -29,30 +30,15 @@ using eDream.GUI;
 using eDream.libs;
 using eDream.program;
 using EvilTools;
-using Settings = EvilTools.Settings;
 
 namespace eDream
 {
     internal partial class FrmMain : Form
     {
-        public const string LoadLastDbSetting = "loadLastDatabase";
-
-        public const string ShowWelcomeSetting = "showWelcomeWindow";
-
-        private const string SettingsFile = "settings.ini";
-
-
         private readonly Debug _debug = new Debug(Debug.DebugParameters.ToConsoleAndFile);
 
-        private readonly List<Settings.SettingsPair> _defaultSettings =
-            new List<Settings.SettingsPair>();
 
-        private readonly LastOpened _recentlyOpened = new LastOpened();
-
-
-        private readonly DreamDatabaseViewModel _viewModel =
-            new DreamDatabaseViewModel(InjectionKernel.Get<IDreamDiaryPersistenceService>());
-
+        private readonly DreamDatabaseViewModel _viewModel;
 
         private List<DreamDayEntry> _currentDayList;
 
@@ -62,15 +48,14 @@ namespace eDream
 
         private List<DreamEntry> _dreamEntries;
 
-        private bool _loadedFirstTime;
         private SearchForm _searchWindow;
-        private Settings _settings;
 
         public FrmMain()
         {
             InitializeComponent();
+            _viewModel = new DreamDatabaseViewModel(InjectionKernel.Get<IDreamDiaryPersistenceService>(),
+                InjectionKernel.Get<IDreamSettings>());
             BindingSource.DataSource = _viewModel;
-            LoadDefaultSettings();
             InitializeInterface();
         }
 
@@ -100,6 +85,11 @@ namespace eDream
 
         private void AddEntryToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            AddNewEntry();
+        }
+
+        private void AddNewEntry()
+        {
             var addEntryBox = new NewEntryForm(_viewModel.GetDreamTagStatistics().TagStatistics);
             addEntryBox.ShowDialog();
             if (!addEntryBox.CreatedEntry) return;
@@ -109,9 +99,6 @@ namespace eDream
             PersistDiary();
         }
 
-        /// <summary>
-        ///     Clear the right hand panel: delete any associated controls
-        /// </summary>
         private void ClearRightPanel()
         {
             TableLayoutPanel.RowCount = 0;
@@ -196,9 +183,6 @@ namespace eDream
             _viewModel.LoadingFailed += (s, e) => ShowLoadingErrorMessage();
             _debugIncidence += SendToDebugger;
             Shown += LoadLastDatabase;
-
-            _settings = new Settings(SettingsFile,
-                _defaultSettings);
         }
 
 
@@ -214,7 +198,6 @@ namespace eDream
                 return;
             }
 
-            // Improves visuals when quickly transitioning through different days
             TableLayoutPanel.Visible = false;
             var entryCount = 1;
             foreach (var entry in entries)
@@ -269,21 +252,6 @@ namespace eDream
             }
         }
 
-        // Loads the default settings to the settings object
-        private void LoadDefaultSettings()
-        {
-            _defaultSettings.Add(new Settings.SettingsPair
-            {
-                Key = LoadLastDbSetting,
-                Value = "yes"
-            });
-
-            _defaultSettings.Add(new Settings.SettingsPair
-            {
-                Key = ShowWelcomeSetting,
-                Value = "yes"
-            });
-        }
 
         private void LoadDiary()
         {
@@ -324,40 +292,15 @@ namespace eDream
 
         private void LoadLastDatabase(object sender, EventArgs e)
         {
-            if (_loadedFirstTime || _settings.GetValue(LoadLastDbSetting) != "yes") return;
-
-            _recentlyOpened.LoadPaths();
-            SetRecentFilesMenu();
-            var recent = _recentlyOpened.GetPaths();
-            if (recent.Length > 0)
-                if (!string.IsNullOrEmpty(recent[0]))
-                {
-                    _viewModel.CurrentDatabasePath = recent[0];
-                    LoadDiary();
-                }
-
-            _loadedFirstTime = true;
+            _viewModel.LoadLastDiary();
         }
 
         private void LoadRecentDatabase(object sender, EventArgs a)
         {
             var theSender = (RecentlyOpenedMenuItem) sender;
 
-            var resultM =
-                MessageBox.Show("Your current database has been modified. Do " +
-                                "you wish to save it before closing it?", "Save database?",
-                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (resultM == DialogResult.Cancel)
-                return;
-            if (resultM == DialogResult.Yes) PersistDiary();
-
             _viewModel.CurrentDatabasePath = theSender.FilePath;
             LoadDiary();
-        }
-
-        private void OnDiaryLoaded(object sender, FinishedLoadingEventArgs e)
-        {
-            Invoke((Action) LoadEntriesFromLoader);
         }
 
         private void OnPersistenceFailed()
@@ -371,40 +314,20 @@ namespace eDream
             }));
         }
 
-        /// <summary>
-        ///     When the saving process is finished, unfreeze the interface and
-        ///     inform, if necessary, that there was an error
-        /// </summary>
         private void OnPersistenceSucceeded()
         {
-            BeginInvoke((Action) (() =>
-            {
-                SetActiveStatus();
-                SetLoadedState();
-            }));
+            SetActiveStatus();
+            SetLoadedState();
         }
 
         private void OpenDatabaseToolStripMenuItem_Click(object sender,
             EventArgs e)
         {
-            var resultM =
-                MessageBox.Show("Your current database has been modified. Do " +
-                                "you wish to save it before closing it?", "Save database?",
-                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (resultM == DialogResult.Cancel)
-                return;
-            if (resultM == DialogResult.Yes) PersistDiary();
-
-
             var result = openFileDialog1.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                _viewModel.CurrentDatabasePath = openFileDialog1.FileName;
-                // If it was correct, we set it through SetCurrentFile to
-                // add it to recently opened
-                _viewModel.CurrentDatabasePath = openFileDialog1.FileName;
-                LoadDiary();
-            }
+            if (result != DialogResult.OK) return;
+
+            _viewModel.CurrentDatabasePath = openFileDialog1.FileName;
+            LoadDiary();
         }
 
         private void PersistDiary()
@@ -428,12 +351,10 @@ namespace eDream
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var resultSave = saveFileDialog1.ShowDialog();
-            if (resultSave == DialogResult.OK)
-            {
-                _viewModel.CurrentDatabasePath = saveFileDialog1.FileName;
-                PersistDiary();
-                saveFileDialog1.FileName = "";
-            }
+            if (resultSave != DialogResult.OK) return;
+            _viewModel.CurrentDatabasePath = saveFileDialog1.FileName;
+            PersistDiary();
+            saveFileDialog1.FileName = "";
         }
 
         private void ScrollList(object sender, MouseEventArgs e)
@@ -471,9 +392,9 @@ namespace eDream
             LoadEntriesToList(DreamCalendarCreator.GetDreamDayList(searcher.Results)
             );
             string searchType;
-            if (searcher.SearchType == SearchForm.ESearchType.textSearch)
+            if (searcher.SearchType == SearchForm.ESearchType.TextSearch)
                 searchType = "text";
-            else if (searcher.SearchType == SearchForm.ESearchType.dateSearch)
+            else if (searcher.SearchType == SearchForm.ESearchType.DateSearch)
                 searchType = "date";
             else
                 searchType = "tags";
@@ -520,8 +441,6 @@ namespace eDream
         private void SetCurrentFile(string file)
         {
             _viewModel.CurrentDatabasePath = file;
-            _recentlyOpened.AddPath(file);
-            _recentlyOpened.SavePaths();
             SetRecentFilesMenu();
         }
 
@@ -550,35 +469,19 @@ namespace eDream
         private void SetRecentFilesMenu()
         {
             menuRecent.Enabled = false;
-            _recentlyOpened.LoadPaths();
-            var thePaths = _recentlyOpened.GetPaths().Reverse();
 
-            var paths = thePaths.ToList();
+            var paths = _viewModel.GetRecentlyOpenedDiaryPaths().ToList();
             if (!paths.Any()) return;
             menuRecent.Enabled = true;
             menuRecent.DropDownItems.Clear();
-            var menuItems = new
-                ToolStripItem[paths.Count];
-            var count = 0;
             foreach (var path in paths)
             {
-                if (string.IsNullOrEmpty(path)) continue;
-                var newI = new RecentlyOpenedMenuItem(path,
-                    _recentlyOpened.ShortenPath(path));
+                var newI = new RecentlyOpenedMenuItem(path, Path.GetFileName(path));
                 newI.Click += LoadRecentDatabase;
-                menuItems[count] = newI;
-                count++;
+                menuRecent.DropDownItems.Add(newI);
             }
-
-            var menuItemsFinal = new
-                ToolStripItem[count];
-            for (var i = 0; i < count; i++) menuItemsFinal[i] = menuItems[i];
-            menuRecent.DropDownItems.AddRange(menuItemsFinal);
         }
 
-        /// <summary>
-        ///     Display statistics about number of loaded entries in status bar
-        /// </summary>
         private void SetStatusBarStats()
         {
             SetStatusBarMsg(_viewModel.StatusBarMessage);
@@ -587,9 +490,9 @@ namespace eDream
 
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var settings = new GUI.Settings(_settings);
-            settings.ShowDialog();
-            if (settings.Result == GUI.Settings.enumResult.Changed) _settings.SaveFile();
+            //var settings = new GUI.Settings(_settings);
+            //settings.ShowDialog();
+            //if (settings.Result == GUI.Settings.enumResult.Changed) _settings.SaveFile();
         }
 
         private void SetUnloadedState()
@@ -638,6 +541,11 @@ namespace eDream
         {
             var statWindow = new DreamsStatisticsShow(_viewModel.GetDreamTagStatistics());
             statWindow.ShowDialog();
+        }
+
+        private void ToolStripAdd_Click(object sender, EventArgs e)
+        {
+            AddNewEntry();
         }
     }
 }

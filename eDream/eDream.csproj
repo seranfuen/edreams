@@ -85,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="libs\DreamSettings.cs" />
     <Compile Include="GUI\DreamDatabaseViewModel.cs" />
     <Compile Include="GUI\EntryViewerModel.cs" />
     <Compile Include="GUI\FrmAboutBox.cs">
@@ -117,6 +118,8 @@
     <Compile Include="GUI\CtrEntryViewer.Designer.cs">
       <DependentUpon>CtrEntryViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\IDreamSettings.cs" />
+    <Compile Include="GUI\LoadingRecentlyOpenedDiariesEventArgs.cs" />
     <Compile Include="GUI\NewEntryForm.cs">
       <SubType>Form</SubType>
     </Compile>

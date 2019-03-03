@@ -85,20 +85,20 @@ namespace eDream.GUI {
         /// Set the elements of the dialog to match the current settings
         /// </summary>
         private void SetOriginalSettings() {
-            if (string.Compare(settings.GetValue(FrmMain.LoadLastDbSetting),
-                trueStr, true) == 0) {
-                checkLoadLastDB.Checked = true;
-            }
-            else {
-                checkLoadLastDB.Checked = false;
-            }
-            if (string.Compare(settings.GetValue(FrmMain.ShowWelcomeSetting),
-                trueStr, true) == 0) {
-                checkShowWelcomeWindow.Checked = true;
-            }
-            else {
-                checkShowWelcomeWindow.Checked = false;
-            }
+            //if (string.Compare(settings.GetValue(FrmMain.LoadLastDbSetting),
+            //    trueStr, true) == 0) {
+            //    checkLoadLastDB.Checked = true;
+            //}
+            //else {
+            //    checkLoadLastDB.Checked = false;
+            //}
+            //if (string.Compare(settings.GetValue(FrmMain.ShowWelcomeSetting),
+            //    trueStr, true) == 0) {
+            //    checkShowWelcomeWindow.Checked = true;
+            //}
+            //else {
+            //    checkShowWelcomeWindow.Checked = false;
+            //}
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e) {
@@ -119,14 +119,13 @@ namespace eDream.GUI {
             else {
                 value = falseStr;
             }
-            settings.ChangeValue(FrmMain.LoadLastDbSetting, value);
+            //settings.ChangeValue(FrmMain.LoadLastDbSetting, value);
             if (checkShowWelcomeWindow.Checked == true) {
                 value = trueStr;
             }
             else {
                 value = falseStr;
             }
-            settings.ChangeValue(FrmMain.ShowWelcomeSetting, value);
             result = enumResult.Changed;
             Dispose();
         }
