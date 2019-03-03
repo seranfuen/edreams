@@ -29,7 +29,6 @@ E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.CreateTags.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.DreamsStatisticsShow.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.NewEntryForm.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.SearchForm.resources
-E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.Settings.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.Properties.Resources.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.csproj.GenerateResource.cache
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.csproj.CoreCompileInputs.cache

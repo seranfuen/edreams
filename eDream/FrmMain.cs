@@ -54,7 +54,7 @@ namespace eDream
         {
             InitializeComponent();
             _viewModel = new DreamDatabaseViewModel(InjectionKernel.Get<IDreamDiaryPersistenceService>(),
-                InjectionKernel.Get<IDreamSettings>());
+                InjectionKernel.Get<IDreamDiaryPaths>());
             BindingSource.DataSource = _viewModel;
             InitializeInterface();
         }

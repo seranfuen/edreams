@@ -2,10 +2,9 @@
 
 namespace eDream.GUI
 {
-    public interface IDreamSettings
+    public interface IDreamDiaryPaths
     {
         string LastDreamDatabase { get; }
-        bool ShouldLoadLastDreamDiary { get; }
         IList<string> RecentlyOpenedDiaries { get; }
         void AddPathToRecentlyOpenedPaths(string path);
     }

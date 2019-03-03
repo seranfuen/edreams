@@ -36,7 +36,7 @@ namespace Tests.GUI
         [Test]
         public void FormText_no_file_shows_application_name_with_no_database_loaded()
         {
-            var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), Substitute.For<IDreamSettings>());
+            var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>());
             entityUnderTest.CurrentDatabasePath.Should().BeNullOrEmpty();
             entityUnderTest.FormText.Should().Be("eDreams (No dream diary loaded)");
         }
@@ -44,7 +44,7 @@ namespace Tests.GUI
         [Test]
         public void FormText_with_file_shows_application_name_with_file_name()
         {
-            var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), Substitute.For<IDreamSettings>())
+            var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
                 {CurrentDatabasePath = @"C:\Files\Another\dreams.xml"};
 
             entityUnderTest.FormText.Should().Be("eDreams - dreams.xml");
@@ -54,7 +54,7 @@ namespace Tests.GUI
         public void LoadDiary_passes_filepath_to_service()
         {
             var mockService = GetPersistenceService();
-            var entityUnderTest = new DreamDatabaseViewModel(mockService, Substitute.For<IDreamSettings>())
+            var entityUnderTest = new DreamDatabaseViewModel(mockService, Substitute.For<IDreamDiaryPaths>())
             {
                 CurrentDatabasePath = @"C:\Users\Test\MyDiary",
                 DreamList = GetThreeDreamEntriesTwoDays()
@@ -68,7 +68,7 @@ namespace Tests.GUI
         public void LoadingFailed_fired_when_loading_service_has_failed_status()
         {
             var mockService = GetPersistenceService();
-            var entityUnderTest = new DreamDatabaseViewModel(mockService, Substitute.For<IDreamSettings>())
+            var entityUnderTest = new DreamDatabaseViewModel(mockService, Substitute.For<IDreamDiaryPaths>())
             {
                 CurrentDatabasePath = @"C:\Users\Test\MyDiary",
                 DreamList = GetThreeDreamEntriesTwoDays()
@@ -85,7 +85,7 @@ namespace Tests.GUI
         public void LoadingSucceeded_fired_when_loading_service_has_Successful_status()
         {
             var mockService = GetPersistenceService();
-            var entityUnderTest = new DreamDatabaseViewModel(mockService, Substitute.For<IDreamSettings>())
+            var entityUnderTest = new DreamDatabaseViewModel(mockService, Substitute.For<IDreamDiaryPaths>())
             {
                 CurrentDatabasePath = @"C:\Users\Test\MyDiary",
                 DreamList = GetThreeDreamEntriesTwoDays()
@@ -101,7 +101,7 @@ namespace Tests.GUI
         public void Persist_passes_filepath_and_entries()
         {
             var mockService = GetPersistenceService();
-            var entityUnderTest = new DreamDatabaseViewModel(mockService, Substitute.For<IDreamSettings>())
+            var entityUnderTest = new DreamDatabaseViewModel(mockService, Substitute.For<IDreamDiaryPaths>())
             {
                 CurrentDatabasePath = @"C:\Users\Test\MyDiary", DreamList = GetThreeDreamEntriesTwoDays()
             };
@@ -116,7 +116,7 @@ namespace Tests.GUI
         public void PersistenceFailed_fired_when_persistence_service_has_failed_status()
         {
             var mockService = GetPersistenceService();
-            var entityUnderTest = new DreamDatabaseViewModel(mockService, Substitute.For<IDreamSettings>())
+            var entityUnderTest = new DreamDatabaseViewModel(mockService, Substitute.For<IDreamDiaryPaths>())
             {
                 CurrentDatabasePath = @"C:\Users\Test\MyDiary",
                 DreamList = GetThreeDreamEntriesTwoDays()
@@ -132,7 +132,7 @@ namespace Tests.GUI
         public void PersistenceSucceeded_fired_when_persistence_service_has_Successful_status()
         {
             var mockService = GetPersistenceService();
-            var entityUnderTest = new DreamDatabaseViewModel(mockService, Substitute.For<IDreamSettings>())
+            var entityUnderTest = new DreamDatabaseViewModel(mockService, Substitute.For<IDreamDiaryPaths>())
             {
                 CurrentDatabasePath = @"C:\Users\Test\MyDiary",
                 DreamList = GetThreeDreamEntriesTwoDays()
@@ -150,14 +150,14 @@ namespace Tests.GUI
         [Test]
         public void StatusBarMessage_with_no_entries()
         {
-            var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), Substitute.For<IDreamSettings>());
+            var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>());
             entityUnderTest.StatusBarMessage.Should().Be("No dreams");
         }
 
         [Test]
         public void CurrentDatabasePath_when_changed_added_to_recent_paths_settings()
         {
-            var dreamSettings = Substitute.For<IDreamSettings>();
+            var dreamSettings = Substitute.For<IDreamDiaryPaths>();
             var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), dreamSettings)
             {
                 CurrentDatabasePath = "HELLO.XML"
@@ -168,7 +168,7 @@ namespace Tests.GUI
         [Test]
         public void CurrentDatabasePath_when_changed_with_null_Ignored()
         {
-            var dreamSettings = Substitute.For<IDreamSettings>();
+            var dreamSettings = Substitute.For<IDreamDiaryPaths>();
             var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), dreamSettings)
             {
                 CurrentDatabasePath = null
@@ -182,7 +182,7 @@ namespace Tests.GUI
         [SetUICulture("en-US")]
         public void StatusBarMessage_with_one_day_and_one_dream_appears_in_singular()
         {
-            var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), Substitute.For<IDreamSettings>())
+            var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
             {
                 DreamList = new List<DreamDayEntry>
                 {
@@ -201,7 +201,7 @@ namespace Tests.GUI
         [SetUICulture("en-US")]
         public void StatusBarMessage_with_one_day_appears_in_singular()
         {
-            var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), Substitute.For<IDreamSettings>())
+            var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
             {
                 DreamList = new List<DreamDayEntry>
                 {
@@ -221,7 +221,7 @@ namespace Tests.GUI
         [SetUICulture("en-US")]
         public void StatusBarMessage_with_two_different_days_and_three_dreams()
         {
-            var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), Substitute.For<IDreamSettings>())
+            var entityUnderTest = new DreamDatabaseViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
             {
                 DreamList = GetThreeDreamEntriesTwoDays()
             };

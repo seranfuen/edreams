@@ -12,20 +12,26 @@ namespace eDream.GUI
 {
     public class DreamDatabaseViewModel : INotifyPropertyChanged
     {
-        private const string ApplicationName = "eDreams";
-        private readonly IDreamDiaryPersistenceService _dreamDiaryPersistenceService;
-        private readonly IDreamSettings _dreamSettings;
-        private IEnumerable<DreamEntry> _dreamEntries;
-        private List<DreamDayEntry> _dreamList;
-        private string _currentDatabasePath;
+        public event EventHandler LoadingFailed;
         public event EventHandler<LoadingRecentlyOpenedDiariesEventArgs> LoadingRecentlyOpenedDiaries;
 
+        public event EventHandler LoadingSucceeded;
+
+        public event EventHandler PersistenceFailed;
+        public event EventHandler PersistenceSucceeded;
+        private const string ApplicationName = "eDreams";
+        private readonly IDreamDiaryPaths _dreamDiaryPaths;
+        private readonly IDreamDiaryPersistenceService _dreamDiaryPersistenceService;
+        private string _currentDatabasePath;
+        private IEnumerable<DreamEntry> _dreamEntries;
+        private List<DreamDayEntry> _dreamList;
+
         public DreamDatabaseViewModel([NotNull] IDreamDiaryPersistenceService dreamDiaryPersistenceService,
-            [NotNull] IDreamSettings dreamSettings)
+            [NotNull] IDreamDiaryPaths dreamDiaryPaths)
         {
             _dreamDiaryPersistenceService = dreamDiaryPersistenceService ??
                                             throw new ArgumentNullException(nameof(dreamDiaryPersistenceService));
-            _dreamSettings = dreamSettings ?? throw new ArgumentNullException(nameof(dreamSettings));
+            _dreamDiaryPaths = dreamDiaryPaths ?? throw new ArgumentNullException(nameof(dreamDiaryPaths));
             _dreamDiaryPersistenceService.FinishedPersisting += DreamDiaryPersistenceServiceOnFinishedPersisting;
             _dreamDiaryPersistenceService.FinishedLoading += DreamDiaryPersistenceServiceOnFinishedLoading;
         }
@@ -38,7 +44,7 @@ namespace eDream.GUI
             {
                 _currentDatabasePath = value;
                 if (string.IsNullOrWhiteSpace(value)) return;
-                _dreamSettings.AddPathToRecentlyOpenedPaths(value);
+                _dreamDiaryPaths.AddPathToRecentlyOpenedPaths(value);
             }
         }
 
@@ -73,22 +79,34 @@ namespace eDream.GUI
             return DreamCalendarCreator.GetDreamDayList(_dreamEntries);
         }
 
+        public DreamTagStatistics GetDreamTagStatistics()
+        {
+            return new DreamTagStatistics(_dreamEntries);
+        }
+
+        public IList<string> GetRecentlyOpenedDiaryPaths()
+        {
+            return _dreamDiaryPaths.RecentlyOpenedDiaries;
+        }
+
         public void LoadDiary()
         {
             _dreamDiaryPersistenceService.LoadDiary(CurrentDatabasePath);
         }
 
-        public event EventHandler LoadingFailed;
+        public void LoadLastDiary()
+        {
+            OnLoadingRecentlyOpenedDiaries(_dreamDiaryPaths.RecentlyOpenedDiaries);
+            if (string.IsNullOrWhiteSpace(_dreamDiaryPaths.LastDreamDatabase)) return;
 
-        public event EventHandler LoadingSucceeded;
+            CurrentDatabasePath = _dreamDiaryPaths.LastDreamDatabase;
+            LoadDiary();
+        }
 
         public void Persist()
         {
             _dreamDiaryPersistenceService.PersistEntries(DreamEntries, CurrentDatabasePath);
         }
-
-        public event EventHandler PersistenceFailed;
-        public event EventHandler PersistenceSucceeded;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -133,29 +151,10 @@ namespace eDream.GUI
             return DreamCount > 1 ? "dreams" : "dream";
         }
 
-        public DreamTagStatistics GetDreamTagStatistics()
-        {
-            return new DreamTagStatistics(_dreamEntries);
-        } 
-
-        public void LoadLastDiary()
-        {
-            OnLoadingRecentlyOpenedDiaries(_dreamSettings.RecentlyOpenedDiaries);
-            if (!_dreamSettings.ShouldLoadLastDreamDiary || string.IsNullOrWhiteSpace(_dreamSettings.LastDreamDatabase)) return;
-
-            CurrentDatabasePath = _dreamSettings.LastDreamDatabase;
-            LoadDiary();
-        }
-
         private void OnLoadingRecentlyOpenedDiaries(IList<string> recentlyOpenedDiaries)
         {
             LoadingRecentlyOpenedDiaries?.Invoke(this,
                 new LoadingRecentlyOpenedDiariesEventArgs(recentlyOpenedDiaries));
-        }
-
-        public IList<string> GetRecentlyOpenedDiaryPaths()
-        {
-            return _dreamSettings.RecentlyOpenedDiaries;
         }
     }
 }

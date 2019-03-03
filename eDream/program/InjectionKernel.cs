@@ -13,7 +13,7 @@ namespace eDream.program
             Kernel.Bind<IFileService>().To<DreamFileService>();
             Kernel.Bind<IDreamDiaryPersistenceService>().To<DreamSaveLoadService>();
             Kernel.Bind<IDreamDiaryBus>().To<DreamDiaryBus>();
-            Kernel.Bind<IDreamSettings>().To<DreamSettings>();
+            Kernel.Bind<IDreamDiaryPaths>().To<DreamDiaryPaths>();
         }
 
         public static T Get<T>()
