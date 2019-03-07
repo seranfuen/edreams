@@ -46,12 +46,7 @@ namespace eDream.GUI
 
         public void EditEntry()
         {
-            //var editEntry = new NewEntryForm(theEntry, parent.TagStatistics);
-            //editEntry.ShowDialog();
-            //if (editEntry.CreatedEntry)
-            //{
-            //    parent.SaveXmlFile();
-            //}
+            _dreamDiaryBus.EditEntry(_entry);
         }
     }
 }

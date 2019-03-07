@@ -45,10 +45,11 @@ namespace eDream.program
 
         public DreamEntry(DateTime date, string tags, string text)
         {
-            if (tags == null) throw new ArgumentNullException(nameof(tags));
-            Text = text ?? throw new ArgumentNullException(nameof(text));
+            if (string.IsNullOrWhiteSpace(tags) && string.IsNullOrWhiteSpace(text))
+                throw new ArgumentNullException();
+            Text = text ?? "";
             Date = date.Date;
-            SetTags(tags);
+            SetTags(tags ?? "");
         }
 
         public DateTime Date { get; set; }

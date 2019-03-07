@@ -35,7 +35,7 @@
             this.entryStatusLabel = new System.Windows.Forms.Label();
             this.DeleteButton = new System.Windows.Forms.Button();
             this.EditButton = new System.Windows.Forms.Button();
-            this.dreamText = new System.Windows.Forms.RichTextBox();
+            this.DreamText = new System.Windows.Forms.RichTextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.wrapperBox.SuspendLayout();
@@ -77,7 +77,7 @@
             this.wrapperBox.Controls.Add(this.entryStatusLabel);
             this.wrapperBox.Controls.Add(this.DeleteButton);
             this.wrapperBox.Controls.Add(this.EditButton);
-            this.wrapperBox.Controls.Add(this.dreamText);
+            this.wrapperBox.Controls.Add(this.DreamText);
             this.wrapperBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.BindingSource, "EntryNumber", true));
             this.wrapperBox.Location = new System.Drawing.Point(13, 3);
             this.wrapperBox.Name = "wrapperBox";
@@ -160,20 +160,20 @@
             this.EditButton.UseVisualStyleBackColor = true;
             this.EditButton.Click += new System.EventHandler(this.EditButton_Click);
             // 
-            // dreamText
+            // DreamText
             // 
-            this.dreamText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.DreamText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dreamText.AutoWordSelection = true;
-            this.dreamText.BackColor = System.Drawing.SystemColors.Window;
-            this.dreamText.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.BindingSource, "DreamText", true));
-            this.dreamText.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dreamText.Location = new System.Drawing.Point(12, 61);
-            this.dreamText.Name = "dreamText";
-            this.dreamText.ReadOnly = true;
-            this.dreamText.Size = new System.Drawing.Size(604, 209);
-            this.dreamText.TabIndex = 8;
-            this.dreamText.Text = "";
+            this.DreamText.AutoWordSelection = true;
+            this.DreamText.BackColor = System.Drawing.SystemColors.Window;
+            this.DreamText.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.BindingSource, "DreamText", true));
+            this.DreamText.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DreamText.Location = new System.Drawing.Point(12, 61);
+            this.DreamText.Name = "DreamText";
+            this.DreamText.ReadOnly = true;
+            this.DreamText.Size = new System.Drawing.Size(604, 209);
+            this.DreamText.TabIndex = 8;
+            this.DreamText.Text = "";
             // 
             // CtrEntryViewer
             // 
@@ -206,7 +206,7 @@
         private System.Windows.Forms.Label entryStatusLabel;
         private System.Windows.Forms.Button DeleteButton;
         private System.Windows.Forms.Button EditButton;
-        private System.Windows.Forms.RichTextBox dreamText;
+        private System.Windows.Forms.RichTextBox DreamText;
         private System.Windows.Forms.BindingSource BindingSource;
     }
 }

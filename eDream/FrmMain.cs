@@ -36,9 +36,10 @@ namespace eDream
     internal partial class FrmMain : Form
     {
         private readonly Debug _debug = new Debug(Debug.DebugParameters.ToConsoleAndFile);
+        private readonly IDreamDiaryBus _dreamDiaryBus;
 
 
-        private readonly DreamDatabaseViewModel _viewModel;
+        private readonly DreamDiaryViewModel _viewModel;
 
         private List<DreamDayEntry> _currentDayList;
 
@@ -53,9 +54,11 @@ namespace eDream
         public FrmMain()
         {
             InitializeComponent();
-            _viewModel = new DreamDatabaseViewModel(InjectionKernel.Get<IDreamDiaryPersistenceService>(),
+            _viewModel = new DreamDiaryViewModel(InjectionKernel.Get<IDreamDiaryPersistenceService>(),
                 InjectionKernel.Get<IDreamDiaryPaths>());
             BindingSource.DataSource = _viewModel;
+            _dreamDiaryBus = new DreamDiaryBus(_viewModel);
+            _dreamDiaryBus.DiaryPersisted += (s, e) => RefreshEntries();
             InitializeInterface();
         }
 
@@ -90,13 +93,7 @@ namespace eDream
 
         private void AddNewEntry()
         {
-            var addEntryBox = new NewEntryForm(_viewModel.GetDreamTagStatistics().TagStatistics);
-            addEntryBox.ShowDialog();
-            if (!addEntryBox.CreatedEntry) return;
-            _dreamEntries.Add(addEntryBox.NewEntry);
-            _dayList = DreamCalendarCreator.GetDreamDayList(_dreamEntries);
-            LoadEntriesToList(_dayList);
-            PersistDiary();
+            _dreamDiaryBus.AddNewEntry();
         }
 
         private void ClearRightPanel()
@@ -112,21 +109,21 @@ namespace eDream
             _currentDayList = _dayList;
         }
 
-        private void CloseDatabase()
+        private void CloseDiary()
         {
             _viewModel.CurrentDatabasePath = string.Empty;
             _dreamEntries = new List<DreamEntry>();
             _dayList = new List<DreamDayEntry>();
             SetUnloadedState();
             DreamListBox.Enabled = false;
+            DreamListBox.DataSource = null;
             SetStatusBarMsg(GuiStrings.StatusBar_NoDreamDiaryLoaded);
             Text = _viewModel.FormText;
         }
 
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PersistDiary();
-            CloseDatabase();
+            CloseDiary();
         }
 
         private void CreateNewDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -179,7 +176,7 @@ namespace eDream
 
             _viewModel.PersistenceFailed += (s, e) => OnPersistenceFailed();
             _viewModel.PersistenceSucceeded += (s, e) => OnPersistenceSucceeded();
-            _viewModel.LoadingSucceeded += (s, e) => LoadEntriesFromLoader();
+            _viewModel.LoadingSucceeded += (s, e) => RefreshEntries();
             _viewModel.LoadingFailed += (s, e) => ShowLoadingErrorMessage();
             _debugIncidence += SendToDebugger;
             Shown += LoadLastDatabase;
@@ -188,15 +185,10 @@ namespace eDream
 
         private void LoadDayEntries(DreamDayEntry day)
         {
+            TableLayoutPanel.Controls.Clear();
             var entries = day.DreamEntries;
-            ClearRightPanel();
-            if (entries.Count == 0)
-            {
-                ShowErrorMessage("Error loading entries",
-                    "This day contains no entries. Database may be" +
-                    " corrupted");
-                return;
-            }
+            if (!entries.Any()) return;
+        
 
             TableLayoutPanel.Visible = false;
             var entryCount = 1;
@@ -205,22 +197,14 @@ namespace eDream
                 if (entry.ToDelete) continue;
                 var newEntry = new CtrEntryViewer();
                 newEntry.SetViewModel(EntryViewerModel.FromEntry(entry, entryCount++,
-                    InjectionKernel.Get<IDreamDiaryBus>()));
+                    _dreamDiaryBus));
                 TableLayoutPanel.Controls.Add(newEntry);
             }
 
-            /**
-             * Set autosize to avoid visual problems, all entries will have
-             * same size
-             */
+   
             for (var i = 0; i < TableLayoutPanel.RowStyles.Count; i++)
                 TableLayoutPanel.RowStyles[i].SizeType = SizeType.AutoSize;
-            /**
-             * Add handlers to capture a click and focus on the panel if
-             * any entry clicked. Since it becomes pretty complicated
-             * (Maybe there's another way?), I'm enclosing it in a try-catch
-             * structure to prevent unexpected exceptions
-             */
+
             try
             {
                 for (var i = 0; i < TableLayoutPanel.Controls.Count; i++)
@@ -259,16 +243,8 @@ namespace eDream
             _viewModel.LoadDiary();
         }
 
-        private void LoadEntriesFromLoader()
-        {
-            SetActiveStatus();
-            LoadEntriesToList(_viewModel.GetDayList());
-            SetCurrentFile(_viewModel.CurrentDatabasePath);
-            SetLoadedState();
-        }
 
-
-        private void LoadEntriesToList(List<DreamDayEntry> entries)
+        private void LoadEntriesToList(IReadOnlyCollection<DreamDayEntry> entries)
         {
             TableLayoutPanel.Visible = false;
             DreamListBox.Enabled = false;
@@ -279,11 +255,11 @@ namespace eDream
             }
 
             DreamListBox.Enabled = true;
-            entries.Sort();
+            var sortedEntries = entries.OrderBy(day => day.Date);
 
-            _currentDayList = entries;
-            _viewModel.DreamList = entries;
+            _currentDayList = sortedEntries.ToList();
 
+            DreamListBox.DataSource = _currentDayList;
             DreamListBox.SelectedIndex = Math.Max(0, entries.Count - 1);
             ShowCurrentDay(DreamListBox, new EventArgs());
             TableLayoutPanel.Visible = true;
@@ -346,6 +322,14 @@ namespace eDream
                 StackTrace = e.StackTrace
             };
             _debugIncidence?.Invoke(args);
+        }
+
+        private void RefreshEntries()
+        {
+            SetActiveStatus();
+            LoadEntriesToList(_viewModel.GetDayList());
+            SetCurrentFile(_viewModel.CurrentDatabasePath);
+            SetLoadedState();
         }
 
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -459,7 +443,7 @@ namespace eDream
             toolStripAdd.Enabled = true;
             toolStripStats.Enabled = true;
             ClearRightPanel();
-            LoadEntriesToList(_viewModel.DreamList);
+            LoadEntriesToList(_viewModel.DreamDays);
             SetStatusBarStats();
             searchToolStripMenuItem.Enabled = true;
             Text = _viewModel.FormText;
@@ -485,14 +469,6 @@ namespace eDream
         private void SetStatusBarStats()
         {
             SetStatusBarMsg(_viewModel.StatusBarMessage);
-        }
-
-
-        private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //var settings = new GUI.Settings(_settings);
-            //settings.ShowDialog();
-            //if (settings.Result == GUI.Settings.enumResult.Changed) _settings.SaveFile();
         }
 
         private void SetUnloadedState()

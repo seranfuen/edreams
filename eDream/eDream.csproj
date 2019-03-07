@@ -62,7 +62,6 @@
       <HintPath>..\EvilTools\bin\Release\EvilTools.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
     </Reference>
@@ -86,7 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="libs\DreamDiaryPaths.cs" />
-    <Compile Include="GUI\DreamDatabaseViewModel.cs" />
+    <Compile Include="GUI\DreamDiaryViewModel.cs" />
     <Compile Include="GUI\EntryViewerModel.cs" />
     <Compile Include="GUI\FrmAboutBox.cs">
       <SubType>Form</SubType>

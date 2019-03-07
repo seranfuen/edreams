@@ -26,33 +26,29 @@ namespace Tests.Program
 
         private static DreamEntry GetDreamEntryWithText(string text)
         {
-            return new DreamEntry(DateTime.Now, "", text);
+            return new DreamEntry(DateTime.Now, "abc", text);
         }
 
         [Test]
-        public void Constructor_does_not_allow_null_tags_allows_empty_test()
+        public void Constructor_does_not_allow_both_null_tags_and_text()
         {
             Action act = () => new DreamEntry(new DateTime(2019, 2, 16), null, "");
             act.Should().ThrowExactly<ArgumentNullException>();
 
-            var entityUnderTest = new DreamEntry(new DateTime(2019, 2, 16), "", "");
-            entityUnderTest.Text.Should().BeEmpty();
-        }
+            Action act2 = () => new DreamEntry(new DateTime(2019, 2, 16), "", "");
+            act2.Should().ThrowExactly<ArgumentNullException>();
 
-        [Test]
-        public void Constructor_does_not_allow_null_text_allows_empty_test()
-        {
-            Action act = () => new DreamEntry(new DateTime(2019, 2, 16), "", null);
-            act.Should().ThrowExactly<ArgumentNullException>();
+            Action act3 = () => new DreamEntry(new DateTime(2019, 2, 16), "Hello", null);
+            act3.Should().NotThrow();
 
-            var entityUnderTest = new DreamEntry(new DateTime(2019, 2, 16), "", "");
-            entityUnderTest.Text.Should().BeEmpty();
+            Action act4 = () => new DreamEntry(new DateTime(2019, 2, 16), "", "Hello");
+            act4.Should().NotThrow();
         }
 
         [Test]
         public void Constructor_strips_time_from_DreamDate()
         {
-            var entityUnderTest = new DreamEntry(new DateTime(2019, 2, 16, 12, 56, 23), "", "");
+            var entityUnderTest = new DreamEntry(new DateTime(2019, 2, 16, 12, 56, 23), "hello", "");
             entityUnderTest.Date.Should().Be(new DateTime(2019, 2, 16));
         }
 

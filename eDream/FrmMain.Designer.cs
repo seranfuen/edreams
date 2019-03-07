@@ -47,8 +47,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.entryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statisticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -209,9 +207,7 @@
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.searchToolStripMenuItem,
-            this.toolStripSeparator10,
-            this.settingsToolStripMenuItem});
+            this.searchToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -223,18 +219,6 @@
             this.searchToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.searchToolStripMenuItem.Text = "Search...";
             this.searchToolStripMenuItem.Click += new System.EventHandler(this.SearchToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator10
-            // 
-            this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(155, 6);
-            // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
             // entryToolStripMenuItem
             // 
@@ -340,25 +324,23 @@
             // 
             // EntriesBindingSource
             // 
-            this.EntriesBindingSource.DataMember = "DreamList";
+            this.EntriesBindingSource.DataMember = "DreamDays";
             this.EntriesBindingSource.DataSource = this.BindingSource;
             // 
             // BindingSource
             // 
-            this.BindingSource.DataSource = typeof(eDream.GUI.DreamDatabaseViewModel);
+            this.BindingSource.DataSource = typeof(eDream.GUI.DreamDiaryViewModel);
             // 
             // TableLayoutPanel
             // 
             this.TableLayoutPanel.AutoScroll = true;
             this.TableLayoutPanel.ColumnCount = 1;
-            this.TableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.TableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TableLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.TableLayoutPanel.Name = "TableLayoutPanel";
             this.TableLayoutPanel.RowCount = 1;
-            this.TableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.TableLayoutPanel.Size = new System.Drawing.Size(811, 479);
             this.TableLayoutPanel.TabIndex = 0;
             // 
@@ -476,6 +458,7 @@
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmMain";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -501,7 +484,6 @@
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem entryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addEntryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem statisticsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
@@ -533,7 +515,6 @@
         private System.Windows.Forms.Label findsLabel;
         private System.Windows.Forms.RichTextBox textBoxFinds;
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
         private System.Windows.Forms.ToolStripButton searchStripButton;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.BindingSource BindingSource;

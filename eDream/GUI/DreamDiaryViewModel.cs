@@ -10,7 +10,7 @@ using eDream.program;
 
 namespace eDream.GUI
 {
-    public class DreamDatabaseViewModel : INotifyPropertyChanged
+    public class DreamDiaryViewModel : INotifyPropertyChanged
     {
         public event EventHandler LoadingFailed;
         public event EventHandler<LoadingRecentlyOpenedDiariesEventArgs> LoadingRecentlyOpenedDiaries;
@@ -23,10 +23,9 @@ namespace eDream.GUI
         private readonly IDreamDiaryPaths _dreamDiaryPaths;
         private readonly IDreamDiaryPersistenceService _dreamDiaryPersistenceService;
         private string _currentDatabasePath;
-        private IEnumerable<DreamEntry> _dreamEntries;
-        private List<DreamDayEntry> _dreamList;
+        private IList<DreamEntry> _dreamEntries = new List<DreamEntry>();
 
-        public DreamDatabaseViewModel([NotNull] IDreamDiaryPersistenceService dreamDiaryPersistenceService,
+        public DreamDiaryViewModel([NotNull] IDreamDiaryPersistenceService dreamDiaryPersistenceService,
             [NotNull] IDreamDiaryPaths dreamDiaryPaths)
         {
             _dreamDiaryPersistenceService = dreamDiaryPersistenceService ??
@@ -36,6 +35,11 @@ namespace eDream.GUI
             _dreamDiaryPersistenceService.FinishedLoading += DreamDiaryPersistenceServiceOnFinishedLoading;
         }
 
+        public void CloseCurrentDiary()
+        {
+            CurrentDatabasePath = string.Empty;
+            _dreamEntries = new List<DreamEntry>();
+        }
 
         public string CurrentDatabasePath
         {
@@ -48,17 +52,9 @@ namespace eDream.GUI
             }
         }
 
-        private IEnumerable<DreamEntry> DreamEntries => DreamList.SelectMany(x => x.DreamEntries);
+        private IEnumerable<DreamEntry> DreamEntries => _dreamEntries;
 
-        public List<DreamDayEntry> DreamList
-        {
-            get => _dreamList;
-            set
-            {
-                _dreamList = value;
-                OnPropertyChanged(nameof(DreamList));
-            }
-        }
+        public List<DreamDayEntry> DreamDays => GetDayList();
 
         public string FormText => string.IsNullOrWhiteSpace(CurrentDatabasePath)
             ? $"{ApplicationName} ({GuiStrings.StatusBar_NoDreamDiaryLoaded})"
@@ -69,10 +65,15 @@ namespace eDream.GUI
             : string.Format(GuiStrings.StatusBarMessage_NumberDreamsAndDays, DreamCount, GetDreamWord(), DayCount,
                 GetDayWord(), (decimal) DreamCount / DayCount);
 
-        private int DayCount => DreamList?.Count ?? 0;
-        private int DreamCount => DreamList?.SelectMany(x => x.DreamEntries).Count(x => !x.ToDelete) ?? 0;
+        private int DayCount => DreamDays?.Count ?? 0;
+        private int DreamCount => DreamDays?.SelectMany(x => x.DreamEntries).Count(x => !x.ToDelete) ?? 0;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public void AddEntry(DreamEntry newEntry)
+        {
+            _dreamEntries.Add(newEntry);
+        }
 
         public List<DreamDayEntry> GetDayList()
         {
@@ -122,7 +123,7 @@ namespace eDream.GUI
                     LoadingFailed?.Invoke(this, EventArgs.Empty);
                     break;
                 case LoadingResult.Successful:
-                    _dreamEntries = e.LoadedDreamEntries;
+                    _dreamEntries = e.LoadedDreamEntries.ToList();
                     LoadingSucceeded?.Invoke(this, EventArgs.Empty);
                     break;
             }
