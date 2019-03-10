@@ -48,7 +48,7 @@ namespace eDream.program
             }
             else if (_frmSearchWindow == null)
             {
-                _frmSearchWindow = new FrmSearchForm(_dreamDiary.DreamEntries);
+                _frmSearchWindow = new FrmSearchForm(_dreamDiary);
                 _frmSearchWindow.SearchCompleted += (s, e) =>
                 {
                     if (e.SearchResult == null) _dreamDiary.ClearFilteredEntries();

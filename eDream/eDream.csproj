@@ -178,6 +178,7 @@
     <Compile Include="program\DreamMainTag.cs" />
     <Compile Include="program\DreamTag.cs" />
     <Compile Include="program\IDreamDiaryBus.cs" />
+    <Compile Include="program\IDreamEntryProvider.cs" />
     <Compile Include="program\InjectionKernel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

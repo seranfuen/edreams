@@ -10,7 +10,7 @@ using eDream.program;
 
 namespace eDream.GUI
 {
-    public class DreamDiaryViewModel : INotifyPropertyChanged
+    public class DreamDiaryViewModel : INotifyPropertyChanged, IDreamEntryProvider
     {
         public event EventHandler LoadingFailed;
         public event EventHandler<LoadingRecentlyOpenedDiariesEventArgs> LoadingRecentlyOpenedDiaries;
@@ -47,8 +47,6 @@ namespace eDream.GUI
             }
         }
 
-        public IEnumerable<DreamEntry> DreamEntries => _dreamEntries;
-
         public List<DreamDayEntry> DreamDays => GetDayList();
 
         public string FormText => string.IsNullOrWhiteSpace(CurrentDatabasePath)
@@ -62,6 +60,8 @@ namespace eDream.GUI
 
         private int DayCount => DreamDays?.Count ?? 0;
         private int DreamCount => DreamDays?.SelectMany(x => x.DreamEntries).Count(x => !x.ToDelete) ?? 0;
+
+        public IEnumerable<DreamEntry> DreamEntries => _dreamEntries;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -79,11 +79,6 @@ namespace eDream.GUI
         {
             CurrentDatabasePath = string.Empty;
             _dreamEntries = new List<DreamEntry>();
-        }
-
-        public void SetFilteredEntriesFromSearch(IEnumerable<DreamEntry> dreamEntries)
-        {
-            _filteredEntriesToShow = dreamEntries;
         }
 
         public List<DreamDayEntry> GetDayList()
@@ -118,6 +113,11 @@ namespace eDream.GUI
         public void Persist()
         {
             _dreamDiaryPersistenceService.PersistEntries(DreamEntries, CurrentDatabasePath);
+        }
+
+        public void SetFilteredEntriesFromSearch(IEnumerable<DreamEntry> dreamEntries)
+        {
+            _filteredEntriesToShow = dreamEntries;
         }
 
         [NotifyPropertyChangedInvocator]

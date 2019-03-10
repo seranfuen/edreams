@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using eDream.Annotations;
 using eDream.libs;
 using eDream.program;
 
@@ -37,16 +38,15 @@ namespace eDream.GUI
             DateSearch
         }
 
-        private readonly IEnumerable<DreamEntry> _dreamEntries;
-
         private readonly DreamSearchUtils _searchUtils = new DreamSearchUtils();
+        private readonly IDreamEntryProvider _provider;
 
         public EventHandler<SearchPerformedEventArgs> SearchCompleted;
 
-        public FrmSearchForm(IEnumerable<DreamEntry> entries)
+        public FrmSearchForm([NotNull] IDreamEntryProvider provider)
         {
             InitializeComponent();
-            _dreamEntries = entries;
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             StartPosition =
                 FormStartPosition.CenterScreen;
             textSearchFindButton.Enabled = false;
@@ -77,10 +77,10 @@ namespace eDream.GUI
         {
             SearchType = ESearchType.DateSearch;
             if (checkBox2.Checked)
-                Results = _searchUtils.SearchEntriesOnDate(_dreamEntries,
+                Results = _searchUtils.SearchEntriesOnDate(_provider.DreamEntries,
                     fromTimePicker.Value);
             else
-                Results = _searchUtils.SearchEntriesDateRange(_dreamEntries,
+                Results = _searchUtils.SearchEntriesDateRange(_provider.DreamEntries,
                     fromTimePicker.Value, toTimePicker.Value);
 
             OnSearchCompleted();
@@ -128,7 +128,7 @@ namespace eDream.GUI
             var searchType = orRadio.Checked
                 ? DreamSearchUtils.TagSearchType.ORSearch
                 : DreamSearchUtils.TagSearchType.ANDSearch;
-            Results = _searchUtils.SearchEntriesTags(_dreamEntries, tags,
+            Results = _searchUtils.SearchEntriesTags(_provider.DreamEntries, tags,
                 checkChildTags.Checked, searchType);
             LastSearchText = string.Join(", ", tags);
             SearchType = ESearchType.TagsSearch;
@@ -172,7 +172,7 @@ namespace eDream.GUI
 
         private void TextSearchFindButton_Click(object sender, EventArgs e)
         {
-            Results = _searchUtils.SearchEntriesText(_dreamEntries, textSearchBox.Text);
+            Results = _searchUtils.SearchEntriesText(_provider.DreamEntries, textSearchBox.Text);
             LastSearchText = textSearchBox.Text;
             SearchType = ESearchType.TextSearch;
 
