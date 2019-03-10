@@ -24,32 +24,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Media;
 using System.Windows.Forms;
 using eDream.GUI;
 using eDream.libs;
 using eDream.program;
-using EvilTools;
 
 namespace eDream
 {
     internal partial class FrmMain : Form
     {
-        private readonly Debug _debug = new Debug(Debug.DebugParameters.ToConsoleAndFile);
         private readonly IDreamDiaryBus _dreamDiaryBus;
 
 
         private readonly DreamDiaryViewModel _viewModel;
 
         private List<DreamDayEntry> _currentDayList;
-
-        private List<DreamDayEntry> _dayList;
-
-        private Debug.OnDebugIncidence _debugIncidence;
-
-        private List<DreamEntry> _dreamEntries;
-
-        private SearchForm _searchWindow;
 
         public FrmMain()
         {
@@ -59,6 +48,7 @@ namespace eDream
             BindingSource.DataSource = _viewModel;
             _dreamDiaryBus = new DreamDiaryBus(_viewModel);
             _dreamDiaryBus.DiaryPersisted += (s, e) => RefreshEntries();
+            _dreamDiaryBus.SearchPerformed += (s, e) => RefreshEntries();
             InitializeInterface();
         }
 
@@ -67,18 +57,9 @@ namespace eDream
             entriesStatsStatus.Text = text;
         }
 
-        public void ShowCurrentDay(object sender, EventArgs e)
-        {
-            if (_currentDayList == null || _currentDayList.Count <= 0) return;
-            if (DreamListBox.SelectedIndex < 0 || DreamListBox.SelectedIndex >= _currentDayList.Count) return;
-
-            LoadDayEntries(_currentDayList[DreamListBox.SelectedIndex]);
-        }
-
         public void ShowErrorMessage(string title, string text)
         {
-            MessageBox.Show(text, title, MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+            MessageBox.Show(text, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -102,18 +83,9 @@ namespace eDream
             TableLayoutPanel.Controls.Clear();
         }
 
-        private void ClearSearch(object sender, EventArgs e)
-        {
-            SetFindsMessage("Showing all dreams");
-            LoadEntriesToList(_dayList);
-            _currentDayList = _dayList;
-        }
-
         private void CloseDiary()
         {
             _viewModel.CurrentDatabasePath = string.Empty;
-            _dreamEntries = new List<DreamEntry>();
-            _dayList = new List<DreamDayEntry>();
             SetUnloadedState();
             DreamListBox.Enabled = false;
             DreamListBox.DataSource = null;
@@ -142,11 +114,6 @@ namespace eDream
             LoadDiary();
         }
 
-        private void EmptyEntryList()
-        {
-            LoadEntriesToList(null);
-        }
-
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -167,8 +134,7 @@ namespace eDream
         {
             SetUnloadedState();
 
-            DreamListBox.SelectedIndexChanged +=
-                ShowCurrentDay;
+            DreamListBox.SelectedIndexChanged += (sender, args) => LoadCurrentlySelectedDay();
             DreamListBox.MouseWheel += ScrollList;
             DreamListBox.MouseClick += FocusList;
             TableLayoutPanel.MouseClick +=
@@ -178,8 +144,15 @@ namespace eDream
             _viewModel.PersistenceSucceeded += (s, e) => OnPersistenceSucceeded();
             _viewModel.LoadingSucceeded += (s, e) => RefreshEntries();
             _viewModel.LoadingFailed += (s, e) => ShowLoadingErrorMessage();
-            _debugIncidence += SendToDebugger;
             Shown += LoadLastDatabase;
+        }
+
+        private void LoadCurrentlySelectedDay()
+        {
+            if (_currentDayList == null || _currentDayList.Count <= 0) return;
+            if (DreamListBox.SelectedIndex < 0 || DreamListBox.SelectedIndex >= _currentDayList.Count) return;
+
+            LoadDayEntries(_currentDayList[DreamListBox.SelectedIndex]);
         }
 
 
@@ -188,7 +161,7 @@ namespace eDream
             TableLayoutPanel.Controls.Clear();
             var entries = day.DreamEntries;
             if (!entries.Any()) return;
-        
+
 
             TableLayoutPanel.Visible = false;
             var entryCount = 1;
@@ -201,7 +174,7 @@ namespace eDream
                 TableLayoutPanel.Controls.Add(newEntry);
             }
 
-   
+
             for (var i = 0; i < TableLayoutPanel.RowStyles.Count; i++)
                 TableLayoutPanel.RowStyles[i].SizeType = SizeType.AutoSize;
 
@@ -222,13 +195,9 @@ namespace eDream
                     }
                 }
             }
-            catch (Exception e)
+            catch
             {
-                ProcessIncidence(e, @"Error setting focus to right panel: when
- setting focus to right panel we loop through all controls in the
- layout panel down to a third level, adding a mouse click handler which is
- supposed to process all clicks on the interface except inside buttons and the
- text box");
+                // ignored
             }
             finally
             {
@@ -261,7 +230,7 @@ namespace eDream
 
             DreamListBox.DataSource = _currentDayList;
             DreamListBox.SelectedIndex = Math.Max(0, entries.Count - 1);
-            ShowCurrentDay(DreamListBox, new EventArgs());
+            LoadCurrentlySelectedDay();
             TableLayoutPanel.Visible = true;
             SetStatusBarStats();
         }
@@ -273,9 +242,7 @@ namespace eDream
 
         private void LoadRecentDatabase(object sender, EventArgs a)
         {
-            var theSender = (RecentlyOpenedMenuItem) sender;
-
-            _viewModel.CurrentDatabasePath = theSender.FilePath;
+            _viewModel.CurrentDatabasePath = ((RecentlyOpenedMenuItem) sender).FilePath;
             LoadDiary();
         }
 
@@ -312,17 +279,6 @@ namespace eDream
             _viewModel.Persist();
         }
 
-
-        private void ProcessIncidence(Exception e, string msg)
-        {
-            var args = new Debug.DebugArgs
-            {
-                Message = msg,
-                ExceptionMessage = e.Message,
-                StackTrace = e.StackTrace
-            };
-            _debugIncidence?.Invoke(args);
-        }
 
         private void RefreshEntries()
         {
@@ -368,45 +324,16 @@ namespace eDream
             ee.Handled = true;
         }
 
-
-        private void SearchPerformed(object sender, EventArgs e)
-        {
-            var searcher = (SearchForm) sender;
-            SystemSounds.Beep.Play();
-            LoadEntriesToList(DreamCalendarCreator.GetDreamDayList(searcher.Results)
-            );
-            string searchType;
-            if (searcher.SearchType == SearchForm.ESearchType.TextSearch)
-                searchType = "text";
-            else if (searcher.SearchType == SearchForm.ESearchType.DateSearch)
-                searchType = "date";
-            else
-                searchType = "tags";
-            var entry = "entries";
-            if (searcher.Results.Count == 1) entry = "entry";
-            var msg = $"Your search for the {searchType} \"{searcher.LastSearchText}\" found" +
-                      $" {searcher.Results.Count} {entry}";
-            SetFindsMessage(msg);
-            Focus();
-        }
-
-
         private void SearchStripButton_Click(object sender, EventArgs e)
         {
-            ShowSearch(this, e);
+            _dreamDiaryBus.OpenSearchDialog();
         }
-
 
         private void SearchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ShowSearch(this, e);
+            _dreamDiaryBus.OpenSearchDialog();
         }
 
-
-        private void SendToDebugger(Debug.DebugArgs args)
-        {
-            _debug.AcceptDebug(args);
-        }
 
         private void SetActiveStatus()
         {
@@ -426,12 +353,6 @@ namespace eDream
         {
             _viewModel.CurrentDatabasePath = file;
             SetRecentFilesMenu();
-        }
-
-
-        private void SetFindsMessage(string str)
-        {
-            textBoxFinds.Text = str;
         }
 
         private void SetLoadedState()
@@ -480,7 +401,6 @@ namespace eDream
             toolStripAdd.Enabled = false;
             toolStripStats.Enabled = false;
             searchToolStripMenuItem.Enabled = false;
-            EmptyEntryList();
             ClearRightPanel();
         }
 
@@ -492,31 +412,9 @@ namespace eDream
                 string.Format(GuiStrings.FrmMain_ShowLoadingErrorMessage, _viewModel.CurrentDatabasePath));
         }
 
-
-        private void ShowSearch(object sender, EventArgs e)
-        {
-            if (_searchWindow != null && _searchWindow.Visible)
-            {
-                _searchWindow.Focus();
-            }
-            else if (_searchWindow == null)
-            {
-                _searchWindow = new SearchForm(_dreamEntries);
-                _searchWindow.OnSearchCompleted +=
-                    SearchPerformed;
-                _searchWindow.OnClear += ClearSearch;
-                _searchWindow.Show(this);
-            }
-            else
-            {
-                _searchWindow.Visible = true;
-            }
-        }
-
         private void StatisticsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var statWindow = new DreamsStatisticsShow(_viewModel.GetDreamTagStatistics());
-            statWindow.ShowDialog();
+            new DreamsStatisticsShow(_viewModel.GetDreamTagStatistics()).ShowDialog();
         }
 
         private void ToolStripAdd_Click(object sender, EventArgs e)

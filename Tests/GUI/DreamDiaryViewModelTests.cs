@@ -34,15 +34,48 @@ namespace Tests.GUI
         }
 
         [Test]
-        public void CloseCurrentDiary_sets_CurrentDatabasePath_to_empty()
+        public void FilterSearchEntries_only_returns_those_days()
         {
             var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
             {
                 CurrentDatabasePath = @"C:\Hello"
             };
-            entityUnderTest.CurrentDatabasePath.Should().NotBeNullOrEmpty();
-            entityUnderTest.CloseCurrentDiary();
-            entityUnderTest.CurrentDatabasePath.Should().BeNullOrEmpty();
+            AddThreeDreamEntriesTwoDays(entityUnderTest);
+            entityUnderTest.DreamDays.Should().HaveCount(2);
+            entityUnderTest.SetFilteredEntriesFromSearch(new List<DreamEntry>
+                {new DreamEntry(new DateTime(2019, 2, 23), "A", "B")});
+            entityUnderTest.DreamDays.Should().HaveCount(1).And
+                .ContainSingle(x => x.DreamEntries.Single().Text == "B");
+        }
+
+        [Test]
+        public void ClearFilteredEntries_returns_original_ones_again()
+        {
+            var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
+            {
+                CurrentDatabasePath = @"C:\Hello"
+            };
+            AddThreeDreamEntriesTwoDays(entityUnderTest);
+            entityUnderTest.DreamDays.Should().HaveCount(2);
+            entityUnderTest.SetFilteredEntriesFromSearch(new List<DreamEntry>
+                {new DreamEntry(new DateTime(2019, 2, 23), "A", "B")});
+            entityUnderTest.DreamDays.Should().HaveCount(1).And
+                .ContainSingle(x => x.DreamEntries.Single().Text == "B");
+            entityUnderTest.ClearFilteredEntries();
+            entityUnderTest.DreamDays.Should().HaveCount(2);
+        }
+
+        [Test]
+        public void FilterSearchEntries_given_empty_list_returns_nothing()
+        {
+            var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
+            {
+                CurrentDatabasePath = @"C:\Hello"
+            };
+            AddThreeDreamEntriesTwoDays(entityUnderTest);
+            entityUnderTest.DreamDays.Should().HaveCount(2);
+            entityUnderTest.SetFilteredEntriesFromSearch(new List<DreamEntry>());
+            entityUnderTest.DreamDays.Should().BeEmpty();
         }
 
         [Test]
@@ -56,6 +89,18 @@ namespace Tests.GUI
             entityUnderTest.DreamDays.Should().HaveCount(2);
             entityUnderTest.CloseCurrentDiary();
             entityUnderTest.DreamDays.Should().BeEmpty();
+        }
+
+        [Test]
+        public void CloseCurrentDiary_sets_CurrentDatabasePath_to_empty()
+        {
+            var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
+            {
+                CurrentDatabasePath = @"C:\Hello"
+            };
+            entityUnderTest.CurrentDatabasePath.Should().NotBeNullOrEmpty();
+            entityUnderTest.CloseCurrentDiary();
+            entityUnderTest.CurrentDatabasePath.Should().BeNullOrEmpty();
         }
 
         [Test]

@@ -45,12 +45,13 @@ namespace eDream.libs {
         /// <param name="searchFor">The string to search in the text of the
         /// entries</param>
         /// <returns></returns>
-        public List<DreamEntry> SearchEntriesText(List<DreamEntry> entries,
+        public List<DreamEntry> SearchEntriesText(IEnumerable<DreamEntry> entries,
             string searchFor) {
                 var results = new List<DreamEntry>();
-                for (var i = 0; i < entries.Count; i++) {
-                    if (entries[i].DreamTextContains(searchFor)) {
-                        results.Add(entries[i]);
+                foreach (var entry in entries)
+                {
+                    if (entry.DreamTextContains(searchFor)) {
+                        results.Add(entry);
                     }
                 }
                 return results;
@@ -66,15 +67,11 @@ namespace eDream.libs {
         /// <param name="type">One of the class constants for the search type,
         /// either ANDsearch or ORsearch</param>
         /// <returns></returns>
-        public List<DreamEntry> SearchEntriesTags(List<DreamEntry> entries,
-            string[] searchFor, bool childTags, TagSearchType type) {
-                CleanString(searchFor);
-                if (type == TagSearchType.ANDSearch) {
-                    return DoAndSearch(entries, searchFor, childTags);
-                }
-                else {
-                    return DoOrSearch(entries, searchFor, childTags);
-                }
+        public IEnumerable<DreamEntry> SearchEntriesTags(IEnumerable<DreamEntry> entries,
+            string[] searchFor, bool childTags, TagSearchType type)
+        {
+            CleanString(searchFor);
+            return type == TagSearchType.ANDSearch ? DoAndSearch(entries, searchFor, childTags) : DoOrSearch(entries, searchFor, childTags);
         }
 
         /// <summary>
@@ -85,13 +82,14 @@ namespace eDream.libs {
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public List<DreamEntry>SearchEntriesDateRange(List<DreamEntry> entries,
+        public List<DreamEntry>SearchEntriesDateRange(IEnumerable<DreamEntry> entries,
             DateTime from, DateTime to) {
             var results = new List<DreamEntry>();
             var sorter = new DateRangeSort(from, to);
-            for (var i = 0; i < entries.Count; i++) {
-                if (sorter.EvaluateDate(entries[i].Date)) {
-                    results.Add(entries[i]);
+            foreach (var entry in entries)
+            {
+                if (sorter.EvaluateDate(entry.Date)) {
+                    results.Add(entry);
                 }
             }
             return results;
@@ -103,13 +101,14 @@ namespace eDream.libs {
         /// <param name="entries"></param>
         /// <param name="day"></param>
         /// <returns></returns>
-        public List<DreamEntry>SearchEntriesOnDate(List<DreamEntry> entries,
+        public List<DreamEntry>SearchEntriesOnDate(IEnumerable<DreamEntry> entries,
             DateTime day) {
             var results = new List<DreamEntry>();
             var sorter = new DateRangeSort(day);
-            for (var i = 0; i < entries.Count; i++) {
-                if (sorter.EvaluateDate(entries[i].Date)) {
-                    results.Add(entries[i]);
+            foreach (var entry in entries)
+            {
+                if (sorter.EvaluateDate(entry.Date)) {
+                    results.Add(entry);
                 }
             }
             return results;
@@ -151,12 +150,13 @@ namespace eDream.libs {
         /// <param name="tags"></param>
         /// <param name="includeChildTags"></param>
         /// <returns></returns>
-        private List<DreamEntry> DoAndSearch(List<DreamEntry> entries,
+        private List<DreamEntry> DoAndSearch(IEnumerable<DreamEntry> entries,
             string[] tags, bool includeChildTags) {
                 var results = new List<DreamEntry>();
-                for (var i = 0; i < entries.Count; i++) {
-                    if (MatchAndSearch(entries[i], tags, includeChildTags)) {
-                        results.Add(entries[i]);
+                foreach (var entry in entries)
+                {
+                    if (MatchAndSearch(entry, tags, includeChildTags)) {
+                        results.Add(entry);
                     }
                 }
                 return results;
@@ -171,12 +171,13 @@ namespace eDream.libs {
         /// <param name="tags"></param>
         /// <param name="includeChildTags"></param>
         /// <returns></returns>
-        private List<DreamEntry> DoOrSearch(List<DreamEntry> entries,
+        private List<DreamEntry> DoOrSearch(IEnumerable<DreamEntry> entries,
             string[] tags, bool includeChildTags) {
                 var results = new List<DreamEntry>();
-                for (var i = 0; i < entries.Count; i++) {
-                    if (MatchOrSearch(entries[i], tags, includeChildTags)) {
-                        results.Add(entries[i]);
+                foreach (var entry in entries)
+                {
+                    if (MatchOrSearch(entry, tags, includeChildTags)) {
+                        results.Add(entry);
                     }
                 }
                 return results;

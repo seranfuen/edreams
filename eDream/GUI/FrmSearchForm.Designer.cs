@@ -1,5 +1,5 @@
 ﻿namespace eDream.GUI {
-    partial class SearchForm {
+    partial class FrmSearchForm {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -23,7 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmSearchForm));
             this.searchTabs = new System.Windows.Forms.TabControl();
             this.textSearchPage = new System.Windows.Forms.TabPage();
             this.textClearButton = new System.Windows.Forms.Button();
@@ -100,7 +100,7 @@
             this.textSearchFindButton.TabIndex = 7;
             this.textSearchFindButton.Text = "Find";
             this.textSearchFindButton.UseVisualStyleBackColor = true;
-            this.textSearchFindButton.Click += new System.EventHandler(this.textSearchFindButton_Click);
+            this.textSearchFindButton.Click += new System.EventHandler(this.TextSearchFindButton_Click);
             // 
             // label1
             // 
@@ -308,7 +308,7 @@
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.CheckBox2_CheckedChanged);
             // 
-            // SearchForm
+            // FrmSearchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -318,7 +318,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(342, 179);
-            this.Name = "SearchForm";
+            this.Name = "FrmSearchForm";
             this.Text = "Search";
             this.TopMost = true;
             this.searchTabs.ResumeLayout(false);

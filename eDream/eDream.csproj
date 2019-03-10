@@ -84,6 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\SearchPerformedEventArgs.cs" />
     <Compile Include="libs\DreamDiaryPaths.cs" />
     <Compile Include="GUI\DreamDiaryViewModel.cs" />
     <Compile Include="GUI\EntryViewerModel.cs" />
@@ -135,11 +136,11 @@
     <Compile Include="GUI\RecentlyOpenedMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\SearchForm.cs">
+    <Compile Include="GUI\FrmSearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\SearchForm.Designer.cs">
-      <DependentUpon>SearchForm.cs</DependentUpon>
+    <Compile Include="GUI\FrmSearchForm.Designer.cs">
+      <DependentUpon>FrmSearchForm.cs</DependentUpon>
     </Compile>
     <Compile Include="libs\DreamCalendarCreator.cs" />
     <Compile Include="libs\DreamFileService.cs" />
@@ -206,8 +207,8 @@
     <EmbeddedResource Include="GUI\FrmNewFileCreator.resx">
       <DependentUpon>FrmNewFileCreator.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\SearchForm.resx">
-      <DependentUpon>SearchForm.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\FrmSearchForm.resx">
+      <DependentUpon>FrmSearchForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>

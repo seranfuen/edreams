@@ -24,6 +24,7 @@ namespace eDream.GUI
         private readonly IDreamDiaryPersistenceService _dreamDiaryPersistenceService;
         private string _currentDatabasePath;
         private IList<DreamEntry> _dreamEntries = new List<DreamEntry>();
+        private IEnumerable<DreamEntry> _filteredEntriesToShow;
 
         public DreamDiaryViewModel([NotNull] IDreamDiaryPersistenceService dreamDiaryPersistenceService,
             [NotNull] IDreamDiaryPaths dreamDiaryPaths)
@@ -33,12 +34,6 @@ namespace eDream.GUI
             _dreamDiaryPaths = dreamDiaryPaths ?? throw new ArgumentNullException(nameof(dreamDiaryPaths));
             _dreamDiaryPersistenceService.FinishedPersisting += DreamDiaryPersistenceServiceOnFinishedPersisting;
             _dreamDiaryPersistenceService.FinishedLoading += DreamDiaryPersistenceServiceOnFinishedLoading;
-        }
-
-        public void CloseCurrentDiary()
-        {
-            CurrentDatabasePath = string.Empty;
-            _dreamEntries = new List<DreamEntry>();
         }
 
         public string CurrentDatabasePath
@@ -52,7 +47,7 @@ namespace eDream.GUI
             }
         }
 
-        private IEnumerable<DreamEntry> DreamEntries => _dreamEntries;
+        public IEnumerable<DreamEntry> DreamEntries => _dreamEntries;
 
         public List<DreamDayEntry> DreamDays => GetDayList();
 
@@ -75,9 +70,25 @@ namespace eDream.GUI
             _dreamEntries.Add(newEntry);
         }
 
+        public void ClearFilteredEntries()
+        {
+            _filteredEntriesToShow = null;
+        }
+
+        public void CloseCurrentDiary()
+        {
+            CurrentDatabasePath = string.Empty;
+            _dreamEntries = new List<DreamEntry>();
+        }
+
+        public void SetFilteredEntriesFromSearch(IEnumerable<DreamEntry> dreamEntries)
+        {
+            _filteredEntriesToShow = dreamEntries;
+        }
+
         public List<DreamDayEntry> GetDayList()
         {
-            return DreamCalendarCreator.GetDreamDayList(_dreamEntries);
+            return DreamCalendarCreator.GetDreamDayList(_filteredEntriesToShow ?? _dreamEntries);
         }
 
         public DreamTagStatistics GetDreamTagStatistics()

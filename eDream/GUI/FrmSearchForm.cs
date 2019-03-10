@@ -28,11 +28,8 @@ using eDream.program;
 
 namespace eDream.GUI
 {
-    internal partial class SearchForm : Form
+    internal partial class FrmSearchForm : Form
     {
-        public delegate void SearchEvent(object sender, EventArgs arguments);
-
-
         public enum ESearchType
         {
             TextSearch,
@@ -40,15 +37,13 @@ namespace eDream.GUI
             DateSearch
         }
 
-        private readonly List<DreamEntry> _dreamEntries;
+        private readonly IEnumerable<DreamEntry> _dreamEntries;
 
         private readonly DreamSearchUtils _searchUtils = new DreamSearchUtils();
 
-        public EventHandler OnClear;
+        public EventHandler<SearchPerformedEventArgs> SearchCompleted;
 
-        public SearchEvent OnSearchCompleted;
-
-        public SearchForm(List<DreamEntry> entries)
+        public FrmSearchForm(IEnumerable<DreamEntry> entries)
         {
             InitializeComponent();
             _dreamEntries = entries;
@@ -72,85 +67,26 @@ namespace eDream.GUI
             KeyDown += CloseWindow;
         }
 
-        public List<DreamEntry> Results { get; private set; } = new List<DreamEntry>();
+        public IEnumerable<DreamEntry> Results { get; private set; } = new List<DreamEntry>();
 
         public ESearchType SearchType { get; private set; }
 
         public string LastSearchText { get; private set; }
 
-        private void TextSearchBoxChanged(object sender, EventArgs args)
+        private void Button2_Click(object sender, EventArgs e)
         {
-            var box = (TextBox) sender;
+            SearchType = ESearchType.DateSearch;
+            if (checkBox2.Checked)
+                Results = _searchUtils.SearchEntriesOnDate(_dreamEntries,
+                    fromTimePicker.Value);
+            else
+                Results = _searchUtils.SearchEntriesDateRange(_dreamEntries,
+                    fromTimePicker.Value, toTimePicker.Value);
 
-            if (box.Equals(textSearchBox))
-                textSearchFindButton.Enabled = !string.IsNullOrWhiteSpace(box.Text);
-            else if (box.Equals(tagsTextBox)) findTagsButton.Enabled = !string.IsNullOrWhiteSpace(box.Text);
-        }
-
-        private void textSearchFindButton_Click(object sender, EventArgs e)
-        {
-            Results = _searchUtils.SearchEntriesText(_dreamEntries,
-                textSearchBox.Text);
-            LastSearchText = textSearchBox.Text;
-            SearchType = ESearchType.TextSearch;
-            if (OnSearchCompleted == null) return;
-
-            OnSearchCompleted(this, new EventArgs());
+            OnSearchCompleted();
             clearTagsButton.Enabled = true;
             textClearButton.Enabled = true;
             dateClearButton.Enabled = true;
-        }
-
-
-        private void FindTagsButton_Click(object sender, EventArgs e)
-        {
-            var tags =
-                tagsTextBox.Text.Split(DreamTagTokens.MainTagSeparator);
-            var searchType = orRadio.Checked ? DreamSearchUtils.TagSearchType.ORSearch : DreamSearchUtils.TagSearchType.ANDSearch;
-            Results = _searchUtils.SearchEntriesTags(_dreamEntries, tags,
-                checkChildTags.Checked, searchType);
-            LastSearchText = string.Join(", ", tags);
-            SearchType = ESearchType.TagsSearch;
-            if (OnSearchCompleted == null) return;
-
-            OnSearchCompleted(this, new EventArgs());
-            clearTagsButton.Enabled = true;
-            textClearButton.Enabled = true;
-            dateClearButton.Enabled = true;
-        }
-
-
-        private void EnterKeyPressed(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode != Keys.Enter) return;
-
-            var activePage = searchTabs.SelectedTab;
-            if (activePage == textSearchPage)
-                textSearchFindButton.PerformClick();
-            else if (activePage == tagsSearchPage) findTagsButton.PerformClick();
-            e.Handled = true;
-        }
-
-        private void CloseWindow(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape) Close();
-        }
-
-        private void PreventDestroy(object sender, FormClosingEventArgs e)
-        {
-            if (e.CloseReason == CloseReason.ApplicationExitCall ||
-                e.CloseReason == CloseReason.FormOwnerClosing)
-                return;
-            e.Cancel = true;
-            Visible = false;
-        }
-
-        private void SendClear(object sender, EventArgs e)
-        {
-            clearTagsButton.Enabled = false;
-            textClearButton.Enabled = false;
-            dateClearButton.Enabled = false;
-            OnClear?.Invoke(this, e);
         }
 
         private void CheckBox2_CheckedChanged(object sender, EventArgs e)
@@ -167,22 +103,83 @@ namespace eDream.GUI
             }
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void CloseWindow(object sender, KeyEventArgs e)
         {
-            SearchType = ESearchType.DateSearch;
-            if (checkBox2.Checked)
-                Results = _searchUtils.SearchEntriesOnDate(_dreamEntries,
-                    fromTimePicker.Value);
-            else
-                Results = _searchUtils.SearchEntriesDateRange(_dreamEntries,
-                    fromTimePicker.Value, toTimePicker.Value);
-            if (OnSearchCompleted != null)
-            {
-                OnSearchCompleted(this, new EventArgs());
-                clearTagsButton.Enabled = true;
-                textClearButton.Enabled = true;
-                dateClearButton.Enabled = true;
-            }
+            if (e.KeyCode == Keys.Escape) Close();
+        }
+
+
+        private void EnterKeyPressed(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter) return;
+
+            var activePage = searchTabs.SelectedTab;
+            if (activePage == textSearchPage)
+                textSearchFindButton.PerformClick();
+            else if (activePage == tagsSearchPage) findTagsButton.PerformClick();
+            e.Handled = true;
+        }
+
+
+        private void FindTagsButton_Click(object sender, EventArgs e)
+        {
+            var tags =
+                tagsTextBox.Text.Split(DreamTagTokens.MainTagSeparator);
+            var searchType = orRadio.Checked
+                ? DreamSearchUtils.TagSearchType.ORSearch
+                : DreamSearchUtils.TagSearchType.ANDSearch;
+            Results = _searchUtils.SearchEntriesTags(_dreamEntries, tags,
+                checkChildTags.Checked, searchType);
+            LastSearchText = string.Join(", ", tags);
+            SearchType = ESearchType.TagsSearch;
+
+            OnSearchCompleted();
+            clearTagsButton.Enabled = true;
+            textClearButton.Enabled = true;
+            dateClearButton.Enabled = true;
+        }
+
+        private void OnSearchCompleted()
+        {
+            SearchCompleted?.Invoke(this, new SearchPerformedEventArgs(Results));
+        }
+
+        private void PreventDestroy(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.ApplicationExitCall ||
+                e.CloseReason == CloseReason.FormOwnerClosing)
+                return;
+            e.Cancel = true;
+            Visible = false;
+        }
+
+        private void SendClear(object sender, EventArgs e)
+        {
+            clearTagsButton.Enabled = false;
+            textClearButton.Enabled = false;
+            dateClearButton.Enabled = false;
+            SearchCompleted?.Invoke(this, new SearchPerformedEventArgs(null));
+        }
+
+        private void TextSearchBoxChanged(object sender, EventArgs args)
+        {
+            var box = (TextBox) sender;
+
+            if (box.Equals(textSearchBox))
+                textSearchFindButton.Enabled = !string.IsNullOrWhiteSpace(box.Text);
+            else if (box.Equals(tagsTextBox)) findTagsButton.Enabled = !string.IsNullOrWhiteSpace(box.Text);
+        }
+
+        private void TextSearchFindButton_Click(object sender, EventArgs e)
+        {
+            Results = _searchUtils.SearchEntriesText(_dreamEntries, textSearchBox.Text);
+            LastSearchText = textSearchBox.Text;
+            SearchType = ESearchType.TextSearch;
+
+            OnSearchCompleted();
+            clearTagsButton.Enabled = true;
+            textClearButton.Enabled = true;
+            dateClearButton.Enabled = true;
         }
     }
 }
