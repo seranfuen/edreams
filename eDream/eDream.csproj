@@ -155,6 +155,7 @@
     <Compile Include="libs\IFileService.cs" />
     <Compile Include="libs\MainTagParser.cs" />
     <Compile Include="libs\PersistDreamEntriesArgs.cs" />
+    <Compile Include="libs\TagSearchType.cs" />
     <Compile Include="libs\TagStatTableData.cs" />
     <Compile Include="libs\TagTableData.cs" />
     <Compile Include="FrmMain.cs">
@@ -163,7 +164,7 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="libs\DreamSearchUtils.cs" />
+    <Compile Include="libs\DreamDiarySearch.cs" />
     <Compile Include="libs\DreamTagParser.cs" />
     <Compile Include="libs\XMLConstants.cs" />
     <Compile Include="libs\DiaryXmlReader.cs" />

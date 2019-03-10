@@ -84,6 +84,7 @@
     <Compile Include="Program\DreamEntryTests.cs" />
     <Compile Include="Program\DreamMainStatTagTests.cs" />
     <Compile Include="Program\DreamMainTagTests.cs" />
+    <Compile Include="Program\DreamDiarySearchTests.cs" />
     <Compile Include="Program\DreamTagParserTests.cs" />
     <Compile Include="Program\DreamTagStatisticsTests.cs" />
     <Compile Include="Program\DreamTagStringBuilderTests.cs" />

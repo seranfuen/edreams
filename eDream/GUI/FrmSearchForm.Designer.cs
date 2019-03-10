@@ -26,27 +26,27 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmSearchForm));
             this.searchTabs = new System.Windows.Forms.TabControl();
             this.textSearchPage = new System.Windows.Forms.TabPage();
-            this.textClearButton = new System.Windows.Forms.Button();
-            this.textSearchFindButton = new System.Windows.Forms.Button();
+            this.TextClearButton = new System.Windows.Forms.Button();
+            this.TextSearchFindButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.textSearchBox = new System.Windows.Forms.TextBox();
+            this.TextSearchBox = new System.Windows.Forms.TextBox();
             this.tagsSearchPage = new System.Windows.Forms.TabPage();
             this.orRadio = new System.Windows.Forms.RadioButton();
             this.andRadio = new System.Windows.Forms.RadioButton();
-            this.clearTagsButton = new System.Windows.Forms.Button();
-            this.findTagsButton = new System.Windows.Forms.Button();
+            this.ClearTagsButton = new System.Windows.Forms.Button();
+            this.FindTagsButton = new System.Windows.Forms.Button();
             this.checkChildTags = new System.Windows.Forms.CheckBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.tagsTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.dateSearchPage = new System.Windows.Forms.TabPage();
-            this.dateClearButton = new System.Windows.Forms.Button();
-            this.findDateButton = new System.Windows.Forms.Button();
-            this.toTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.DateClearButton = new System.Windows.Forms.Button();
+            this.FindDateButton = new System.Windows.Forms.Button();
+            this.ToTimePicker = new System.Windows.Forms.DateTimePicker();
             this.label3 = new System.Windows.Forms.Label();
-            this.fromTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.FromTimePicker = new System.Windows.Forms.DateTimePicker();
             this.fromDateLabel = new System.Windows.Forms.Label();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.SingleDayCheckBox = new System.Windows.Forms.CheckBox();
             this.searchTabs.SuspendLayout();
             this.textSearchPage.SuspendLayout();
             this.tagsSearchPage.SuspendLayout();
@@ -70,10 +70,10 @@
             // textSearchPage
             // 
             this.textSearchPage.BackColor = System.Drawing.SystemColors.Control;
-            this.textSearchPage.Controls.Add(this.textClearButton);
-            this.textSearchPage.Controls.Add(this.textSearchFindButton);
+            this.textSearchPage.Controls.Add(this.TextClearButton);
+            this.textSearchPage.Controls.Add(this.TextSearchFindButton);
             this.textSearchPage.Controls.Add(this.label1);
-            this.textSearchPage.Controls.Add(this.textSearchBox);
+            this.textSearchPage.Controls.Add(this.TextSearchBox);
             this.textSearchPage.Location = new System.Drawing.Point(4, 22);
             this.textSearchPage.Name = "textSearchPage";
             this.textSearchPage.Padding = new System.Windows.Forms.Padding(3);
@@ -81,26 +81,26 @@
             this.textSearchPage.TabIndex = 0;
             this.textSearchPage.Text = "Text";
             // 
-            // textClearButton
+            // TextClearButton
             // 
-            this.textClearButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textClearButton.Location = new System.Drawing.Point(239, 86);
-            this.textClearButton.Name = "textClearButton";
-            this.textClearButton.Size = new System.Drawing.Size(56, 23);
-            this.textClearButton.TabIndex = 8;
-            this.textClearButton.Text = "Clear";
-            this.textClearButton.UseVisualStyleBackColor = true;
+            this.TextClearButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.TextClearButton.Location = new System.Drawing.Point(239, 86);
+            this.TextClearButton.Name = "TextClearButton";
+            this.TextClearButton.Size = new System.Drawing.Size(56, 23);
+            this.TextClearButton.TabIndex = 8;
+            this.TextClearButton.Text = "Clear";
+            this.TextClearButton.UseVisualStyleBackColor = true;
             // 
-            // textSearchFindButton
+            // TextSearchFindButton
             // 
-            this.textSearchFindButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textSearchFindButton.Location = new System.Drawing.Point(301, 86);
-            this.textSearchFindButton.Name = "textSearchFindButton";
-            this.textSearchFindButton.Size = new System.Drawing.Size(53, 23);
-            this.textSearchFindButton.TabIndex = 7;
-            this.textSearchFindButton.Text = "Find";
-            this.textSearchFindButton.UseVisualStyleBackColor = true;
-            this.textSearchFindButton.Click += new System.EventHandler(this.TextSearchFindButton_Click);
+            this.TextSearchFindButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.TextSearchFindButton.Location = new System.Drawing.Point(301, 86);
+            this.TextSearchFindButton.Name = "TextSearchFindButton";
+            this.TextSearchFindButton.Size = new System.Drawing.Size(53, 23);
+            this.TextSearchFindButton.TabIndex = 7;
+            this.TextSearchFindButton.Text = "Find";
+            this.TextSearchFindButton.UseVisualStyleBackColor = true;
+            this.TextSearchFindButton.Click += new System.EventHandler(this.TextSearchFindButton_Click);
             // 
             // label1
             // 
@@ -111,22 +111,22 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Find entries that contain the following text";
             // 
-            // textSearchBox
+            // TextSearchBox
             // 
-            this.textSearchBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.TextSearchBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textSearchBox.Location = new System.Drawing.Point(9, 21);
-            this.textSearchBox.Name = "textSearchBox";
-            this.textSearchBox.Size = new System.Drawing.Size(345, 20);
-            this.textSearchBox.TabIndex = 0;
+            this.TextSearchBox.Location = new System.Drawing.Point(9, 21);
+            this.TextSearchBox.Name = "TextSearchBox";
+            this.TextSearchBox.Size = new System.Drawing.Size(345, 20);
+            this.TextSearchBox.TabIndex = 0;
             // 
             // tagsSearchPage
             // 
             this.tagsSearchPage.BackColor = System.Drawing.SystemColors.Control;
             this.tagsSearchPage.Controls.Add(this.orRadio);
             this.tagsSearchPage.Controls.Add(this.andRadio);
-            this.tagsSearchPage.Controls.Add(this.clearTagsButton);
-            this.tagsSearchPage.Controls.Add(this.findTagsButton);
+            this.tagsSearchPage.Controls.Add(this.ClearTagsButton);
+            this.tagsSearchPage.Controls.Add(this.FindTagsButton);
             this.tagsSearchPage.Controls.Add(this.checkChildTags);
             this.tagsSearchPage.Controls.Add(this.richTextBox1);
             this.tagsSearchPage.Controls.Add(this.tagsTextBox);
@@ -160,26 +160,26 @@
             this.andRadio.Text = "AND";
             this.andRadio.UseVisualStyleBackColor = true;
             // 
-            // clearTagsButton
+            // ClearTagsButton
             // 
-            this.clearTagsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.clearTagsButton.Location = new System.Drawing.Point(239, 86);
-            this.clearTagsButton.Name = "clearTagsButton";
-            this.clearTagsButton.Size = new System.Drawing.Size(56, 23);
-            this.clearTagsButton.TabIndex = 6;
-            this.clearTagsButton.Text = "Clear";
-            this.clearTagsButton.UseVisualStyleBackColor = true;
+            this.ClearTagsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ClearTagsButton.Location = new System.Drawing.Point(239, 86);
+            this.ClearTagsButton.Name = "ClearTagsButton";
+            this.ClearTagsButton.Size = new System.Drawing.Size(56, 23);
+            this.ClearTagsButton.TabIndex = 6;
+            this.ClearTagsButton.Text = "Clear";
+            this.ClearTagsButton.UseVisualStyleBackColor = true;
             // 
-            // findTagsButton
+            // FindTagsButton
             // 
-            this.findTagsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.findTagsButton.Location = new System.Drawing.Point(301, 86);
-            this.findTagsButton.Name = "findTagsButton";
-            this.findTagsButton.Size = new System.Drawing.Size(53, 23);
-            this.findTagsButton.TabIndex = 5;
-            this.findTagsButton.Text = "Find";
-            this.findTagsButton.UseVisualStyleBackColor = true;
-            this.findTagsButton.Click += new System.EventHandler(this.FindTagsButton_Click);
+            this.FindTagsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.FindTagsButton.Location = new System.Drawing.Point(301, 86);
+            this.FindTagsButton.Name = "FindTagsButton";
+            this.FindTagsButton.Size = new System.Drawing.Size(53, 23);
+            this.FindTagsButton.TabIndex = 5;
+            this.FindTagsButton.Text = "Find";
+            this.FindTagsButton.UseVisualStyleBackColor = true;
+            this.FindTagsButton.Click += new System.EventHandler(this.FindTagsButton_Click);
             // 
             // checkChildTags
             // 
@@ -224,13 +224,13 @@
             // dateSearchPage
             // 
             this.dateSearchPage.BackColor = System.Drawing.SystemColors.Control;
-            this.dateSearchPage.Controls.Add(this.dateClearButton);
-            this.dateSearchPage.Controls.Add(this.findDateButton);
-            this.dateSearchPage.Controls.Add(this.toTimePicker);
+            this.dateSearchPage.Controls.Add(this.DateClearButton);
+            this.dateSearchPage.Controls.Add(this.FindDateButton);
+            this.dateSearchPage.Controls.Add(this.ToTimePicker);
             this.dateSearchPage.Controls.Add(this.label3);
-            this.dateSearchPage.Controls.Add(this.fromTimePicker);
+            this.dateSearchPage.Controls.Add(this.FromTimePicker);
             this.dateSearchPage.Controls.Add(this.fromDateLabel);
-            this.dateSearchPage.Controls.Add(this.checkBox2);
+            this.dateSearchPage.Controls.Add(this.SingleDayCheckBox);
             this.dateSearchPage.Location = new System.Drawing.Point(4, 22);
             this.dateSearchPage.Name = "dateSearchPage";
             this.dateSearchPage.Padding = new System.Windows.Forms.Padding(3);
@@ -238,36 +238,36 @@
             this.dateSearchPage.TabIndex = 2;
             this.dateSearchPage.Text = "Date";
             // 
-            // dateClearButton
+            // DateClearButton
             // 
-            this.dateClearButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateClearButton.Location = new System.Drawing.Point(239, 86);
-            this.dateClearButton.Name = "dateClearButton";
-            this.dateClearButton.Size = new System.Drawing.Size(56, 23);
-            this.dateClearButton.TabIndex = 8;
-            this.dateClearButton.Text = "Clear";
-            this.dateClearButton.UseVisualStyleBackColor = true;
+            this.DateClearButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.DateClearButton.Location = new System.Drawing.Point(239, 86);
+            this.DateClearButton.Name = "DateClearButton";
+            this.DateClearButton.Size = new System.Drawing.Size(56, 23);
+            this.DateClearButton.TabIndex = 8;
+            this.DateClearButton.Text = "Clear";
+            this.DateClearButton.UseVisualStyleBackColor = true;
             // 
-            // findDateButton
+            // FindDateButton
             // 
-            this.findDateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.findDateButton.Location = new System.Drawing.Point(301, 86);
-            this.findDateButton.Name = "findDateButton";
-            this.findDateButton.Size = new System.Drawing.Size(53, 23);
-            this.findDateButton.TabIndex = 7;
-            this.findDateButton.Text = "Find";
-            this.findDateButton.UseVisualStyleBackColor = true;
-            this.findDateButton.Click += new System.EventHandler(this.Button2_Click);
+            this.FindDateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.FindDateButton.Location = new System.Drawing.Point(301, 86);
+            this.FindDateButton.Name = "FindDateButton";
+            this.FindDateButton.Size = new System.Drawing.Size(53, 23);
+            this.FindDateButton.TabIndex = 7;
+            this.FindDateButton.Text = "Find";
+            this.FindDateButton.UseVisualStyleBackColor = true;
+            this.FindDateButton.Click += new System.EventHandler(this.FindDateButton_Click);
             // 
-            // toTimePicker
+            // ToTimePicker
             // 
-            this.toTimePicker.CustomFormat = "";
-            this.toTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.toTimePicker.Location = new System.Drawing.Point(212, 23);
-            this.toTimePicker.Name = "toTimePicker";
-            this.toTimePicker.Size = new System.Drawing.Size(97, 20);
-            this.toTimePicker.TabIndex = 4;
-            this.toTimePicker.Value = new System.DateTime(2012, 1, 20, 0, 0, 0, 0);
+            this.ToTimePicker.CustomFormat = "";
+            this.ToTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.ToTimePicker.Location = new System.Drawing.Point(212, 23);
+            this.ToTimePicker.Name = "ToTimePicker";
+            this.ToTimePicker.Size = new System.Drawing.Size(97, 20);
+            this.ToTimePicker.TabIndex = 4;
+            this.ToTimePicker.Value = new System.DateTime(2012, 1, 20, 0, 0, 0, 0);
             // 
             // label3
             // 
@@ -278,15 +278,15 @@
             this.label3.TabIndex = 3;
             this.label3.Text = "To";
             // 
-            // fromTimePicker
+            // FromTimePicker
             // 
-            this.fromTimePicker.CustomFormat = "";
-            this.fromTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.fromTimePicker.Location = new System.Drawing.Point(100, 23);
-            this.fromTimePicker.Name = "fromTimePicker";
-            this.fromTimePicker.Size = new System.Drawing.Size(97, 20);
-            this.fromTimePicker.TabIndex = 2;
-            this.fromTimePicker.Value = new System.DateTime(2012, 1, 20, 0, 0, 0, 0);
+            this.FromTimePicker.CustomFormat = "";
+            this.FromTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.FromTimePicker.Location = new System.Drawing.Point(100, 23);
+            this.FromTimePicker.Name = "FromTimePicker";
+            this.FromTimePicker.Size = new System.Drawing.Size(97, 20);
+            this.FromTimePicker.TabIndex = 2;
+            this.FromTimePicker.Value = new System.DateTime(2012, 1, 20, 0, 0, 0, 0);
             // 
             // fromDateLabel
             // 
@@ -297,16 +297,16 @@
             this.fromDateLabel.TabIndex = 1;
             this.fromDateLabel.Text = "From";
             // 
-            // checkBox2
+            // SingleDayCheckBox
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(7, 23);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(75, 17);
-            this.checkBox2.TabIndex = 0;
-            this.checkBox2.Text = "Single day";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.CheckBox2_CheckedChanged);
+            this.SingleDayCheckBox.AutoSize = true;
+            this.SingleDayCheckBox.Location = new System.Drawing.Point(7, 23);
+            this.SingleDayCheckBox.Name = "SingleDayCheckBox";
+            this.SingleDayCheckBox.Size = new System.Drawing.Size(75, 17);
+            this.SingleDayCheckBox.TabIndex = 0;
+            this.SingleDayCheckBox.Text = "Single day";
+            this.SingleDayCheckBox.UseVisualStyleBackColor = true;
+            this.SingleDayCheckBox.CheckedChanged += new System.EventHandler(this.SingleDayCheckBox_CheckedChanged);
             // 
             // FrmSearchForm
             // 
@@ -337,24 +337,24 @@
         private System.Windows.Forms.TabControl searchTabs;
         private System.Windows.Forms.TabPage textSearchPage;
         private System.Windows.Forms.TabPage tagsSearchPage;
-        private System.Windows.Forms.TextBox textSearchBox;
+        private System.Windows.Forms.TextBox TextSearchBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tagsTextBox;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.CheckBox checkChildTags;
-        private System.Windows.Forms.Button clearTagsButton;
-        private System.Windows.Forms.Button findTagsButton;
+        private System.Windows.Forms.Button ClearTagsButton;
+        private System.Windows.Forms.Button FindTagsButton;
         private System.Windows.Forms.TabPage dateSearchPage;
-        private System.Windows.Forms.DateTimePicker fromTimePicker;
+        private System.Windows.Forms.DateTimePicker FromTimePicker;
         private System.Windows.Forms.Label fromDateLabel;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.DateTimePicker toTimePicker;
+        private System.Windows.Forms.CheckBox SingleDayCheckBox;
+        private System.Windows.Forms.DateTimePicker ToTimePicker;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button textClearButton;
-        private System.Windows.Forms.Button textSearchFindButton;
-        private System.Windows.Forms.Button dateClearButton;
-        private System.Windows.Forms.Button findDateButton;
+        private System.Windows.Forms.Button TextClearButton;
+        private System.Windows.Forms.Button TextSearchFindButton;
+        private System.Windows.Forms.Button DateClearButton;
+        private System.Windows.Forms.Button FindDateButton;
         private System.Windows.Forms.RadioButton andRadio;
         private System.Windows.Forms.RadioButton orRadio;
     }
