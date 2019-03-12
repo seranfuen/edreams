@@ -177,7 +177,7 @@ namespace eDream.GUI
         private void TextSearchFindButton_Click(object sender, EventArgs e)
         {
             var diarySearch = GetDreamDiarySearch();
-            Results = diarySearch.SearchEntriesText(_provider.DreamEntries, TextSearchBox.Text);
+            Results = diarySearch.SearchEntriesByText(TextSearchBox.Text);
             LastSearchText = TextSearchBox.Text;
             SearchType = ESearchType.TextSearch;
 

@@ -23,14 +23,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using eDream.Annotations;
 using eDream.program;
-using EvilTools;
 
 namespace eDream.libs
 {
     public class DreamDiarySearch
     {
+        private const string QuotedSearchExpressionRegexPattern = "\"[^\\\"]*\"";
+        public const string SeparateWordsInSearchExpressionRegexPattern = "\\w+";
+
         private readonly IEnumerable<DreamEntry> _dreamEntries;
 
         public DreamDiarySearch([NotNull] IEnumerable<DreamEntry> dreamEntries)
@@ -41,6 +44,11 @@ namespace eDream.libs
         public IEnumerable<DreamEntry> SearchEntriesBetweenDates(DateTime from, DateTime to)
         {
             return _dreamEntries.Where(entry => entry.Date.Date >= from.Date && entry.Date.Date <= to.Date);
+        }
+
+        public List<DreamEntry> SearchEntriesByText(string searchFor)
+        {
+            return _dreamEntries.Where(entry => ContainsSearchValue(entry, searchFor)).ToList();
         }
 
         public IEnumerable<DreamEntry> SearchEntriesOnDate(DateTime day)
@@ -69,26 +77,6 @@ namespace eDream.libs
                 : DoOrSearch(entries, searchFor, childTags);
         }
 
-        /// <summary>
-        ///     Returns a list of dream entry object whose text contains the
-        ///     string searchFor
-        /// </summary>
-        /// <param name="entries">The entries to search</param>
-        /// <param name="searchFor">
-        ///     The string to search in the text of the
-        ///     entries
-        /// </param>
-        /// <returns></returns>
-        public List<DreamEntry> SearchEntriesText(IEnumerable<DreamEntry> entries,
-            string searchFor)
-        {
-            var results = new List<DreamEntry>();
-            foreach (var entry in entries)
-                if (entry.DreamTextContains(searchFor))
-                    results.Add(entry);
-            return results;
-        }
-
 
         /// <summary>
         ///     Trims each element in the string array
@@ -112,6 +100,15 @@ namespace eDream.libs
             var result = new string[str.Length];
             for (var i = 0; i < str.Length; i++) result[i] = (string) str[i].Clone();
             return result;
+        }
+
+        private static bool ContainsSearchValue(DreamEntry entry, string searchFor)
+        {
+            var literalWords = GetQuotedExpressionsForLiteralSearch(searchFor);
+            var searchForWithoutQuotedExpressions = RemoveQuotedExpressions(searchFor, literalWords);
+            var unquotedWords = GetUnquotedWords(searchForWithoutQuotedExpressions);
+
+            return literalWords.Any(entry.DreamTextContains) || unquotedWords.Any(entry.DreamTextContains);
         }
 
         /// <summary>
@@ -150,6 +147,26 @@ namespace eDream.libs
                 if (MatchOrSearch(entry, tags, includeChildTags))
                     results.Add(entry);
             return results;
+        }
+
+        private static List<string> GetQuotedExpressionsForLiteralSearch(string searchFor)
+        {
+            var quotedWordsRegex = new Regex(QuotedSearchExpressionRegexPattern,
+                RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var literalWords = new List<string>();
+            foreach (var match in quotedWordsRegex.Matches(searchFor))
+                literalWords.Add(match.ToString().Replace("\"", "").Trim());
+            return literalWords;
+        }
+
+        private static IEnumerable<string> GetUnquotedWords(string searchForWithoutQuotedExpressions)
+        {
+            var unquotedWords = new List<string>();
+            var separateWordsRegex =
+                new Regex(SeparateWordsInSearchExpressionRegexPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            foreach (var match in separateWordsRegex.Matches(searchForWithoutQuotedExpressions))
+                unquotedWords.Add(match.ToString().Trim());
+            return unquotedWords;
         }
 
         /// <summary>
@@ -230,6 +247,12 @@ namespace eDream.libs
             }
 
             return false;
+        }
+
+        private static string RemoveQuotedExpressions(string searchFor, IEnumerable<string> literalWords)
+        {
+            foreach (var literalWord in literalWords) searchFor = searchFor.Replace(literalWord, "");
+            return searchFor;
         }
 
 

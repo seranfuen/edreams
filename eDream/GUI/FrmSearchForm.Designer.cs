@@ -47,6 +47,7 @@
             this.FromTimePicker = new System.Windows.Forms.DateTimePicker();
             this.fromDateLabel = new System.Windows.Forms.Label();
             this.SingleDayCheckBox = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.searchTabs.SuspendLayout();
             this.textSearchPage.SuspendLayout();
             this.tagsSearchPage.SuspendLayout();
@@ -70,6 +71,7 @@
             // textSearchPage
             // 
             this.textSearchPage.BackColor = System.Drawing.SystemColors.Control;
+            this.textSearchPage.Controls.Add(this.label4);
             this.textSearchPage.Controls.Add(this.TextClearButton);
             this.textSearchPage.Controls.Add(this.TextSearchFindButton);
             this.textSearchPage.Controls.Add(this.label1);
@@ -115,7 +117,7 @@
             // 
             this.TextSearchBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TextSearchBox.Location = new System.Drawing.Point(9, 21);
+            this.TextSearchBox.Location = new System.Drawing.Point(9, 42);
             this.TextSearchBox.Name = "TextSearchBox";
             this.TextSearchBox.Size = new System.Drawing.Size(345, 20);
             this.TextSearchBox.TabIndex = 0;
@@ -308,6 +310,15 @@
             this.SingleDayCheckBox.UseVisualStyleBackColor = true;
             this.SingleDayCheckBox.CheckedChanged += new System.EventHandler(this.SingleDayCheckBox_CheckedChanged);
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 26);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(229, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "To find a phrase, put it between quotes \"a b c\"";
+            // 
             // FrmSearchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -357,5 +368,6 @@
         private System.Windows.Forms.Button FindDateButton;
         private System.Windows.Forms.RadioButton andRadio;
         private System.Windows.Forms.RadioButton orRadio;
+        private System.Windows.Forms.Label label4;
     }
 }

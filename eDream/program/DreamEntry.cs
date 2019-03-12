@@ -76,10 +76,10 @@ namespace eDream.program
 
         public bool IsValid => _isTextValid && !_toDelete;
 
-
-        public string GetDateAsStr()
+        public bool DreamTextContains(string value)
         {
-            return Date.ToString("yyyy-MM-dd");
+            return !string.IsNullOrWhiteSpace(value) && Regex.IsMatch(_text, value.Trim(),
+                       RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
         }
 
         public string GetDateAsDayStr()
@@ -87,9 +87,10 @@ namespace eDream.program
             return Date.ToString("dd-MM-yyyy");
         }
 
-        public void SetTags(string tags)
+
+        public string GetDateAsStr()
         {
-            _tags = DreamTagParser.ParseStringToDreamTags(tags);
+            return Date.ToString("yyyy-MM-dd");
         }
 
         public IList<DreamMainTag> GetTagsAsList()
@@ -102,10 +103,9 @@ namespace eDream.program
             return DreamTagParser.TagsToString(_tags);
         }
 
-        public bool DreamTextContains(string value)
+        public void SetTags(string tags)
         {
-            if (string.IsNullOrWhiteSpace(value) || !_isTextValid) return false;
-            return Regex.IsMatch(_text, value.Trim(), RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+            _tags = DreamTagParser.ParseStringToDreamTags(tags);
         }
 
         private void CountTextWords()

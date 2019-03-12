@@ -14,8 +14,8 @@ namespace Tests.Program
         {
             return new List<DreamEntry>
             {
-                new DreamEntry(new DateTime(2019, 3, 8), "A", "B"),
-                new DreamEntry(new DateTime(2019, 3, 7), "A", "B")
+                new DreamEntry(new DateTime(2019, 3, 8), "A", "Hello there. General Kenobi."),
+                new DreamEntry(new DateTime(2019, 3, 7), "A", "You are a bold one. Kenobi.")
             };
         }
 
@@ -56,6 +56,69 @@ namespace Tests.Program
             var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
             entityUnderTest.SearchEntriesBetweenDates(new DateTime(2019, 3, 7), new DateTime(2019, 3,
                 8)).Should().HaveCount(2);
+        }
+
+        [Test]
+        public void SearchEntriesForText_empty_text_null_result()
+        {
+            var entityUnderTest = new DreamDiarySearch(new List<DreamEntry>());
+            entityUnderTest.SearchEntriesByText("").Should().BeEmpty();
+        }
+
+        [Test]
+        public void SearchEntriesForText_existing_match_for_Letters_finds_two_entries()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesByText("re").Should().HaveCount(2);
+        }
+
+        [Test]
+        public void SearchEntriesForText_existing_word_finds_two_entries()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesByText("kenobi").Should().HaveCount(2);
+        }
+
+        [Test]
+        public void SearchEntriesForText_not_existing_subtext_finds_nothing()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesByText("Plagueis").Should().BeEmpty();
+        }
+
+        [Test]
+        public void SearchEntriesForText_several_literals_not_matching_but_unquoted_word_matches()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesByText("\"General Darth\" bold \"darth plagueis\"").Should().HaveCount(1);
+        }
+
+        [Test]
+        public void SearchEntriesForText_several_literals_two_match()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesByText("\"General kenobi\" Darth \"bold one\"").Should().HaveCount(2);
+        }
+
+        [Test]
+        public void SearchEntriesForText_two_words_between_quotes_searches_literal_string()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesByText("\"General kenobi\"").Should().HaveCount(1);
+        }
+
+        [Test]
+        public void SearchEntriesForText_two_words_no_quotes_does_or_search()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesByText("darth GENERAL").Should().HaveCount(1);
+        }
+
+        [Test]
+        public void SearchEntriesForText_two_words_no_quotes_does_or_search_no_matches()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesByText("darth jarjar").Should().BeEmpty();
         }
 
         [Test]
