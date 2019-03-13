@@ -146,4 +146,10 @@
   <data name="ValueCannotBeNullOrWhitespace" xml:space="preserve">
     <value>Value cannot be null or whitespace.</value>
   </data>
+  <data name="Search_OnThisDate" xml:space="preserve">
+    <value>On this date</value>
+  </data>
+  <data name="Search_FromThisDate" xml:space="preserve">
+    <value>From</value>
+  </data>
 </root>

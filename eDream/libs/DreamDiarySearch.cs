@@ -51,32 +51,28 @@ namespace eDream.libs
             return _dreamEntries.Where(entry => ContainsSearchValue(entry, searchFor)).ToList();
         }
 
+        public List<DreamEntry> SearchEntriesForAllTags([NotNull] IEnumerable<string> tags)
+        {
+            if (tags == null) throw new ArgumentNullException(nameof(tags));
+            var tagList = tags.ToList();
+            if (!tagList.Any() || tagList.All(string.IsNullOrWhiteSpace)) return new List<DreamEntry>();
+            return _dreamEntries.Where(entry =>
+                DreamContainsAllTags(entry, tagList.Where(tag => !string.IsNullOrWhiteSpace(tag)))).ToList();
+        }
+
+        public IList<DreamEntry> SearchEntriesForAnyTag(IEnumerable<string> tags)
+        {
+            if (tags == null) throw new ArgumentNullException(nameof(tags));
+            var tagList = tags.ToList();
+            if (!tagList.Any() || tagList.All(string.IsNullOrWhiteSpace)) return new List<DreamEntry>();
+            return _dreamEntries.Where(entry =>
+                DreamContainsAnyTag(entry, tagList.Where(tag => !string.IsNullOrWhiteSpace(tag)))).ToList();
+        }
+
         public IEnumerable<DreamEntry> SearchEntriesOnDate(DateTime day)
         {
             return _dreamEntries.Where(entry => entry.Date.Date.Equals(day.Date));
         }
-
-        /// <summary>
-        ///     Performs a tag search and returns a list with the dream entries
-        ///     that match the results
-        /// </summary>
-        /// <param name="entries">The entries that are being searched</param>
-        /// <param name="searchFor">The targs to search for</param>
-        /// <param name="childTags">True if child tags are also searched</param>
-        /// <param name="type">
-        ///     One of the class constants for the search type,
-        ///     either ANDsearch or ORsearch
-        /// </param>
-        /// <returns></returns>
-        public IEnumerable<DreamEntry> SearchEntriesTags(IEnumerable<DreamEntry> entries,
-            string[] searchFor, bool childTags, TagSearchType type)
-        {
-            CleanString(searchFor);
-            return type == TagSearchType.AndSearch
-                ? DoAndSearch(entries, searchFor, childTags)
-                : DoOrSearch(entries, searchFor, childTags);
-        }
-
 
         /// <summary>
         ///     Trims each element in the string array
@@ -111,42 +107,14 @@ namespace eDream.libs
             return literalWords.Any(entry.DreamTextContains) || unquotedWords.Any(entry.DreamTextContains);
         }
 
-        /// <summary>
-        ///     Performs an AND search to the tags of the dream entries in a list:
-        ///     when all the tags are found in a dream entry, it's added to the
-        ///     results
-        /// </summary>
-        /// <param name="entries"></param>
-        /// <param name="tags"></param>
-        /// <param name="includeChildTags"></param>
-        /// <returns></returns>
-        private List<DreamEntry> DoAndSearch(IEnumerable<DreamEntry> entries,
-            string[] tags, bool includeChildTags)
+        private static bool DreamContainsAllTags(DreamEntry entry, IEnumerable<string> tags)
         {
-            var results = new List<DreamEntry>();
-            foreach (var entry in entries)
-                if (MatchAndSearch(entry, tags, includeChildTags))
-                    results.Add(entry);
-            return results;
+            return tags.All(tag => entry.ContainsTagOrChildTag(tag.Trim()));
         }
 
-        /// <summary>
-        ///     Performs an OR search to the tags of the dream entires in a list:
-        ///     as soon as one of the tags being searched for is found, the entry
-        ///     is added to the results
-        /// </summary>
-        /// <param name="entries"></param>
-        /// <param name="tags"></param>
-        /// <param name="includeChildTags"></param>
-        /// <returns></returns>
-        private List<DreamEntry> DoOrSearch(IEnumerable<DreamEntry> entries,
-            string[] tags, bool includeChildTags)
+        private static bool DreamContainsAnyTag(DreamEntry entry, IEnumerable<string> tags)
         {
-            var results = new List<DreamEntry>();
-            foreach (var entry in entries)
-                if (MatchOrSearch(entry, tags, includeChildTags))
-                    results.Add(entry);
-            return results;
+            return tags.Any(tag => entry.ContainsTagOrChildTag(tag.Trim()));
         }
 
         private static List<string> GetQuotedExpressionsForLiteralSearch(string searchFor)
@@ -169,107 +137,9 @@ namespace eDream.libs
             return unquotedWords;
         }
 
-        /// <summary>
-        ///     Searches the entry's tags and returns true if all the tags that
-        ///     were being searched
-        /// </summary>
-        /// <param name="entry"></param>
-        /// <param name="tag"></param>
-        /// <param name="includeChildTags"></param>
-        /// <returns></returns>
-        private bool MatchAndSearch(DreamEntry entry, string[] tags,
-            bool includeChildTags)
-        {
-            var tag = CloneString(tags);
-            var mainTags = entry.GetTagsAsList();
-            for (var i = 0; i < mainTags.Count; i++)
-            {
-                // Find if among each main tag a tag in the list is found
-                for (var j = 0; j < tag.Length; j++)
-                {
-                    if (string.IsNullOrWhiteSpace(tag[j])) continue;
-                    if (string.Compare(tag[j], mainTags[i].Tag, true)
-                        == 0)
-                        tag[j] = string.Empty;
-                }
-
-                // If child tags also included, search them
-                if (includeChildTags)
-                {
-                    var childTags = mainTags[i].ChildTags;
-                    for (var j = 0; j < childTags.Count; j++)
-                    for (var k = 0; k < tag.Length; k++)
-                    {
-                        if (string.IsNullOrWhiteSpace(tag[k])) continue;
-                        if (string.Compare(tag[k], childTags[j].Tag,
-                                true) == 0)
-                            tag[k] = string.Empty;
-                    }
-                }
-
-                /* Check if there are still unfound tags. If so, continue
-                 * search, otherwise return true
-                 */
-                if (ToFind(tag) == 0) return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        ///     Searches the entry's tags and returns true as soon as one match is
-        ///     found, false otherwise
-        /// </summary>
-        /// <param name="entry"></param>
-        /// <param name="tags"></param>
-        /// <param name="includeChildTags"></param>
-        /// <returns></returns>
-        private bool MatchOrSearch(DreamEntry entry, string[] tags,
-            bool includeChildTags)
-        {
-            var mainTags = entry.GetTagsAsList();
-            for (var i = 0; i < mainTags.Count; i++)
-            {
-                for (var j = 0; j < tags.Length; j++)
-                    if (string.Compare(tags[j], mainTags[i].Tag,
-                            true) == 0)
-                        return true;
-                // Search child tags if searching for them
-                if (includeChildTags)
-                {
-                    var childTags = mainTags[i].ChildTags;
-                    for (var j = 0; j < childTags.Count; j++)
-                    for (var k = 0; k < tags.Length; k++)
-                        if (string.Compare(tags[k], childTags[j].Tag,
-                                true) == 0)
-                            return true;
-                }
-            }
-
-            return false;
-        }
-
         private static string RemoveQuotedExpressions(string searchFor, IEnumerable<string> literalWords)
         {
-            foreach (var literalWord in literalWords) searchFor = searchFor.Replace(literalWord, "");
-            return searchFor;
-        }
-
-
-        /// <summary>
-        ///     Returns the number of tags in the string that haven't been found
-        ///     yet. A tag that is found is replaced in the string by String.Empty,
-        ///     so this method returns the number of strings that are not empty
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <returns></returns>
-        private int ToFind(string[] tags)
-        {
-            var counter = 0;
-            for (var i = 0; i < tags.Length; i++)
-                if (!string.IsNullOrWhiteSpace(tags[i]))
-                    counter++;
-            return counter;
+            return literalWords.Aggregate(searchFor, (current, literalWord) => current.Replace(literalWord, ""));
         }
     }
 }

@@ -109,7 +109,7 @@ namespace eDream
             newFile.ShowDialog();
             if (newFile.Action != FrmNewFileCreator.CreateFileAction.Created) return;
 
-            closeToolStripMenuItem.PerformClick();
+            CloseToolStripMenuItem.PerformClick();
             _viewModel.CurrentDatabasePath = newFile.ChosenPath;
             LoadDiary();
         }
@@ -358,15 +358,15 @@ namespace eDream
         private void SetLoadedState()
         {
             entryToolStripMenuItem.Enabled = true;
-            saveAsToolStripMenuItem.Enabled = true;
-            closeToolStripMenuItem.Enabled = true;
-            addEntryToolStripMenuItem.Enabled = true;
+            SaveAsToolStripMenuItem.Enabled = true;
+            CloseToolStripMenuItem.Enabled = true;
+            AddEntryToolStripMenuItem.Enabled = true;
             toolStripAdd.Enabled = true;
             toolStripStats.Enabled = true;
             ClearRightPanel();
             LoadEntriesToList(_viewModel.DreamDays);
             SetStatusBarStats();
-            searchToolStripMenuItem.Enabled = true;
+            SearchToolStripMenuItem.Enabled = true;
             Text = _viewModel.FormText;
         }
 
@@ -395,12 +395,12 @@ namespace eDream
         private void SetUnloadedState()
         {
             entryToolStripMenuItem.Enabled = false;
-            saveAsToolStripMenuItem.Enabled = false;
-            closeToolStripMenuItem.Enabled = false;
-            addEntryToolStripMenuItem.Enabled = false;
+            SaveAsToolStripMenuItem.Enabled = false;
+            CloseToolStripMenuItem.Enabled = false;
+            AddEntryToolStripMenuItem.Enabled = false;
             toolStripAdd.Enabled = false;
             toolStripStats.Enabled = false;
-            searchToolStripMenuItem.Enabled = false;
+            SearchToolStripMenuItem.Enabled = false;
             ClearRightPanel();
         }
 
@@ -412,14 +412,24 @@ namespace eDream
                 string.Format(GuiStrings.FrmMain_ShowLoadingErrorMessage, _viewModel.CurrentDatabasePath));
         }
 
-        private void StatisticsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowStatistics()
         {
             new DreamsStatisticsShow(_viewModel.GetDreamTagStatistics()).ShowDialog();
+        }
+
+        private void StatisticsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowStatistics();
         }
 
         private void ToolStripAdd_Click(object sender, EventArgs e)
         {
             AddNewEntry();
+        }
+
+        private void ToolStripStats_Click(object sender, EventArgs e)
+        {
+            ShowStatistics();
         }
     }
 }

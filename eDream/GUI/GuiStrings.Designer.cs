@@ -169,6 +169,24 @@ namespace eDream.GUI {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to From.
+        /// </summary>
+        internal static string Search_FromThisDate {
+            get {
+                return ResourceManager.GetString("Search_FromThisDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On this date.
+        /// </summary>
+        internal static string Search_OnThisDate {
+            get {
+                return ResourceManager.GetString("Search_OnThisDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No dream diary loaded.
         /// </summary>
         internal static string StatusBar_NoDreamDiaryLoaded {

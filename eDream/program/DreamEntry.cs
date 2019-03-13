@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using eDream.libs;
 
@@ -75,6 +76,13 @@ namespace eDream.program
         }
 
         public bool IsValid => _isTextValid && !_toDelete;
+
+        public bool ContainsTagOrChildTag(string tagName)
+        {
+            return GetTagsAsList().Any(tag => string.Equals(tagName, tag.Tag, StringComparison.OrdinalIgnoreCase)
+                                              || tag.ChildTags.Any(childTag => string.Equals(childTag.Tag, tagName,
+                                                  StringComparison.OrdinalIgnoreCase)));
+        }
 
         public bool DreamTextContains(string value)
         {

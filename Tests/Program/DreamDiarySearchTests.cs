@@ -14,8 +14,8 @@ namespace Tests.Program
         {
             return new List<DreamEntry>
             {
-                new DreamEntry(new DateTime(2019, 3, 8), "A", "Hello there. General Kenobi."),
-                new DreamEntry(new DateTime(2019, 3, 7), "A", "You are a bold one. Kenobi.")
+                new DreamEntry(new DateTime(2019, 3, 8), "Beach, Cameo (Friend1)", "Hello there. General Kenobi."),
+                new DreamEntry(new DateTime(2019, 3, 7), "Cameo (Friend2), Car", "You are a bold one. Kenobi.")
             };
         }
 
@@ -56,6 +56,121 @@ namespace Tests.Program
             var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
             entityUnderTest.SearchEntriesBetweenDates(new DateTime(2019, 3, 7), new DateTime(2019, 3,
                 8)).Should().HaveCount(2);
+        }
+
+        [Test]
+        public void SearchEntriesForAllTags_all_tags_empty_result()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesForAllTags(new List<string> {" ", ""}).Should().BeEmpty();
+        }
+
+        [Test]
+        public void SearchEntriesForAllTags_main_tag_in_two_returns_two()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesForAllTags(new List<string>
+            {
+                "Cameo"
+            }).Should().HaveCount(2);
+        }
+
+
+        [Test]
+        public void SearchEntriesForAllTags_no_dreams_empty_result()
+        {
+            var entityUnderTest = new DreamDiarySearch(new List<DreamEntry>());
+            entityUnderTest.SearchEntriesForAllTags(new List<string>
+            {
+                "Beach"
+            }).Should().BeEmpty();
+        }
+
+        [Test]
+        public void SearchEntriesForAllTags_no_tags_empty_result()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesForAllTags(new List<string>()).Should().BeEmpty();
+        }
+
+        [Test]
+        public void SearchEntriesForAllTags_two_tags_searched_for_do_not_match_any()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesForAllTags(new List<string>
+            {
+                "Beach",
+                "friend2"
+            }).Should().BeEmpty();
+        }
+
+        [Test]
+        public void SearchEntriesForAllTags_two_tags_searched_for_match()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesForAllTags(new List<string>
+            {
+                "Beach",
+                "friend1"
+            }).Should().HaveCount(1);
+        }
+
+
+        [Test]
+        public void SearchEntriesForAnyTag_all_tags_empty_result()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesForAnyTag(new List<string> {" ", ""}).Should().BeEmpty();
+        }
+
+        [Test]
+        public void SearchEntriesForAnyTag_main_tag_in_two_returns_two()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesForAnyTag(new List<string>
+            {
+                "Cameo"
+            }).Should().HaveCount(2);
+        }
+
+        [Test]
+        public void SearchEntriesForAnyTag_no_dreams_empty_result()
+        {
+            var entityUnderTest = new DreamDiarySearch(new List<DreamEntry>());
+            entityUnderTest.SearchEntriesForAnyTag(new List<string>
+            {
+                "Beach"
+            }).Should().BeEmpty();
+        }
+
+
+        [Test]
+        public void SearchEntriesForAnyTag_no_tags_empty_result()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesForAnyTag(new List<string>()).Should().BeEmpty();
+        }
+
+        [Test]
+        public void SearchEntriesForAnyTag_two_tags_searched_for_each_matches_a_different_entry_all_returned()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesForAnyTag(new List<string>
+            {
+                "Beach",
+                "friend2"
+            }).Should().HaveCount(2);
+        }
+
+        [Test]
+        public void SearchEntriesForAnyTag_two_tags_searched_for_one_matches_tag_another_does_not_exist_returns_one()
+        {
+            var entityUnderTest = new DreamDiarySearch(GetEntriesOnTwoDates());
+            entityUnderTest.SearchEntriesForAnyTag(new List<string>
+            {
+                "Kenobi",
+                "friend2"
+            }).Should().HaveCount(1);
         }
 
         [Test]

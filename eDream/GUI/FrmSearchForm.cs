@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using eDream.Annotations;
 using eDream.libs;
@@ -93,10 +94,9 @@ namespace eDream.GUI
         {
             var diarySearch = GetDreamDiarySearch();
             SearchType = ESearchType.DateSearch;
-            if (SingleDayCheckBox.Checked)
-                Results = diarySearch.SearchEntriesOnDate(FromTimePicker.Value);
-            else
-                Results = diarySearch.SearchEntriesBetweenDates(FromTimePicker.Value, ToTimePicker.Value);
+            Results = SingleDayCheckBox.Checked
+                ? diarySearch.SearchEntriesOnDate(FromTimePicker.Value)
+                : diarySearch.SearchEntriesBetweenDates(FromTimePicker.Value, ToTimePicker.Value);
 
             OnSearchCompleted();
             ClearTagsButton.Enabled = true;
@@ -104,17 +104,18 @@ namespace eDream.GUI
             DateClearButton.Enabled = true;
         }
 
-
         private void FindTagsButton_Click(object sender, EventArgs e)
         {
-            var tags =
-                tagsTextBox.Text.Split(DreamTagTokens.MainTagSeparator);
             var searchType = orRadio.Checked
                 ? TagSearchType.OrSearch
                 : TagSearchType.AndSearch;
             var diarySearch = GetDreamDiarySearch();
-            Results = diarySearch.SearchEntriesTags(_provider.DreamEntries, tags,
-                checkChildTags.Checked, searchType);
+
+            var tags = GetTagsBeingSearchedFor().ToList();
+            Results = searchType == TagSearchType.AndSearch
+                ? diarySearch.SearchEntriesForAllTags(tags)
+                : diarySearch.SearchEntriesForAnyTag(tags);
+
             LastSearchText = string.Join(", ", tags);
             SearchType = ESearchType.TagsSearch;
 
@@ -127,6 +128,12 @@ namespace eDream.GUI
         private DreamDiarySearch GetDreamDiarySearch()
         {
             return new DreamDiarySearch(_provider.DreamEntries);
+        }
+
+        private IEnumerable<string> GetTagsBeingSearchedFor()
+        {
+            return tagsTextBox.Text.Split(DreamTagTokens.MainTagSeparator).Where(tag => !string.IsNullOrWhiteSpace(tag))
+                .Select(tag => tag.Trim());
         }
 
         private void OnSearchCompleted()
@@ -156,12 +163,12 @@ namespace eDream.GUI
             if (SingleDayCheckBox.Checked)
             {
                 ToTimePicker.Enabled = false;
-                fromDateLabel.Text = "On this date";
+                fromDateLabel.Text = GuiStrings.Search_OnThisDate;
             }
             else
             {
                 ToTimePicker.Enabled = true;
-                fromDateLabel.Text = "From";
+                fromDateLabel.Text = GuiStrings.Search_FromThisDate;
             }
         }
 

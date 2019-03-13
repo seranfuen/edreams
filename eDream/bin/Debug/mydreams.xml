@@ -20,4 +20,9 @@
     <Text>otra prueba</Text>
     <Tags />
   </Entry>
+  <Entry>
+    <Date>2019-03-13</Date>
+    <Text>hey</Text>
+    <Tags>Cameo (Friend1)</Tags>
+  </Entry>
 </FrmMain>

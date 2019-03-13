@@ -29,6 +29,16 @@ namespace Tests.Program
             return new DreamEntry(DateTime.Now, "abc", text);
         }
 
+        [TestCase("Hello, There", "there", ExpectedResult = true)]
+        [TestCase("Hello, There", "Hello", ExpectedResult = true)]
+        [TestCase("Hello, There", "general", ExpectedResult = false)]
+        [TestCase("Hello (general), There", "General", ExpectedResult = true)]
+        public bool ContainsTagOrChildTag_cases(string tags, string searchedForTag)
+        {
+            var entityUnderTest = new DreamEntry(new DateTime(2019, 3, 10), tags, "h" );
+            return entityUnderTest.ContainsTagOrChildTag(searchedForTag);
+        }
+
         [Test]
         public void Constructor_does_not_allow_both_null_tags_and_text()
         {
