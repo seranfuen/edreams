@@ -30,7 +30,7 @@ using eDream.program;
 
 namespace eDream.libs
 {
-    public class DreamSaveLoadService : IDreamDiaryPersistenceService
+    public class DreamDiaryPersistenceService : IDreamDiaryPersistenceService
     {
         public event EventHandler<FinishedPersistingEventArgs> FinishedPersisting;
 

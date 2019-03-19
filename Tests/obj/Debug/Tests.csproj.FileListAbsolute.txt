@@ -130,3 +130,7 @@ E:\Código\eDream\Tests\bin\Debug\NSubstitute.xml
 E:\Código\eDream\Tests\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 E:\Código\eDream\Tests\bin\Debug\System.Threading.Tasks.Extensions.xml
 E:\Código\eDream\Tests\bin\Debug\Ninject.xml
+E:\Código\eDream\Tests\bin\Debug\Ninject.Extensions.Conventions.dll
+E:\Código\eDream\Tests\bin\Debug\Ninject.Extensions.Factory.dll
+E:\Código\eDream\Tests\bin\Debug\Ninject.Extensions.Conventions.xml
+E:\Código\eDream\Tests\bin\Debug\Ninject.Extensions.Factory.xml

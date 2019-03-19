@@ -1,6 +1,6 @@
 ﻿namespace eDream.libs
 {
-    public interface IFileService
+    public interface IDreamFileService
     {
         bool FileExists(string path);
         void CreateDatabaseFile(string path);

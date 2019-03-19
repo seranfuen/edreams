@@ -23,7 +23,6 @@
 using System;
 using System.Windows.Forms;
 using eDream.libs;
-using eDream.program;
 
 namespace eDream.GUI
 {
@@ -37,10 +36,10 @@ namespace eDream.GUI
 
         private readonly NewFileViewModel _viewModel;
 
-        public FrmNewFileCreator()
+        public FrmNewFileCreator(IDreamFileService dreamFileService)
         {
             InitializeComponent();
-            _viewModel = new NewFileViewModel(InjectionKernel.Get<IFileService>());
+            _viewModel = new NewFileViewModel(dreamFileService);
             BindingSource.DataSource = _viewModel;
         }
 

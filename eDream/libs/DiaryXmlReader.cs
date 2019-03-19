@@ -45,10 +45,10 @@ namespace eDream.libs
                 _xmlTextReader = new XmlTextReader(filename);
                 while (_xmlTextReader.Read())
                     if (_xmlTextReader.NodeType == XmlNodeType.Element &&
-                        _xmlTextReader.Name == XMLConstants.root_node && !end)
+                        _xmlTextReader.Name == XmlConstants.RootNode && !end)
                         open = true;
                     else if (_xmlTextReader.NodeType == XmlNodeType.EndElement &&
-                             _xmlTextReader.Name == XMLConstants.root_node && open)
+                             _xmlTextReader.Name == XmlConstants.RootNode && open)
                         end = true; // only consider it closed if it was opened
             }
             catch (Exception)
@@ -75,26 +75,26 @@ namespace eDream.libs
                 var tags = string.Empty;
                 while (_xmlTextReader.Read())
                     if (_xmlTextReader.NodeType == XmlNodeType.Element &&
-                        _xmlTextReader.Name == XMLConstants.entry_node)
+                        _xmlTextReader.Name == XmlConstants.EntryNode)
                     {
                         text = string.Empty;
                         date = string.Empty;
                         tags = string.Empty;
                     }
 
-                    else if (_xmlTextReader.Name == XMLConstants.text_node &&
+                    else if (_xmlTextReader.Name == XmlConstants.TextNode &&
                              _xmlTextReader.NodeType == XmlNodeType.Element)
                     {
                         _xmlTextReader.Read();
                         text = _xmlTextReader.Value;
                     }
-                    else if (_xmlTextReader.Name == XMLConstants.tags_node &&
+                    else if (_xmlTextReader.Name == XmlConstants.TagsNode &&
                              _xmlTextReader.NodeType == XmlNodeType.Element)
                     {
                         _xmlTextReader.Read();
                         tags = _xmlTextReader.Value;
                     }
-                    else if (_xmlTextReader.Name == XMLConstants.date_node &&
+                    else if (_xmlTextReader.Name == XmlConstants.DateNode &&
                              _xmlTextReader.NodeType == XmlNodeType.Element)
                     {
                         _xmlTextReader.Read();
@@ -102,7 +102,7 @@ namespace eDream.libs
                     }
 
                     else if (_xmlTextReader.NodeType == XmlNodeType.EndElement &&
-                             _xmlTextReader.Name == XMLConstants.entry_node)
+                             _xmlTextReader.Name == XmlConstants.EntryNode)
                     {
                         dreamEntries.Add(new DreamEntry(DateTime.Parse(date), tags, text));
                     }

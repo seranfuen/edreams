@@ -10,18 +10,18 @@ namespace eDream.GUI
         private const string DefaultFileName = "mydreams.xml";
 
         public const string RequiredFileExtension = "xml";
-        private readonly IFileService _fileService;
+        private readonly IDreamFileService _dreamFileService;
 
-        public NewFileViewModel(IFileService fileService)
+        public NewFileViewModel(IDreamFileService dreamFileService)
         {
-            _fileService = fileService;
+            _dreamFileService = dreamFileService;
         }
 
         public string FileName { get; set; } = DefaultFileName;
         public string Folder { get; set; } = Application.StartupPath;
         public string FilePath => Path.Combine(Folder ?? "", GetFileName());
         public bool IsValid => FileName.IndexOfAny(Path.GetInvalidFileNameChars()) == -1;
-        public bool FileAlreadyExists => _fileService.FileExists(FilePath);
+        public bool FileAlreadyExists => _dreamFileService.FileExists(FilePath);
 
         private string GetFileName()
         {
@@ -36,7 +36,7 @@ namespace eDream.GUI
             if (!IsValid)
                 throw new InvalidOperationException("Unable to use a path with errors");
 
-            _fileService.CreateDatabaseFile(FilePath);
+            _dreamFileService.CreateDatabaseFile(FilePath);
         }
     }
 }

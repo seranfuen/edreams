@@ -10,7 +10,7 @@ using eDream.program;
 
 namespace eDream.GUI
 {
-    public class DreamDiaryViewModel : INotifyPropertyChanged, IDreamEntryProvider
+    public class DreamDiaryViewModel : INotifyPropertyChanged, IDreamDiaryViewModel
     {
         public event EventHandler LoadingFailed;
         public event EventHandler<LoadingRecentlyOpenedDiariesEventArgs> LoadingRecentlyOpenedDiaries;
@@ -86,9 +86,9 @@ namespace eDream.GUI
             return DreamCalendarCreator.GetDreamDayList(_filteredEntriesToShow ?? _dreamEntries);
         }
 
-        public DreamTagStatistics GetDreamTagStatistics()
+        public DreamTagStatisticsGenerator GetDreamTagStatistics()
         {
-            return new DreamTagStatistics(_dreamEntries);
+            return new DreamTagStatisticsGenerator(_dreamEntries);
         }
 
         public IList<string> GetRecentlyOpenedDiaryPaths()

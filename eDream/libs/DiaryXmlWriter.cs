@@ -101,7 +101,7 @@ namespace eDream.libs
         {
             _xmlTextWriter.WriteStartDocument();
             _xmlTextWriter.WriteWhitespace("\n");
-            _xmlTextWriter.WriteStartElement(XMLConstants.root_node);
+            _xmlTextWriter.WriteStartElement(XmlConstants.RootNode);
             _xmlTextWriter.WriteWhitespace("\n");
         }
 
@@ -109,22 +109,22 @@ namespace eDream.libs
         {
             foreach (var entry in dreamList)
             {
-                _xmlTextWriter.WriteWhitespace(StringUtils.GenerateSpaces(XMLConstants.first_level_tab));
-                _xmlTextWriter.WriteStartElement(XMLConstants.entry_node);
+                _xmlTextWriter.WriteWhitespace(StringUtils.GenerateSpaces(XmlConstants.FirstLevelTab));
+                _xmlTextWriter.WriteStartElement(XmlConstants.EntryNode);
                 _xmlTextWriter.WriteWhitespace("\n" +
-                                               StringUtils.GenerateSpaces(XMLConstants.second_level_tab));
-                _xmlTextWriter.WriteElementString(XMLConstants.date_node,
+                                               StringUtils.GenerateSpaces(XmlConstants.SecondLevelTab));
+                _xmlTextWriter.WriteElementString(XmlConstants.DateNode,
                     entry.GetDateAsStr());
                 _xmlTextWriter.WriteWhitespace("\n" +
-                                               StringUtils.GenerateSpaces(XMLConstants.second_level_tab));
-                _xmlTextWriter.WriteElementString(XMLConstants.text_node,
+                                               StringUtils.GenerateSpaces(XmlConstants.SecondLevelTab));
+                _xmlTextWriter.WriteElementString(XmlConstants.TextNode,
                     entry.Text);
                 _xmlTextWriter.WriteWhitespace("\n" +
-                                               StringUtils.GenerateSpaces(XMLConstants.second_level_tab));
-                _xmlTextWriter.WriteElementString(XMLConstants.tags_node,
+                                               StringUtils.GenerateSpaces(XmlConstants.SecondLevelTab));
+                _xmlTextWriter.WriteElementString(XmlConstants.TagsNode,
                     entry.GetTagString());
                 _xmlTextWriter.WriteWhitespace("\n" +
-                                               StringUtils.GenerateSpaces(XMLConstants.first_level_tab));
+                                               StringUtils.GenerateSpaces(XmlConstants.FirstLevelTab));
                 _xmlTextWriter.WriteEndElement();
                 _xmlTextWriter.WriteWhitespace("\n");
             }

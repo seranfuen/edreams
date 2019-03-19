@@ -26,6 +26,9 @@ using System.Text.RegularExpressions;
 using eDream.program;
 using eDream.libs;
 using EvilTools;
+using Ninject;
+using Ninject.Extensions.Conventions;
+using Ninject.Extensions.Factory;
 
 namespace eDream
 {
@@ -37,13 +40,15 @@ namespace eDream
         [STAThread]
         static void Main()
         {
-            /* TODO: if eviltools.dll not present just crashes. Check if
-             * it is available before trying to load and show error message 
-             * and exit app instead
-             */ 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMain());
+            using (var kernel = new StandardKernel())
+            {
+                kernel.Bind(x => { x.FromThisAssembly().SelectAllClasses().BindDefaultInterface(); });
+                kernel.Bind<IEdreamsFactory>().ToFactory();
+
+                Application.Run(kernel.Get<FrmMain>());
+            }
         }
     }
 }

@@ -25,8 +25,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using eDream.Annotations;
 using eDream.GUI;
-using eDream.libs;
 using eDream.program;
 
 namespace eDream
@@ -34,17 +34,18 @@ namespace eDream
     internal partial class FrmMain : Form
     {
         private readonly IDreamDiaryBus _dreamDiaryBus;
+        private readonly IEdreamsFactory _factory;
 
 
-        private readonly DreamDiaryViewModel _viewModel;
+        private readonly IDreamDiaryViewModel _viewModel;
 
         private List<DreamDayEntry> _currentDayList;
 
-        public FrmMain()
+        public FrmMain([NotNull] IEdreamsFactory factory)
         {
             InitializeComponent();
-            _viewModel = new DreamDiaryViewModel(InjectionKernel.Get<IDreamDiaryPersistenceService>(),
-                InjectionKernel.Get<IDreamDiaryPaths>());
+            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            _viewModel = factory.CreateDreamDiaryViewModel();
             BindingSource.DataSource = _viewModel;
             _dreamDiaryBus = new DreamDiaryBus(_viewModel);
             _dreamDiaryBus.DiaryPersisted += (s, e) => RefreshEntries();
@@ -105,7 +106,7 @@ namespace eDream
 
         private void CreateNewDreamDatabase()
         {
-            var newFile = new FrmNewFileCreator();
+            var newFile = _factory.CreateNewFileCreator();
             newFile.ShowDialog();
             if (newFile.Action != FrmNewFileCreator.CreateFileAction.Created) return;
 
@@ -414,7 +415,7 @@ namespace eDream
 
         private void ShowStatistics()
         {
-            new DreamsStatisticsShow(_viewModel.GetDreamTagStatistics()).ShowDialog();
+            new FrmDreamStatistics(_viewModel.GetDreamTagStatistics()).ShowDialog();
         }
 
         private void StatisticsToolStripMenuItem_Click(object sender, EventArgs e)

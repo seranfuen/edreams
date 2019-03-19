@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using eDream.libs;
 using eDream.program;
 
 namespace eDream.GUI
@@ -31,25 +32,25 @@ namespace eDream.GUI
     {
         private readonly DreamEntry _editEntry;
 
-        private readonly List<DreamMainStatTag> _tagStats;
+        private readonly IList<TagStatistic> _tagStatistics;
         private readonly DreamEntryViewModel _viewModel;
 
         private CreateTags _tagWiz;
 
-        public NewEntryForm(List<DreamMainStatTag> tagStats)
+        public NewEntryForm(IList<TagStatistic> tagStatistics)
         {
             InitializeComponent();
             SetUpForm();
-            _tagStats = tagStats;
+            _tagStatistics = tagStatistics;
             _viewModel = DreamEntryViewModel.ForNewDream();
             BindingSource.DataSource = _viewModel;
         }
 
-        public NewEntryForm(DreamEntry editEntry, List<DreamMainStatTag> tagStats)
+        public NewEntryForm(DreamEntry editEntry, IList<TagStatistic> tagStatistics)
         {
             InitializeComponent();
             SetUpForm();
-            _tagStats = tagStats;
+            _tagStatistics = tagStatistics;
             _viewModel = DreamEntryViewModel.FromExistingEntry(editEntry);
             BindingSource.DataSource = _viewModel;
             CmdSave.Click -= AddEntryButton_Click;
@@ -62,13 +63,35 @@ namespace eDream.GUI
 
         public bool CreatedEntry { get; private set; }
 
-        private void SetUpForm()
+        private void AddEntryButton_Click(object sender, EventArgs e)
         {
-            FormClosing += PreventChildClose;
-            StartPosition = FormStartPosition.CenterParent;
-            TagsBox.TextChanged += NotifyTagW;
-            KeyPreview = true;
-            KeyDown += SendForm;
+            if (!_viewModel.HasTextOrTags)
+            {
+                ShowNoTextOrTagsError();
+                return;
+            }
+
+            NewEntry = _viewModel.ToDreamEntry();
+            CreatedEntry = true;
+            Dispose();
+        }
+
+        private void AddTagButton_Click(object sender, EventArgs e)
+        {
+            //_tagWiz = new CreateTags(this, _tagStatistics, TagsBox.Text);
+            //_tagWiz.OnTagTextChange += WizardChanged;
+            //_tagWiz.ShowDialog();
+        }
+
+        private void CancelButtonClick(object sender, EventArgs e)
+        {
+            CloseTagWizard();
+            Dispose();
+        }
+
+        private void CloseTagWizard()
+        {
+            _tagWiz?.Dispose();
         }
 
         private void LoadEditEntry()
@@ -78,10 +101,15 @@ namespace eDream.GUI
             DreamDatePicker.Text = _editEntry.GetDateAsStr();
         }
 
-        private void CancelButtonClick(object sender, EventArgs e)
+        private void NotifyTagW(object sender, EventArgs e)
         {
-            CloseTagWizard();
-            Dispose();
+            if (_tagWiz == null || _tagWiz.Visible == false) return;
+            if (TagsBox.Text != _tagWiz.TagText) _tagWiz.TagText = TagsBox.Text;
+        }
+
+        private static void PreventChildClose(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.None) e.Cancel = true;
         }
 
         private void SaveEdit(object sender, EventArgs e)
@@ -99,45 +127,6 @@ namespace eDream.GUI
             Dispose();
         }
 
-        private static void ShowNoTextOrTagsError()
-        {
-            MessageBox.Show(GuiStrings.NewEntryForm_SaveEdit_NoTextOrTagsMessage,
-                GuiStrings.NewEntryForm_SaveEdit_NoTextOrTagsTitle,
-                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-        }
-
-        private void AddEntryButton_Click(object sender, EventArgs e)
-        {
-            if (!_viewModel.HasTextOrTags)
-            {
-                ShowNoTextOrTagsError();
-                return;
-            }
-
-            NewEntry = _viewModel.ToDreamEntry();
-            CreatedEntry = true;
-            Dispose();
-        }
-
-        private void AddTagButton_Click(object sender, EventArgs e)
-        {
-            _tagWiz = new CreateTags(this, _tagStats, TagsBox.Text);
-            _tagWiz.OnTagTextChange += WizardChanged;
-            _tagWiz.ShowDialog();
-        }
-
-        private void WizardChanged(object sender, EventArgs e)
-        {
-            var tagW = (CreateTags) sender;
-            TagsBox.Text = tagW.TagText;
-        }
-
-        private void NotifyTagW(object sender, EventArgs e)
-        {
-            if (_tagWiz == null || _tagWiz.Visible == false) return;
-            if (TagsBox.Text != _tagWiz.TagText) _tagWiz.TagText = TagsBox.Text;
-        }
-
         private void SendForm(object sender, KeyEventArgs e)
         {
             switch (e.KeyData)
@@ -153,14 +142,26 @@ namespace eDream.GUI
             }
         }
 
-        private static void PreventChildClose(object sender, FormClosingEventArgs e)
+        private void SetUpForm()
         {
-            if (e.CloseReason == CloseReason.None) e.Cancel = true;
+            FormClosing += PreventChildClose;
+            StartPosition = FormStartPosition.CenterParent;
+            TagsBox.TextChanged += NotifyTagW;
+            KeyPreview = true;
+            KeyDown += SendForm;
         }
 
-        private void CloseTagWizard()
+        private static void ShowNoTextOrTagsError()
         {
-            _tagWiz?.Dispose();
+            MessageBox.Show(GuiStrings.NewEntryForm_SaveEdit_NoTextOrTagsMessage,
+                GuiStrings.NewEntryForm_SaveEdit_NoTextOrTagsTitle,
+                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+
+        private void WizardChanged(object sender, EventArgs e)
+        {
+            var tagW = (CreateTags) sender;
+            TagsBox.Text = tagW.TagText;
         }
     }
 }

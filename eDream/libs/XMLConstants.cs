@@ -19,22 +19,17 @@
     You should have received a copy of the GNU General Public License
     along with FrmMain.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.]
 ****************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace eDream.libs {
-    /// <summary>
-    /// The class contains the constants that are used for XML operations, such
-    /// as the names of the nodes or other formatting options
-    /// </summary>
-    class XMLConstants {
-        public static string root_node  = "FrmMain";
-        public static string entry_node = "Entry";
-        public static string date_node  = "Date";
-        public static string text_node  = "Text";
-        public static string tags_node  = "Tags";
-        public static int first_level_tab = 2;
-        public static int second_level_tab = 4;
+namespace eDream.libs
+{
+    internal class XmlConstants
+    {
+        public static string RootNode = "eDreams";
+        public static string EntryNode = "Entry";
+        public static string DateNode = "Date";
+        public static string TextNode = "Text";
+        public static string TagsNode = "Tags";
+        public static int FirstLevelTab = 2;
+        public static int SecondLevelTab = 4;
     }
 }

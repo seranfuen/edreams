@@ -2,7 +2,7 @@
 
 namespace eDream.libs
 {
-    public class DreamFileService : IFileService
+    public class DreamFileService : IDreamFileService
     {
         public bool FileExists(string path)
         {

@@ -6,10 +6,10 @@ namespace eDream.program
 {
     public class DreamDiaryBus : IDreamDiaryBus
     {
-        private readonly DreamDiaryViewModel _dreamDiary;
+        private readonly IDreamDiaryViewModel _dreamDiary;
         private FrmSearchForm _frmSearchWindow;
 
-        public DreamDiaryBus([NotNull] DreamDiaryViewModel dreamDiary)
+        public DreamDiaryBus([NotNull] IDreamDiaryViewModel dreamDiary)
         {
             _dreamDiary = dreamDiary ?? throw new ArgumentNullException(nameof(dreamDiary));
         }
@@ -26,14 +26,14 @@ namespace eDream.program
         public void EditEntry([NotNull] DreamEntry entry)
         {
             if (entry == null) throw new ArgumentNullException(nameof(entry));
-            var editEntry = new NewEntryForm(entry, _dreamDiary.GetDreamTagStatistics().TagStatistics);
+            var editEntry = new NewEntryForm(entry, _dreamDiary.GetDreamTagStatistics().GetStatistics());
             editEntry.ShowDialog();
             PersistDiary();
         }
 
         public void AddNewEntry()
         {
-            var addEntryBox = new NewEntryForm(_dreamDiary.GetDreamTagStatistics().TagStatistics);
+            var addEntryBox = new NewEntryForm(_dreamDiary.GetDreamTagStatistics().GetStatistics());
             addEntryBox.ShowDialog();
             if (!addEntryBox.CreatedEntry) return;
             _dreamDiary.AddEntry(addEntryBox.NewEntry);

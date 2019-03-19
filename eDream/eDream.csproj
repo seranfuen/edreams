@@ -58,12 +58,21 @@
     <ApplicationIcon>dream_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.2.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="EvilTools">
       <HintPath>..\EvilTools\bin\Release\EvilTools.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Extensions.Conventions, Version=3.3.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Extensions.Conventions.3.3.0\lib\net45\Ninject.Extensions.Conventions.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Extensions.Factory, Version=3.3.2.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Extensions.Factory.3.3.2\lib\net45\Ninject.Extensions.Factory.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -84,7 +93,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\IDreamDiaryViewModel.cs" />
     <Compile Include="GUI\SearchPerformedEventArgs.cs" />
+    <Compile Include="IEdreamsFactory.cs" />
     <Compile Include="libs\DreamDiaryPaths.cs" />
     <Compile Include="GUI\DreamDiaryViewModel.cs" />
     <Compile Include="GUI\EntryViewerModel.cs" />
@@ -101,11 +112,11 @@
       <DependentUpon>CreateTags.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\DreamEntryViewModel.cs" />
-    <Compile Include="GUI\DreamsStatisticsShow.cs">
+    <Compile Include="GUI\FrmDreamStatistics.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\DreamsStatisticsShow.Designer.cs">
-      <DependentUpon>DreamsStatisticsShow.cs</DependentUpon>
+    <Compile Include="GUI\FrmDreamStatistics.Designer.cs">
+      <DependentUpon>FrmDreamStatistics.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\GuiStrings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -144,19 +155,20 @@
     </Compile>
     <Compile Include="libs\DreamCalendarCreator.cs" />
     <Compile Include="libs\DreamFileService.cs" />
-    <Compile Include="libs\DreamSaveLoadService.cs" />
+    <Compile Include="libs\DreamDiaryPersistenceService.cs" />
     <Compile Include="libs\DreamTagStatistics.cs" />
+    <Compile Include="libs\DreamTagStatisticsGenerator.cs" />
     <Compile Include="libs\DreamTagStringBuilder.cs" />
     <Compile Include="libs\DreamTagStringExtractor.cs" />
     <Compile Include="libs\DreamTagTokens.cs" />
     <Compile Include="libs\FinishedLoadingEventArgs.cs" />
     <Compile Include="libs\FinishedPersistingEventArgs.cs" />
     <Compile Include="libs\IDreamDiaryPersistenceService.cs" />
-    <Compile Include="libs\IFileService.cs" />
+    <Compile Include="libs\IDreamFileService.cs" />
     <Compile Include="libs\MainTagParser.cs" />
     <Compile Include="libs\PersistDreamEntriesArgs.cs" />
     <Compile Include="libs\TagSearchType.cs" />
-    <Compile Include="libs\TagStatTableData.cs" />
+    <Compile Include="libs\TagStatistic.cs" />
     <Compile Include="libs\TagTableData.cs" />
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
@@ -180,7 +192,6 @@
     <Compile Include="program\DreamTag.cs" />
     <Compile Include="program\IDreamDiaryBus.cs" />
     <Compile Include="program\IDreamEntryProvider.cs" />
-    <Compile Include="program\InjectionKernel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestBringIntoViewEventArgs.cs" />
@@ -192,8 +203,8 @@
     <EmbeddedResource Include="GUI\CreateTags.resx">
       <DependentUpon>CreateTags.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\DreamsStatisticsShow.resx">
-      <DependentUpon>DreamsStatisticsShow.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\FrmDreamStatistics.resx">
+      <DependentUpon>FrmDreamStatistics.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\GuiStrings.resx">
@@ -233,6 +244,8 @@
     <None Include="Properties\DataSources\eDream.GUI.DreamEntryViewModel.datasource" />
     <None Include="Properties\DataSources\eDream.GUI.EntryViewerModel.datasource" />
     <None Include="Properties\DataSources\eDream.GUI.NewFileViewModel.datasource" />
+    <None Include="Properties\DataSources\eDream.libs.TagStatisticsViewModel.datasource" />
+    <None Include="Properties\DataSources\eDream.libs.TagStatTableData.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
