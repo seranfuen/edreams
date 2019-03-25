@@ -25,8 +25,6 @@ E:\Código\eDream\eDream\bin\Debug\eDreams.pdb
 E:\Código\eDream\eDream\bin\Debug\EvilTools.dll
 E:\Código\eDream\eDream\bin\Debug\EvilTools.pdb
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.csprojAssemblyReference.cache
-E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.CreateTags.resources
-E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.NewEntryForm.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.Properties.Resources.resources
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.csproj.GenerateResource.cache
 E:\Código\eDream\eDream\obj\x86\Debug\eDream.csproj.CoreCompileInputs.cache
@@ -147,3 +145,5 @@ E:\Código\eDream\eDream\bin\Debug\Ninject.Extensions.Factory.dll
 E:\Código\eDream\eDream\bin\Debug\Ninject.Extensions.Factory.xml
 E:\Código\eDream\eDream\bin\Debug\Ninject.Extensions.Conventions.dll
 E:\Código\eDream\eDream\bin\Debug\Ninject.Extensions.Conventions.xml
+E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.FrmTagWizard.resources
+E:\Código\eDream\eDream\obj\x86\Debug\eDream.GUI.FrmDreamEntry.resources

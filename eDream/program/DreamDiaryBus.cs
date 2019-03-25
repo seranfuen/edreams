@@ -26,14 +26,14 @@ namespace eDream.program
         public void EditEntry([NotNull] DreamEntry entry)
         {
             if (entry == null) throw new ArgumentNullException(nameof(entry));
-            var editEntry = new NewEntryForm(entry, _dreamDiary.GetDreamTagStatistics().GetStatistics());
+            var editEntry = new FrmDreamEntry(entry, _dreamDiary.GetDreamTagStatistics().GetStatistics());
             editEntry.ShowDialog();
             PersistDiary();
         }
 
         public void AddNewEntry()
         {
-            var addEntryBox = new NewEntryForm(_dreamDiary.GetDreamTagStatistics().GetStatistics());
+            var addEntryBox = new FrmDreamEntry(_dreamDiary.GetDreamTagStatistics().GetStatistics());
             addEntryBox.ShowDialog();
             if (!addEntryBox.CreatedEntry) return;
             _dreamDiary.AddEntry(addEntryBox.NewEntry);

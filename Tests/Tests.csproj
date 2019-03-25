@@ -80,12 +80,14 @@
     <Compile Include="GUI\DreamDiaryViewModelTests.cs" />
     <Compile Include="GUI\EntryViewerModelTests.cs" />
     <Compile Include="GUI\NewFileViewModelTests.cs" />
+    <Compile Include="GUI\TagWizardViewModelTests.cs" />
     <Compile Include="Program\DreamDayListTests.cs" />
     <Compile Include="Program\DreamEntryTests.cs" />
     <Compile Include="Program\DreamMainStatTagTests.cs" />
     <Compile Include="Program\DreamMainTagTests.cs" />
     <Compile Include="Program\DreamDiarySearchTests.cs" />
     <Compile Include="Program\DreamTagParserTests.cs" />
+    <Compile Include="Program\DreamTagSearchTests.cs" />
     <Compile Include="Program\DreamTagStatisticsGeneratorTests.cs" />
     <Compile Include="Program\DreamTagStatisticsTests.cs" />
     <Compile Include="Program\DreamTagStringBuilderTests.cs" />

@@ -24,7 +24,7 @@ using eDream.Annotations;
 
 namespace eDream.libs
 {
-    public class TagStatistic
+    public class TagStatistic : IDreamTag
     {
         private TagStatistic(string tagName, string parentTagName, int tagCount,
             decimal? tagCountOverTotalEntriesRatio,
@@ -40,7 +40,7 @@ namespace eDream.libs
 
         public string Tag { get; }
 
-        public string TagDisplay => ParentTag != null ? $"    {Tag}" : Tag;
+        [UsedImplicitly]public string TagDisplay => ParentTag != null ? $"    {Tag}" : Tag;
 
         public int Count { get; }
 

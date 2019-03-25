@@ -28,16 +28,16 @@ using eDream.program;
 
 namespace eDream.GUI
 {
-    internal partial class NewEntryForm : Form
+    internal partial class FrmDreamEntry : Form
     {
         private readonly DreamEntry _editEntry;
 
         private readonly IList<TagStatistic> _tagStatistics;
         private readonly DreamEntryViewModel _viewModel;
 
-        private CreateTags _tagWiz;
+        private FrmTagWizard _tagWiz;
 
-        public NewEntryForm(IList<TagStatistic> tagStatistics)
+        public FrmDreamEntry(IList<TagStatistic> tagStatistics)
         {
             InitializeComponent();
             SetUpForm();
@@ -46,7 +46,7 @@ namespace eDream.GUI
             BindingSource.DataSource = _viewModel;
         }
 
-        public NewEntryForm(DreamEntry editEntry, IList<TagStatistic> tagStatistics)
+        public FrmDreamEntry(DreamEntry editEntry, IList<TagStatistic> tagStatistics)
         {
             InitializeComponent();
             SetUpForm();
@@ -78,9 +78,8 @@ namespace eDream.GUI
 
         private void AddTagButton_Click(object sender, EventArgs e)
         {
-            //_tagWiz = new CreateTags(this, _tagStatistics, TagsBox.Text);
-            //_tagWiz.OnTagTextChange += WizardChanged;
-            //_tagWiz.ShowDialog();
+            _tagWiz = new FrmTagWizard(_tagStatistics, DreamTagParser.ParseStringToDreamTags(_viewModel.Tags));
+            _tagWiz.ShowDialog();
         }
 
         private void CancelButtonClick(object sender, EventArgs e)
@@ -156,12 +155,6 @@ namespace eDream.GUI
             MessageBox.Show(GuiStrings.NewEntryForm_SaveEdit_NoTextOrTagsMessage,
                 GuiStrings.NewEntryForm_SaveEdit_NoTextOrTagsTitle,
                 MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-        }
-
-        private void WizardChanged(object sender, EventArgs e)
-        {
-            var tagW = (CreateTags) sender;
-            TagsBox.Text = tagW.TagText;
         }
     }
 }

@@ -95,6 +95,7 @@
   <ItemGroup>
     <Compile Include="GUI\IDreamDiaryViewModel.cs" />
     <Compile Include="GUI\SearchPerformedEventArgs.cs" />
+    <Compile Include="GUI\TagWizardViewModel.cs" />
     <Compile Include="IEdreamsFactory.cs" />
     <Compile Include="libs\DreamDiaryPaths.cs" />
     <Compile Include="GUI\DreamDiaryViewModel.cs" />
@@ -105,11 +106,11 @@
     <Compile Include="GUI\FrmAboutBox.Designer.cs">
       <DependentUpon>FrmAboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\CreateTags.cs">
+    <Compile Include="GUI\FrmTagWizard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\CreateTags.Designer.cs">
-      <DependentUpon>CreateTags.cs</DependentUpon>
+    <Compile Include="GUI\FrmTagWizard.Designer.cs">
+      <DependentUpon>FrmTagWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\DreamEntryViewModel.cs" />
     <Compile Include="GUI\FrmDreamStatistics.cs">
@@ -131,11 +132,11 @@
     </Compile>
     <Compile Include="GUI\IDreamDiaryPaths.cs" />
     <Compile Include="GUI\LoadingRecentlyOpenedDiariesEventArgs.cs" />
-    <Compile Include="GUI\NewEntryForm.cs">
+    <Compile Include="GUI\FrmDreamEntry.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\NewEntryForm.Designer.cs">
-      <DependentUpon>NewEntryForm.cs</DependentUpon>
+    <Compile Include="GUI\FrmDreamEntry.Designer.cs">
+      <DependentUpon>FrmDreamEntry.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\FrmNewFileCreator.cs">
       <SubType>Form</SubType>
@@ -156,6 +157,7 @@
     <Compile Include="libs\DreamCalendarCreator.cs" />
     <Compile Include="libs\DreamFileService.cs" />
     <Compile Include="libs\DreamDiaryPersistenceService.cs" />
+    <Compile Include="libs\DreamTagSearch.cs" />
     <Compile Include="libs\DreamTagStatistics.cs" />
     <Compile Include="libs\DreamTagStatisticsGenerator.cs" />
     <Compile Include="libs\DreamTagStringBuilder.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="libs\FinishedPersistingEventArgs.cs" />
     <Compile Include="libs\IDreamDiaryPersistenceService.cs" />
     <Compile Include="libs\IDreamFileService.cs" />
+    <Compile Include="libs\IDreamTag.cs" />
     <Compile Include="libs\MainTagParser.cs" />
     <Compile Include="libs\PersistDreamEntriesArgs.cs" />
     <Compile Include="libs\TagSearchType.cs" />
@@ -200,8 +203,8 @@
       <DependentUpon>FrmAboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\CreateTags.resx">
-      <DependentUpon>CreateTags.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\FrmTagWizard.resx">
+      <DependentUpon>FrmTagWizard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\FrmDreamStatistics.resx">
       <DependentUpon>FrmDreamStatistics.cs</DependentUpon>
@@ -214,8 +217,8 @@
     <EmbeddedResource Include="GUI\CtrEntryViewer.resx">
       <DependentUpon>CtrEntryViewer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\NewEntryForm.resx">
-      <DependentUpon>NewEntryForm.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\FrmDreamEntry.resx">
+      <DependentUpon>FrmDreamEntry.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\FrmNewFileCreator.resx">
       <DependentUpon>FrmNewFileCreator.cs</DependentUpon>
@@ -244,6 +247,8 @@
     <None Include="Properties\DataSources\eDream.GUI.DreamEntryViewModel.datasource" />
     <None Include="Properties\DataSources\eDream.GUI.EntryViewerModel.datasource" />
     <None Include="Properties\DataSources\eDream.GUI.NewFileViewModel.datasource" />
+    <None Include="Properties\DataSources\eDream.GUI.TagWizardViewModel.datasource" />
+    <None Include="Properties\DataSources\eDream.libs.TagStatistic.datasource" />
     <None Include="Properties\DataSources\eDream.libs.TagStatisticsViewModel.datasource" />
     <None Include="Properties\DataSources\eDream.libs.TagStatTableData.datasource" />
     <None Include="Properties\Settings.settings">

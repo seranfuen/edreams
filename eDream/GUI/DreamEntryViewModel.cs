@@ -10,7 +10,7 @@ namespace eDream.GUI
 {
     public class DreamEntryViewModel : INotifyPropertyChanged
     {
-        private string _dreamText;
+        private string _dreamText = "";
 
         public string DreamText
         {
@@ -24,7 +24,7 @@ namespace eDream.GUI
             }
         }
 
-        public string Tags { get; set; }
+        public string Tags { get; set; } = "";
         public DateTime DreamDate { get; set; }
         public int WordCount => Regex.Split(DreamText?.Trim() ?? "", @"\s").Count(x => !string.IsNullOrWhiteSpace(x));
         public string WordCountDisplay => $"Number of words: {WordCount}";

@@ -32,17 +32,17 @@ namespace eDream.libs
     /// </summary>
     public static class DreamTagParser
     {
-        public static string TagsToString(IList<DreamMainTag> tagList)
-        {
-            return new DreamTagStringBuilder(tagList).ToString();
-        }
-
         public static IList<DreamMainTag> ParseStringToDreamTags(string str)
         {
             if (str == null) throw new ArgumentNullException(nameof(str));
 
             var mainTags = new DreamTagStringExtractor(str.Trim()).Tags;
             return new MainTagParser(mainTags).DreamTags;
+        }
+
+        public static string TagsToString(IEnumerable<DreamMainTag> tagList)
+        {
+            return new DreamTagStringBuilder(tagList).ToString();
         }
     }
 }

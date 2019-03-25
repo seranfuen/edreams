@@ -1,5 +1,5 @@
 ﻿namespace eDream.GUI {
-    partial class NewEntryForm {
+    partial class FrmDreamEntry {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -24,7 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewEntryForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmDreamEntry));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.DreamTextBox = new System.Windows.Forms.RichTextBox();
             this.BindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -177,7 +177,7 @@
             this.WordCountLabel.TabIndex = 5;
             this.WordCountLabel.Text = "Word count: 0";
             // 
-            // NewEntryForm
+            // FrmDreamEntry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -188,7 +188,7 @@
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(492, 468);
-            this.Name = "NewEntryForm";
+            this.Name = "FrmDreamEntry";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Dream entry";
