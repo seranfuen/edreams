@@ -14,6 +14,8 @@ namespace eDream.libs
             _dreamTags = dreamTags ?? throw new ArgumentNullException(nameof(dreamTags));
         }
 
+        public List<IDreamTag> AllTags => _dreamTags.ToList();
+
         public IEnumerable<IDreamTag> SearchForTags(string searchTerm)
         {
             if (string.IsNullOrWhiteSpace(searchTerm)) return _dreamTags;

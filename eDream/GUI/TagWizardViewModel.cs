@@ -12,16 +12,37 @@ namespace eDream.GUI
     public class TagWizardViewModel : INotifyPropertyChanged
     {
         private readonly string _originalTags;
+        private readonly DreamTagSearch _searcher;
         private readonly List<DreamMainTag> _tagsToAdd = new List<DreamMainTag>();
+        private readonly IEnumerable<TagStatistic> _allTagStatistics;
+        private string _searchTerm;
 
-        public TagWizardViewModel([NotNull] IEnumerable<DreamMainTag> originalTags)
+        public TagWizardViewModel([NotNull] IEnumerable<DreamMainTag> originalTags,
+            IEnumerable<TagStatistic> allTagStatistics)
         {
+            _allTagStatistics = allTagStatistics;
             var dreamMainTags = originalTags.ToList();
             _originalTags = DreamTagParser.TagsToString(dreamMainTags);
             _tagsToAdd.AddRange(dreamMainTags);
+            _searcher = new DreamTagSearch(allTagStatistics);
+            TagsToShow = SetTagsToShow(_searcher.AllTags);
         }
 
         public string TagsToAdd => DreamTagParser.TagsToString(_tagsToAdd);
+        public List<TagStatistic> TagsToShow { get; private set; }
+
+        public string SearchTerm
+        {
+            get => _searchTerm;
+            set
+            {
+                if (_searchTerm == value) return;
+                _searchTerm = value;
+                TagsToShow = SetTagsToShow(_searcher.SearchForTags(value).ToList());
+                OnPropertyChanged(nameof(SearchTerm));
+                OnPropertyChanged(nameof(TagsToShow));
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -56,6 +77,11 @@ namespace eDream.GUI
             return newTag;
         }
 
+        private static bool IsContainedBy(IDreamTag tagStatistic, IEnumerable<IDreamTag> dreamTags)
+        {
+            return dreamTags.Any(tag => tag.Tag == tagStatistic.Tag && tag.ParentTag == tagStatistic.ParentTag);
+        }
+
         private static bool IsMainTag(IDreamTag tag)
         {
             return string.IsNullOrWhiteSpace(tag.ParentTag);
@@ -75,6 +101,11 @@ namespace eDream.GUI
             if (_tagsToAdd.Any(x => string.Equals(x.Tag, tag.Tag, StringComparison.OrdinalIgnoreCase))) return;
             _tagsToAdd.Add(new DreamMainTag(tag.Tag));
             OnPropertyChanged(nameof(TagsToAdd));
+        }
+
+        private List<TagStatistic> SetTagsToShow(List<IDreamTag> dreamTags)
+        {
+            return _allTagStatistics.Where(tag => IsContainedBy(tag, dreamTags)).ToList();
         }
     }
 }

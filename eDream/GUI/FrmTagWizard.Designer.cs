@@ -26,24 +26,22 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmTagWizard));
             this.TagsGrid = new System.Windows.Forms.DataGridView();
-            this.tagDisplayDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.countDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addSelectedEntriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.BindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.ViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.TagSearch = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.OkButton = new System.Windows.Forms.Button();
             this.TagsToAddTextBox = new System.Windows.Forms.TextBox();
-            this.ViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ResetButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.ClearButton = new System.Windows.Forms.Button();
+            this.tagDisplayDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.countDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.TagsGrid)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.BindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ViewModelBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -66,38 +64,13 @@
             this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn});
             this.TagsGrid.ContextMenuStrip = this.contextMenuStrip1;
             this.TagsGrid.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.TagsGrid.DataSource = this.BindingSource;
+            this.TagsGrid.DataMember = "TagsToShow";
+            this.TagsGrid.DataSource = this.ViewModelBindingSource;
             this.TagsGrid.Location = new System.Drawing.Point(12, 69);
             this.TagsGrid.Name = "TagsGrid";
             this.TagsGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.TagsGrid.Size = new System.Drawing.Size(714, 319);
             this.TagsGrid.TabIndex = 0;
-            // 
-            // tagDisplayDataGridViewTextBoxColumn
-            // 
-            this.tagDisplayDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.tagDisplayDataGridViewTextBoxColumn.DataPropertyName = "TagDisplay";
-            this.tagDisplayDataGridViewTextBoxColumn.HeaderText = "Tag";
-            this.tagDisplayDataGridViewTextBoxColumn.Name = "tagDisplayDataGridViewTextBoxColumn";
-            this.tagDisplayDataGridViewTextBoxColumn.ReadOnly = true;
-            this.tagDisplayDataGridViewTextBoxColumn.Width = 51;
-            // 
-            // countDataGridViewTextBoxColumn
-            // 
-            this.countDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.countDataGridViewTextBoxColumn.DataPropertyName = "Count";
-            this.countDataGridViewTextBoxColumn.HeaderText = "Count";
-            this.countDataGridViewTextBoxColumn.Name = "countDataGridViewTextBoxColumn";
-            this.countDataGridViewTextBoxColumn.ReadOnly = true;
-            this.countDataGridViewTextBoxColumn.Width = 60;
-            // 
-            // percentOfTotalEntriesDisplayDataGridViewTextBoxColumn
-            // 
-            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn.DataPropertyName = "PercentOfTotalEntriesDisplay";
-            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn.HeaderText = "% total dreams";
-            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn.Name = "percentOfTotalEntriesDisplayDataGridViewTextBoxColumn";
-            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // contextMenuStrip1
             // 
@@ -113,9 +86,9 @@
             this.addSelectedEntriesToolStripMenuItem.Text = "Add selected entries";
             this.addSelectedEntriesToolStripMenuItem.Click += new System.EventHandler(this.AddSelectedEntriesToolStripMenuItem_Click);
             // 
-            // BindingSource
+            // ViewModelBindingSource
             // 
-            this.BindingSource.DataSource = typeof(eDream.libs.TagStatistic);
+            this.ViewModelBindingSource.DataSource = typeof(eDream.GUI.TagWizardViewModel);
             // 
             // label1
             // 
@@ -128,6 +101,7 @@
             // 
             // TagSearch
             // 
+            this.TagSearch.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.ViewModelBindingSource, "SearchTerm", true));
             this.TagSearch.Location = new System.Drawing.Point(15, 25);
             this.TagSearch.Name = "TagSearch";
             this.TagSearch.Size = new System.Drawing.Size(151, 20);
@@ -166,10 +140,6 @@
             this.TagsToAddTextBox.Size = new System.Drawing.Size(711, 20);
             this.TagsToAddTextBox.TabIndex = 5;
             // 
-            // ViewModelBindingSource
-            // 
-            this.ViewModelBindingSource.DataSource = typeof(eDream.GUI.TagWizardViewModel);
-            // 
             // ResetButton
             // 
             this.ResetButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -201,6 +171,36 @@
             this.ClearButton.UseVisualStyleBackColor = true;
             this.ClearButton.Click += new System.EventHandler(this.ClearButton_Click);
             // 
+            // tagDisplayDataGridViewTextBoxColumn
+            // 
+            this.tagDisplayDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.tagDisplayDataGridViewTextBoxColumn.DataPropertyName = "TagDisplay";
+            this.tagDisplayDataGridViewTextBoxColumn.HeaderText = "Tag";
+            this.tagDisplayDataGridViewTextBoxColumn.Name = "tagDisplayDataGridViewTextBoxColumn";
+            this.tagDisplayDataGridViewTextBoxColumn.ReadOnly = true;
+            this.tagDisplayDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.tagDisplayDataGridViewTextBoxColumn.Width = 32;
+            // 
+            // countDataGridViewTextBoxColumn
+            // 
+            this.countDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.countDataGridViewTextBoxColumn.DataPropertyName = "Count";
+            this.countDataGridViewTextBoxColumn.HeaderText = "Count";
+            this.countDataGridViewTextBoxColumn.Name = "countDataGridViewTextBoxColumn";
+            this.countDataGridViewTextBoxColumn.ReadOnly = true;
+            this.countDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.countDataGridViewTextBoxColumn.Width = 41;
+            // 
+            // percentOfTotalEntriesDisplayDataGridViewTextBoxColumn
+            // 
+            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn.DataPropertyName = "PercentOfTotalEntriesDisplay";
+            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn.HeaderText = "% Total Dreams";
+            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn.Name = "percentOfTotalEntriesDisplayDataGridViewTextBoxColumn";
+            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn.ReadOnly = true;
+            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.percentOfTotalEntriesDisplayDataGridViewTextBoxColumn.Width = 78;
+            // 
             // FrmTagWizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -223,7 +223,6 @@
             this.Text = "Tag Creator";
             ((System.ComponentModel.ISupportInitialize)(this.TagsGrid)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.BindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ViewModelBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -241,12 +240,11 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem addSelectedEntriesToolStripMenuItem;
         private System.Windows.Forms.Button ResetButton;
-        private System.Windows.Forms.BindingSource BindingSource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn tagDisplayDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn percentOfTotalEntriesDisplayDataGridViewTextBoxColumn;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.BindingSource ViewModelBindingSource;
         private System.Windows.Forms.Button ClearButton;
+        private System.Windows.Forms.DataGridViewTextBoxColumn tagDisplayDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn countDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn percentOfTotalEntriesDisplayDataGridViewTextBoxColumn;
     }
 }

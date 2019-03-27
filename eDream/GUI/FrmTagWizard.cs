@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using eDream.Annotations;
 using eDream.libs;
@@ -32,23 +31,16 @@ namespace eDream.GUI
 {
     internal partial class FrmTagWizard : Form
     {
-        private readonly IList<TagStatistic> _tagStatistics;
         private readonly TagWizardViewModel _viewModel;
 
-        public EventHandler OnTagTextChange;
 
         public FrmTagWizard([NotNull] IList<TagStatistic> tagStatistics,
             [NotNull] IEnumerable<DreamMainTag> currentTags)
         {
             InitializeComponent();
             if (currentTags == null) throw new ArgumentNullException(nameof(currentTags));
-            _tagStatistics = tagStatistics ?? throw new ArgumentNullException(nameof(tagStatistics));
-            BindingSource.DataSource = _tagStatistics;
-            _viewModel = new TagWizardViewModel(currentTags);
+            _viewModel = new TagWizardViewModel(currentTags, tagStatistics);
             ViewModelBindingSource.DataSource = _viewModel;
-
-            TagSearch.KeyDown += DetectKey;
-            TagsToAddTextBox.TextChanged += EmitTextChanged;
 
             TagsGrid.DoubleClick += TableDoubleClick;
         }
@@ -72,26 +64,12 @@ namespace eDream.GUI
 
         private void ClearButton_Click(object sender, EventArgs e)
         {
-            TagSearch.Text = "";
-            ResetInitialData();
+            _viewModel.SearchTerm = "";
         }
 
         private void CreateButton_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        private void DetectKey(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData != Keys.Return) return;
-
-            e.SuppressKeyPress = true;
-            SearchButton_Click(sender, new EventArgs());
-        }
-
-        private void EmitTextChanged(object sender, EventArgs e)
-        {
-            OnTagTextChange?.Invoke(this, e);
         }
 
         private IEnumerable<TagStatistic> GetSelectedRows()
@@ -102,37 +80,9 @@ namespace eDream.GUI
             return rows;
         }
 
-        private static bool IsContainedBy(IDreamTag tagStatistic, IEnumerable<IDreamTag> dreamTags)
-        {
-            return dreamTags.Any(tag => tag.Tag == tagStatistic.Tag && tag.ParentTag == tagStatistic.ParentTag);
-        }
-
-        private void PerformSearch()
-        {
-            if (string.IsNullOrWhiteSpace(TagSearch.Text)) ResetInitialData();
-
-            var searcher = new DreamTagSearch(_tagStatistics);
-            SetSearchResult(searcher.SearchForTags(TagSearch.Text));
-        }
-
         private void ResetButton_Click(object sender, EventArgs e)
         {
             _viewModel.Reset();
-        }
-
-        private void ResetInitialData()
-        {
-            BindingSource.DataSource = _tagStatistics;
-        }
-
-        private void SearchButton_Click(object sender, EventArgs e)
-        {
-            PerformSearch();
-        }
-
-        private void SetSearchResult(IEnumerable<IDreamTag> dreamTags)
-        {
-            BindingSource.DataSource = _tagStatistics.Where(tag => IsContainedBy(tag, dreamTags)).ToList();
         }
 
         private void TableDoubleClick(object sender, EventArgs e)
@@ -142,7 +92,7 @@ namespace eDream.GUI
 
         private void TagSearch_TextChanged(object sender, EventArgs e)
         {
-            PerformSearch();
+            TagSearch.DataBindings[0].WriteValue();
         }
     }
 }
