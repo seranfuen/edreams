@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using eDream.Annotations;
 using eDream.libs;
-using eDream.program;
 
 namespace eDream.GUI
 {
@@ -34,21 +33,14 @@ namespace eDream.GUI
         private readonly TagWizardViewModel _viewModel;
 
 
-        public FrmTagWizard([NotNull] IList<TagStatistic> tagStatistics,
-            [NotNull] IEnumerable<DreamMainTag> currentTags)
+        public FrmTagWizard([NotNull] TagWizardViewModel viewModel)
         {
             InitializeComponent();
-            if (currentTags == null) throw new ArgumentNullException(nameof(currentTags));
-            _viewModel = new TagWizardViewModel(currentTags, tagStatistics);
+            _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
+            ;
             ViewModelBindingSource.DataSource = _viewModel;
 
             TagsGrid.DoubleClick += TableDoubleClick;
-        }
-
-        public string TagText
-        {
-            set => TagsToAddTextBox.Text = value;
-            get => TagsToAddTextBox.Text;
         }
 
         private void AddSelectedEntriesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -69,6 +61,7 @@ namespace eDream.GUI
 
         private void CreateButton_Click(object sender, EventArgs e)
         {
+            DialogResult = DialogResult.OK;
             Close();
         }
 

@@ -11,6 +11,7 @@ namespace eDream.GUI
     public class DreamEntryViewModel : INotifyPropertyChanged
     {
         private string _dreamText = "";
+        private string _tags = "";
 
         public string DreamText
         {
@@ -24,7 +25,17 @@ namespace eDream.GUI
             }
         }
 
-        public string Tags { get; set; } = "";
+        public string Tags
+        {
+            get => _tags;
+            set
+            {
+                if (_tags == value) return;
+                _tags = value;
+                OnPropertyChanged(nameof(Tags));
+            }
+        }
+
         public DateTime DreamDate { get; set; }
         public int WordCount => Regex.Split(DreamText?.Trim() ?? "", @"\s").Count(x => !string.IsNullOrWhiteSpace(x));
         public string WordCountDisplay => $"Number of words: {WordCount}";
@@ -35,12 +46,6 @@ namespace eDream.GUI
         public static DreamEntryViewModel ForNewDream()
         {
             return new DreamEntryViewModel {DreamDate = DateTime.Now.Date};
-        }
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public static DreamEntryViewModel FromExistingEntry(DreamEntry editEntry)
@@ -56,6 +61,12 @@ namespace eDream.GUI
         public DreamEntry ToDreamEntry()
         {
             return new DreamEntry(DreamDate, Tags, DreamText);
+        }
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

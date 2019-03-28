@@ -33,6 +33,17 @@ namespace Tests.GUI
         }
 
         [Test]
+        public void Tags_changed_notifies_PropertyChanged()
+        {
+            var tagFired = false;
+            var entityUnderTest = DreamEntryViewModel.ForNewDream();
+            entityUnderTest.PropertyChanged += (s, e) => tagFired |= e.PropertyName == nameof(entityUnderTest.Tags);
+            entityUnderTest.Tags = "FRIEND";
+            tagFired.Should().BeTrue();
+
+        }
+
+        [Test]
         public void DreamText_when_changed_fires_PropertyChanged_for_DreamText_and_WordCount_and_WordCountDisplay()
         {
             var dreamTextFired = false;

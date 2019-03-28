@@ -35,8 +35,6 @@ namespace eDream.GUI
         private readonly IList<TagStatistic> _tagStatistics;
         private readonly DreamEntryViewModel _viewModel;
 
-        private FrmTagWizard _tagWiz;
-
         public FrmDreamEntry(IList<TagStatistic> tagStatistics)
         {
             InitializeComponent();
@@ -78,19 +76,17 @@ namespace eDream.GUI
 
         private void AddTagButton_Click(object sender, EventArgs e)
         {
-            _tagWiz = new FrmTagWizard(_tagStatistics, DreamTagParser.ParseStringToDreamTags(_viewModel.Tags));
-            _tagWiz.ShowDialog();
+            var tagWizardViewModel = new TagWizardViewModel(DreamTagParser.ParseStringToDreamTags(_viewModel.Tags),
+                _tagStatistics);
+            var wizard = new FrmTagWizard(tagWizardViewModel);
+            var result = wizard.ShowDialog();
+            if (result == DialogResult.OK)
+                _viewModel.Tags = tagWizardViewModel.TagsToAdd;
         }
 
         private void CancelButtonClick(object sender, EventArgs e)
         {
-            CloseTagWizard();
-            Dispose();
-        }
-
-        private void CloseTagWizard()
-        {
-            _tagWiz?.Dispose();
+            Close();
         }
 
         private void LoadEditEntry()
@@ -98,12 +94,6 @@ namespace eDream.GUI
             DreamTextBox.Text = _editEntry.Text;
             TagsBox.Text = _editEntry.GetTagString();
             DreamDatePicker.Text = _editEntry.GetDateAsStr();
-        }
-
-        private void NotifyTagW(object sender, EventArgs e)
-        {
-            if (_tagWiz == null || _tagWiz.Visible == false) return;
-            if (TagsBox.Text != _tagWiz.TagText) _tagWiz.TagText = TagsBox.Text;
         }
 
         private static void PreventChildClose(object sender, FormClosingEventArgs e)
@@ -145,7 +135,6 @@ namespace eDream.GUI
         {
             FormClosing += PreventChildClose;
             StartPosition = FormStartPosition.CenterParent;
-            TagsBox.TextChanged += NotifyTagW;
             KeyPreview = true;
             KeyDown += SendForm;
         }
