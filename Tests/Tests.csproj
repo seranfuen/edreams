@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="GUI\DreamEntryViewModelTests.cs" />
     <Compile Include="GUI\DreamDiaryViewModelTests.cs" />
+    <Compile Include="GUI\DreamStatisticsViewModelTests.cs" />
     <Compile Include="GUI\EntryViewerModelTests.cs" />
     <Compile Include="GUI\NewFileViewModelTests.cs" />
     <Compile Include="GUI\TagWizardViewModelTests.cs" />

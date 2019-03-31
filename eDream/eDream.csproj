@@ -93,6 +93,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\DreamCountSummary.cs" />
+    <Compile Include="GUI\DreamStatisticsViewModel.cs" />
     <Compile Include="GUI\IDreamDiaryViewModel.cs" />
     <Compile Include="GUI\SearchPerformedEventArgs.cs" />
     <Compile Include="GUI\TagWizardViewModel.cs" />
@@ -245,6 +247,7 @@
     <None Include="packages.config" />
     <None Include="Properties\DataSources\eDream.GUI.DreamDatabaseViewModel.datasource" />
     <None Include="Properties\DataSources\eDream.GUI.DreamEntryViewModel.datasource" />
+    <None Include="Properties\DataSources\eDream.GUI.DreamStatisticsViewModel.datasource" />
     <None Include="Properties\DataSources\eDream.GUI.EntryViewerModel.datasource" />
     <None Include="Properties\DataSources\eDream.GUI.NewFileViewModel.datasource" />
     <None Include="Properties\DataSources\eDream.GUI.TagWizardViewModel.datasource" />

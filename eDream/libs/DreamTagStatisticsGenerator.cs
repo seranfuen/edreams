@@ -86,7 +86,7 @@ namespace eDream.libs
                 (decimal) queryTagsOnDifferentDates.Count(tagByDate => tagByDate.Tag == x.TagName) / TotalDays));
         }
 
-        private IList<TagStatistic> SortTagStatistics(IEnumerable<TagStatistic> tagStatistics)
+        public static IList<TagStatistic> SortTagStatistics(IEnumerable<TagStatistic> tagStatistics)
         {
             var tagStatisticsViewModels = tagStatistics.ToList();
             var groupByMainTag =

@@ -24,7 +24,7 @@ namespace eDream.GUI
             var dreamMainTags = originalTags.ToList();
             _originalTags = DreamTagParser.TagsToString(dreamMainTags);
             _tagsToAdd.AddRange(dreamMainTags);
-            _searcher = new DreamTagSearch(allTagStatistics);
+            _searcher = new DreamTagSearch(_allTagStatistics);
             TagsToShow = SetTagsToShow(_searcher.AllTags);
         }
 

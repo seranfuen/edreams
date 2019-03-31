@@ -131,6 +131,14 @@ namespace eDream
             DreamListBox.Focus();
         }
 
+        private DreamStatisticsViewModel GetDreamStatisticsViewModel()
+        {
+            var dreamTagStatisticsGenerator = _viewModel.GetDreamTagStatistics();
+            return new DreamStatisticsViewModel(dreamTagStatisticsGenerator.GetStatistics(),
+                new DreamCountSummary(dreamTagStatisticsGenerator.TotalEntries,
+                    dreamTagStatisticsGenerator.TotalDays));
+        }
+
         private void InitializeInterface()
         {
             SetUnloadedState();
@@ -415,7 +423,7 @@ namespace eDream
 
         private void ShowStatistics()
         {
-            new FrmDreamStatistics(_viewModel.GetDreamTagStatistics()).ShowDialog();
+            new FrmDreamStatistics(GetDreamStatisticsViewModel()).Show();
         }
 
         private void StatisticsToolStripMenuItem_Click(object sender, EventArgs e)

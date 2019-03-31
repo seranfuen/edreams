@@ -21,21 +21,17 @@
 ****************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
-using eDream.libs;
+using eDream.Annotations;
 
 namespace eDream.GUI
 {
     public partial class FrmDreamStatistics : Form
     {
-        public FrmDreamStatistics(DreamTagStatisticsGenerator statistics)
+        public FrmDreamStatistics([NotNull] DreamStatisticsViewModel viewModel)
         {
             InitializeComponent();
-            StartPosition = FormStartPosition.CenterScreen;
-            SetTableData(statistics.GetStatistics());
-            DisplayStatisticsLabel(statistics.TotalEntries, statistics.TotalDays);
+            ViewModelBindingSource.DataSource = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
         }
 
         private void CloseButton_Click(object sender, EventArgs e)
@@ -43,33 +39,9 @@ namespace eDream.GUI
             Close();
         }
 
-        private void DisplayStatisticsLabel(int totalEntries, int totalDays)
+        private void SearchTagsTextBox_TextChanged(object sender, EventArgs e)
         {
-            var str = $"There are {totalEntries} dreams in {totalDays} days";
-            if (totalDays > 0)
-                str += $" ({totalEntries / (float) totalDays:0.00} dreams/day)";
-            totalDreamsLabel.Text = str;
-        }
-
-        private void SetTableData(IEnumerable<TagStatistic> data)
-        {
-            var tagStatisticsViewModels = data.ToList();
-            if (!tagStatisticsViewModels.Any())
-            {
-                SetTableDefaultData();
-                return;
-            }
-
-            BindingSource.DataSource = tagStatisticsViewModels;
-            StatsTable.Enabled = true;
-        }
-
-
-        private void SetTableDefaultData()
-        {
-            StatsTable.DataSource = null;
-            StatsTable.Enabled = false;
-            BindingSource.DataSource = null;
+            SearchTagsTextBox.DataBindings[0].WriteValue();
         }
     }
 }

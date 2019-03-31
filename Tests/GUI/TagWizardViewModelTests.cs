@@ -162,20 +162,20 @@ namespace Tests.GUI
         }
 
         [Test]
-        public void SearchTerm_null_or_empty_shows_all_tags()
-        {
-            var entityUnderTest = InitializeViewModelForTest();
-            entityUnderTest.SearchTerm.Should().BeNull();
-            entityUnderTest.TagsToShow.Should().HaveCount(6);
-        }
-
-        [Test]
         public void SearchTerm_first_one_term_then_empty_returns_all_again()
         {
             var entityUnderTest = InitializeViewModelForTest();
             entityUnderTest.SearchTerm = "Kenobi";
             entityUnderTest.TagsToShow.Should().HaveCount(2);
             entityUnderTest.SearchTerm = "";
+            entityUnderTest.TagsToShow.Should().HaveCount(6);
+        }
+
+        [Test]
+        public void SearchTerm_null_or_empty_shows_all_tags()
+        {
+            var entityUnderTest = InitializeViewModelForTest();
+            entityUnderTest.SearchTerm.Should().BeNull();
             entityUnderTest.TagsToShow.Should().HaveCount(6);
         }
 
