@@ -93,6 +93,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\DiaryImportResult.cs" />
     <Compile Include="GUI\DreamCountSummary.cs" />
     <Compile Include="GUI\DreamStatisticsViewModel.cs" />
     <Compile Include="GUI\IDreamDiaryViewModel.cs" />
@@ -159,6 +160,8 @@
     <Compile Include="libs\DreamCalendarCreator.cs" />
     <Compile Include="libs\DreamFileService.cs" />
     <Compile Include="libs\DreamDiaryPersistenceService.cs" />
+    <Compile Include="libs\IDiaryReader.cs" />
+    <Compile Include="libs\IDreamReaderWriterFactory.cs" />
     <Compile Include="libs\DreamTagSearch.cs" />
     <Compile Include="libs\DreamTagStatistics.cs" />
     <Compile Include="libs\DreamTagStatisticsGenerator.cs" />

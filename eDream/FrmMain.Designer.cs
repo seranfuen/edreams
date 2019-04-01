@@ -50,6 +50,7 @@
             this.entryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AddEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StatisticsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ImportFromAnotherDiaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -63,7 +64,7 @@
             this.toolStripAdd = new System.Windows.Forms.ToolStripButton();
             this.searchStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripStats = new System.Windows.Forms.ToolStripButton();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.statusBar.SuspendLayout();
@@ -212,7 +213,7 @@
             // 
             this.SearchToolStripMenuItem.Name = "SearchToolStripMenuItem";
             this.SearchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.SearchToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.SearchToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.SearchToolStripMenuItem.Text = "Search...";
             this.SearchToolStripMenuItem.Click += new System.EventHandler(this.SearchToolStripMenuItem_Click);
             // 
@@ -220,7 +221,8 @@
             // 
             this.entryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AddEntryToolStripMenuItem,
-            this.StatisticsToolStripMenuItem});
+            this.StatisticsToolStripMenuItem,
+            this.ImportFromAnotherDiaryToolStripMenuItem});
             this.entryToolStripMenuItem.Name = "entryToolStripMenuItem";
             this.entryToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.entryToolStripMenuItem.Text = "Entries";
@@ -229,7 +231,7 @@
             // 
             this.AddEntryToolStripMenuItem.Name = "AddEntryToolStripMenuItem";
             this.AddEntryToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.AddEntryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.AddEntryToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
             this.AddEntryToolStripMenuItem.Text = "Add entry";
             this.AddEntryToolStripMenuItem.Click += new System.EventHandler(this.AddEntryToolStripMenuItem_Click);
             // 
@@ -237,9 +239,17 @@
             // 
             this.StatisticsToolStripMenuItem.Name = "StatisticsToolStripMenuItem";
             this.StatisticsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
-            this.StatisticsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.StatisticsToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
             this.StatisticsToolStripMenuItem.Text = "Statistics";
             this.StatisticsToolStripMenuItem.Click += new System.EventHandler(this.StatisticsToolStripMenuItem_Click);
+            // 
+            // ImportFromAnotherDiaryToolStripMenuItem
+            // 
+            this.ImportFromAnotherDiaryToolStripMenuItem.Name = "ImportFromAnotherDiaryToolStripMenuItem";
+            this.ImportFromAnotherDiaryToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
+            this.ImportFromAnotherDiaryToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+            this.ImportFromAnotherDiaryToolStripMenuItem.Text = "Import from another diary";
+            this.ImportFromAnotherDiaryToolStripMenuItem.Click += new System.EventHandler(this.ImportFromAnotherDiaryToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -252,7 +262,7 @@
             // AboutToolStripMenuItem
             // 
             this.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem";
-            this.AboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.AboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.AboutToolStripMenuItem.Text = "About...";
             this.AboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
@@ -383,10 +393,10 @@
             this.toolStripStats.Text = "Dream Statistics";
             this.toolStripStats.Click += new System.EventHandler(this.ToolStripStats_Click);
             // 
-            // openFileDialog1
+            // OpenFileDialog
             // 
-            this.openFileDialog1.Filter = "XML Files|*.xml";
-            this.openFileDialog1.Title = "Load a dream database";
+            this.OpenFileDialog.Filter = "XML Files|*.xml";
+            this.OpenFileDialog.Title = "Load a dream database";
             // 
             // saveFileDialog1
             // 
@@ -453,7 +463,7 @@
         private System.Windows.Forms.TableLayoutPanel TableLayoutPanel;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripStatusLabel entriesStatsStatus;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.OpenFileDialog OpenFileDialog;
         private System.Windows.Forms.ToolStripMenuItem fdToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem CreateNewDatabaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
@@ -476,6 +486,7 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.BindingSource BindingSource;
         private System.Windows.Forms.BindingSource EntriesBindingSource;
+        private System.Windows.Forms.ToolStripMenuItem ImportFromAnotherDiaryToolStripMenuItem;
     }
 }
 

@@ -62,7 +62,7 @@ namespace eDream.libs
         {
             if (!(e.Argument is string path)) return;
 
-            var xmlReader = new DiaryXmlReader();
+            var xmlReader = new DiaryReader();
             e.Result = !xmlReader.IsFileValid(path) ? null : xmlReader.LoadFile(path);
         }
 

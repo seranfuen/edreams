@@ -19,33 +19,34 @@
     You should have received a copy of the GNU General Public License
     along with FrmMain.  If not, see <http://www.gnu.org/licenses/>.]
 ****************************************************************************/
+
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
-using eDream.program;
+using eDream.GUI;
 using eDream.libs;
-using EvilTools;
+using eDream.program;
 using Ninject;
 using Ninject.Extensions.Conventions;
 using Ninject.Extensions.Factory;
 
 namespace eDream
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             using (var kernel = new StandardKernel())
             {
                 kernel.Bind(x => { x.FromThisAssembly().SelectAllClasses().BindDefaultInterface(); });
+                kernel.Bind<IDreamReaderWriterFactory>().ToFactory();
                 kernel.Bind<IEdreamsFactory>().ToFactory();
+                kernel.Bind<IDiaryReader>().To<DiaryReader>();
 
                 Application.Run(kernel.Get<FrmMain>());
             }

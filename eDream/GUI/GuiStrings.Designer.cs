@@ -97,6 +97,44 @@ namespace eDream.GUI {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The file provided is not valid dream diary or does not exist.
+        ///
+        ///{0}.
+        /// </summary>
+        internal static string ImportError {
+            get {
+                return ResourceManager.GetString("ImportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} out of {1} entries were imported. The rest were duplicates and were ignored..
+        /// </summary>
+        internal static string ImportResult {
+            get {
+                return ResourceManager.GetString("ImportResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Diary imported successfully.
+        /// </summary>
+        internal static string ImportResultSuccessTitle {
+            get {
+                return ResourceManager.GetString("ImportResultSuccessTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid diary to import.
+        /// </summary>
+        internal static string InvalidDiaryImportTitle {
+            get {
+                return ResourceManager.GetString("InvalidDiaryImportTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your dream entry doesn&apos;t have either a text or tags..
         /// </summary>
         internal static string NewEntryForm_SaveEdit_NoTextOrTagsMessage {

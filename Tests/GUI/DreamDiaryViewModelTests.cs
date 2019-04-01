@@ -28,24 +28,9 @@ namespace Tests.GUI
             return Substitute.For<IDreamDiaryPersistenceService>();
         }
 
-        private static void AddThreeDreamEntriesTwoDays(DreamDiaryViewModel entityUnderTest)
+        private static void AddThreeDreamEntriesTwoDays(IDreamDiaryViewModel entityUnderTest)
         {
             foreach (var dreamEntry in GetThreeDreamEntriesTwoDays()) entityUnderTest.AddEntry(dreamEntry);
-        }
-
-        [Test]
-        public void FilterSearchEntries_only_returns_those_days()
-        {
-            var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
-            {
-                CurrentDatabasePath = @"C:\Hello"
-            };
-            AddThreeDreamEntriesTwoDays(entityUnderTest);
-            entityUnderTest.DreamDays.Should().HaveCount(2);
-            entityUnderTest.SetFilteredEntriesFromSearch(new List<DreamEntry>
-                {new DreamEntry(new DateTime(2019, 2, 23), "A", "B")});
-            entityUnderTest.DreamDays.Should().HaveCount(1).And
-                .ContainSingle(x => x.DreamEntries.Single().Text == "B");
         }
 
         [Test]
@@ -63,19 +48,6 @@ namespace Tests.GUI
                 .ContainSingle(x => x.DreamEntries.Single().Text == "B");
             entityUnderTest.ClearFilteredEntries();
             entityUnderTest.DreamDays.Should().HaveCount(2);
-        }
-
-        [Test]
-        public void FilterSearchEntries_given_empty_list_returns_nothing()
-        {
-            var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
-            {
-                CurrentDatabasePath = @"C:\Hello"
-            };
-            AddThreeDreamEntriesTwoDays(entityUnderTest);
-            entityUnderTest.DreamDays.Should().HaveCount(2);
-            entityUnderTest.SetFilteredEntriesFromSearch(new List<DreamEntry>());
-            entityUnderTest.DreamDays.Should().BeEmpty();
         }
 
         [Test]
@@ -118,11 +90,39 @@ namespace Tests.GUI
         public void CurrentDatabasePath_when_changed_with_null_Ignored()
         {
             var dreamSettings = Substitute.For<IDreamDiaryPaths>();
-            var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), dreamSettings)
+            var unused = new DreamDiaryViewModel(GetPersistenceService(), dreamSettings)
             {
                 CurrentDatabasePath = null
             };
             dreamSettings.DidNotReceive().AddPathToRecentlyOpenedPaths(Arg.Any<string>());
+        }
+
+        [Test]
+        public void FilterSearchEntries_given_empty_list_returns_nothing()
+        {
+            var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
+            {
+                CurrentDatabasePath = @"C:\Hello"
+            };
+            AddThreeDreamEntriesTwoDays(entityUnderTest);
+            entityUnderTest.DreamDays.Should().HaveCount(2);
+            entityUnderTest.SetFilteredEntriesFromSearch(new List<DreamEntry>());
+            entityUnderTest.DreamDays.Should().BeEmpty();
+        }
+
+        [Test]
+        public void FilterSearchEntries_only_returns_those_days()
+        {
+            var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
+            {
+                CurrentDatabasePath = @"C:\Hello"
+            };
+            AddThreeDreamEntriesTwoDays(entityUnderTest);
+            entityUnderTest.DreamDays.Should().HaveCount(2);
+            entityUnderTest.SetFilteredEntriesFromSearch(new List<DreamEntry>
+                {new DreamEntry(new DateTime(2019, 2, 23), "A", "B")});
+            entityUnderTest.DreamDays.Should().HaveCount(1).And
+                .ContainSingle(x => x.DreamEntries.Single().Text == "B");
         }
 
         [Test]
@@ -141,6 +141,103 @@ namespace Tests.GUI
 
             entityUnderTest.FormText.Should().Be("eDreams - dreams.xml");
         }
+
+        [Test]
+        public void Import_with_different_entries_adds_them()
+        {
+            var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
+            {
+                CurrentDatabasePath = @"C:\Hello"
+            };
+            AddThreeDreamEntriesTwoDays(entityUnderTest);
+
+            entityUnderTest.DreamEntries.Should().HaveCount(3);
+
+            var entries = new List<DreamEntry>
+            {
+                new DreamEntry(new DateTime(2019, 2, 3), "Friend", "Hello"),
+                new DreamEntry(new DateTime(2019, 2, 4), "Friend", "There")
+            };
+
+            entityUnderTest.Import(entries);
+
+            entityUnderTest.DreamEntries.Should().HaveCount(5);
+        }
+
+
+        [Test]
+        public void Import_with_duplicate_entries_does_not_add_them()
+        {
+            var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
+            {
+                CurrentDatabasePath = @"C:\Hello"
+            };
+            AddThreeDreamEntriesTwoDays(entityUnderTest);
+
+            entityUnderTest.DreamEntries.Should().HaveCount(3);
+
+            var entries = new List<DreamEntry>
+            {
+                new DreamEntry(new DateTime(2019, 2, 3), "Friend", "Hello"),
+                new DreamEntry(new DateTime(2019, 2, 23), "A", "B")
+            };
+
+            entityUnderTest.Import(entries);
+
+            entityUnderTest.DreamEntries.Should().HaveCount(4);
+        }
+
+        [Test]
+        public void Import_with_duplicate_entries_imports_1_out_of_2()
+        {
+            var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
+            {
+                CurrentDatabasePath = @"C:\Hello"
+            };
+            AddThreeDreamEntriesTwoDays(entityUnderTest);
+
+            var entries = new List<DreamEntry>
+            {
+                new DreamEntry(new DateTime(2019, 2, 3), "Friend", "Hello"),
+                new DreamEntry(new DateTime(2019, 2, 23), "A", "B")
+            };
+
+            var result = entityUnderTest.Import(entries);
+            result.EntriesImported.Should().Be(1);
+            result.EntriesInImportedDiary.Should().Be(2);
+        }
+
+        [Test]
+        public void Import_with_empty_diary_adds_0_out_of_0()
+        {
+            var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
+            {
+                CurrentDatabasePath = @"C:\Hello"
+            };
+            AddThreeDreamEntriesTwoDays(entityUnderTest);
+
+            var result = entityUnderTest.Import(new List<DreamEntry>());
+
+            result.EntriesInImportedDiary.Should().Be(0);
+            result.EntriesImported.Should().Be(0);
+        }
+
+        [Test]
+        public void Import_with_empty_diary_leaves_it_untouched()
+        {
+            var entityUnderTest = new DreamDiaryViewModel(GetPersistenceService(), Substitute.For<IDreamDiaryPaths>())
+            {
+                CurrentDatabasePath = @"C:\Hello"
+            };
+            AddThreeDreamEntriesTwoDays(entityUnderTest);
+
+            entityUnderTest.DreamEntries.Should().HaveCount(3);
+
+            entityUnderTest.Import(new List<DreamEntry>());
+
+            entityUnderTest.DreamEntries.Should().HaveCount(3);
+        }
+
 
         [Test]
         public void LoadDiary_passes_filepath_to_service()

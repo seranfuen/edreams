@@ -11,5 +11,6 @@ namespace eDream.program
         void EditEntry(DreamEntry entry);
         void AddNewEntry();
         void OpenSearchDialog();
+        void ImportDiary(string fileName);
     }
 }

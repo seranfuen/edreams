@@ -24,5 +24,6 @@ namespace eDream.GUI
         void LoadLastDiary();
         void Persist();
         void SetFilteredEntriesFromSearch(IEnumerable<DreamEntry> dreamEntries);
+        DiaryImportResult Import(IEnumerable<DreamEntry> entries);
     }
 }

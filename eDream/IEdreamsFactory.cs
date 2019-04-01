@@ -1,4 +1,6 @@
 ﻿using eDream.GUI;
+using eDream.libs;
+using eDream.program;
 
 namespace eDream
 {
@@ -6,5 +8,6 @@ namespace eDream
     {
         IDreamDiaryViewModel CreateDreamDiaryViewModel();
         FrmNewFileCreator CreateNewFileCreator();
+        IDreamReaderWriterFactory CreateDreamReaderWriterFactory();
     }
 }

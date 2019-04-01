@@ -152,4 +152,18 @@
   <data name="Search_FromThisDate" xml:space="preserve">
     <value>From</value>
   </data>
+  <data name="ImportResult" xml:space="preserve">
+    <value>{0} out of {1} entries were imported. The rest were duplicates and were ignored.</value>
+  </data>
+  <data name="ImportError" xml:space="preserve">
+    <value>The file provided is not valid dream diary or does not exist.
+
+{0}</value>
+  </data>
+  <data name="ImportResultSuccessTitle" xml:space="preserve">
+    <value>Diary imported successfully</value>
+  </data>
+  <data name="InvalidDiaryImportTitle" xml:space="preserve">
+    <value>Invalid diary to import</value>
+  </data>
 </root>

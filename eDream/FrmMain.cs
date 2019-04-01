@@ -27,6 +27,7 @@ using System.Linq;
 using System.Windows.Forms;
 using eDream.Annotations;
 using eDream.GUI;
+using eDream.libs;
 using eDream.program;
 
 namespace eDream
@@ -47,7 +48,7 @@ namespace eDream
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
             _viewModel = factory.CreateDreamDiaryViewModel();
             BindingSource.DataSource = _viewModel;
-            _dreamDiaryBus = new DreamDiaryBus(_viewModel);
+            _dreamDiaryBus = new DreamDiaryBus(_viewModel, factory.CreateDreamReaderWriterFactory());
             _dreamDiaryBus.DiaryPersisted += (s, e) => RefreshEntries();
             _dreamDiaryBus.SearchPerformed += (s, e) => RefreshEntries();
             InitializeInterface();
@@ -275,10 +276,10 @@ namespace eDream
         private void OpenDatabaseToolStripMenuItem_Click(object sender,
             EventArgs e)
         {
-            var result = openFileDialog1.ShowDialog();
+            var result = OpenFileDialog.ShowDialog();
             if (result != DialogResult.OK) return;
 
-            _viewModel.CurrentDatabasePath = openFileDialog1.FileName;
+            _viewModel.CurrentDatabasePath = OpenFileDialog.FileName;
             LoadDiary();
         }
 
@@ -370,6 +371,7 @@ namespace eDream
             SaveAsToolStripMenuItem.Enabled = true;
             CloseToolStripMenuItem.Enabled = true;
             AddEntryToolStripMenuItem.Enabled = true;
+            ImportFromAnotherDiaryToolStripMenuItem.Enabled = true;
             toolStripAdd.Enabled = true;
             toolStripStats.Enabled = true;
             ClearRightPanel();
@@ -407,6 +409,7 @@ namespace eDream
             SaveAsToolStripMenuItem.Enabled = false;
             CloseToolStripMenuItem.Enabled = false;
             AddEntryToolStripMenuItem.Enabled = false;
+            ImportFromAnotherDiaryToolStripMenuItem.Enabled = false;
             toolStripAdd.Enabled = false;
             toolStripStats.Enabled = false;
             SearchToolStripMenuItem.Enabled = false;
@@ -439,6 +442,14 @@ namespace eDream
         private void ToolStripStats_Click(object sender, EventArgs e)
         {
             ShowStatistics();
+        }
+
+        private void ImportFromAnotherDiaryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (OpenFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _dreamDiaryBus.ImportDiary(OpenFileDialog.FileName);
+            }
         }
     }
 }

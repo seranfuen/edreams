@@ -12,13 +12,7 @@ namespace eDream.GUI
 {
     public class DreamDiaryViewModel : INotifyPropertyChanged, IDreamDiaryViewModel
     {
-        public event EventHandler LoadingFailed;
         public event EventHandler<LoadingRecentlyOpenedDiariesEventArgs> LoadingRecentlyOpenedDiaries;
-
-        public event EventHandler LoadingSucceeded;
-
-        public event EventHandler PersistenceFailed;
-        public event EventHandler PersistenceSucceeded;
         private const string ApplicationName = "eDreams";
         private readonly IDreamDiaryPaths _dreamDiaryPaths;
         private readonly IDreamDiaryPersistenceService _dreamDiaryPersistenceService;
@@ -35,6 +29,15 @@ namespace eDream.GUI
             _dreamDiaryPersistenceService.FinishedPersisting += DreamDiaryPersistenceServiceOnFinishedPersisting;
             _dreamDiaryPersistenceService.FinishedLoading += DreamDiaryPersistenceServiceOnFinishedLoading;
         }
+
+        private int DayCount => DreamDays?.Count ?? 0;
+        private int DreamCount => DreamDays?.SelectMany(x => x.DreamEntries).Count(x => !x.ToDelete) ?? 0;
+        public event EventHandler LoadingFailed;
+
+        public event EventHandler LoadingSucceeded;
+
+        public event EventHandler PersistenceFailed;
+        public event EventHandler PersistenceSucceeded;
 
         public string CurrentDatabasePath
         {
@@ -58,12 +61,7 @@ namespace eDream.GUI
             : string.Format(GuiStrings.StatusBarMessage_NumberDreamsAndDays, DreamCount, GetDreamWord(), DayCount,
                 GetDayWord(), (decimal) DreamCount / DayCount);
 
-        private int DayCount => DreamDays?.Count ?? 0;
-        private int DreamCount => DreamDays?.SelectMany(x => x.DreamEntries).Count(x => !x.ToDelete) ?? 0;
-
         public IEnumerable<DreamEntry> DreamEntries => _dreamEntries;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public void AddEntry(DreamEntry newEntry)
         {
@@ -73,12 +71,6 @@ namespace eDream.GUI
         public void ClearFilteredEntries()
         {
             _filteredEntriesToShow = null;
-        }
-
-        public void CloseCurrentDiary()
-        {
-            CurrentDatabasePath = string.Empty;
-            _dreamEntries = new List<DreamEntry>();
         }
 
         public List<DreamDayEntry> GetDayList()
@@ -120,10 +112,40 @@ namespace eDream.GUI
             _filteredEntriesToShow = dreamEntries;
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void CloseCurrentDiary()
+        {
+            CurrentDatabasePath = string.Empty;
+            _dreamEntries = new List<DreamEntry>();
+        }
+
+        public DiaryImportResult Import([NotNull] IEnumerable<DreamEntry> dreamDiaryToImport)
+        {
+            if (dreamDiaryToImport == null) throw new ArgumentNullException(nameof(dreamDiaryToImport));
+
+            var importedEntries = 0;
+            var entriesToImport = dreamDiaryToImport.ToList();
+            foreach (var entryToImport in entriesToImport)
+                if (!DoesNotContain(entryToImport))
+                {
+                    AddEntry(entryToImport);
+                    importedEntries++;
+                }
+
+            return new DiaryImportResult(entriesToImport.Count(), importedEntries);
+        }
+
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private bool DoesNotContain(DreamEntry dreamEntry)
+        {
+            return _dreamEntries.Any(x => x.Date.Date == dreamEntry.Date.Date &&
+                                          x.Text == dreamEntry.Text && x.GetTagString() == dreamEntry.GetTagString());
         }
 
         private void DreamDiaryPersistenceServiceOnFinishedLoading(object sender, FinishedLoadingEventArgs e)

@@ -27,7 +27,7 @@ using eDream.program;
 
 namespace eDream.libs
 {
-    internal class DiaryXmlReader : IDisposable
+    internal class DiaryReader : IDiaryReader
     {
         private XmlTextReader _xmlTextReader;
 
